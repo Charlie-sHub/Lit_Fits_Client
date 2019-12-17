@@ -194,6 +194,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @param event
      */
     private void onBtnLoginPress(ActionEvent event) {
+        // Gotta adapt it so it opens the right main menu , company's main menu for example
         user = new User();
         try {
             user.setLogin(txtUsername.getText());

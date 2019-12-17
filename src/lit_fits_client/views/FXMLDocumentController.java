@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.WindowEvent;
 
 /*import thebestprogramlogiclibrary.User;
@@ -34,6 +35,8 @@ import thebestprogramlogiclibrary.logic.ApplicationLogicImplementation;
  * @author Ander Rodriguez
  */
 public class FXMLDocumentController {
+    @FXML
+    protected ChoiceBox<String> choiceTheme;
     //protected User user;
     protected String theme;
     //protected ApplicationLogicImplementation appLogic;
@@ -61,6 +64,24 @@ public class FXMLDocumentController {
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    /**
+     * Returns the choice box used to choose the theme
+     *
+     * @return ChoiceBox
+     */
+    public ChoiceBox getChoiceTheme() {
+        return choiceTheme;
+    }
+
+    /**
+     * Sets the choice box for the theme
+     *
+     * @param choiceBox
+     */
+    public void setChoiceTheme(ChoiceBox choiceBox) {
+        this.choiceTheme = choiceBox;
     }
 
     /**

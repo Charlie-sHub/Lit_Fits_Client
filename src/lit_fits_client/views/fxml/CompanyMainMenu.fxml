@@ -58,7 +58,7 @@
   <top>
     <Pane prefHeight="27.0" prefWidth="640.0" BorderPane.alignment="CENTER">
        <children>
-        <MenuBar prefHeight="25.0" prefWidth="720.0">
+        <MenuBar fx:id="menuBar" prefHeight="25.0" prefWidth="720.0">
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
