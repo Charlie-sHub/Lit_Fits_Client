@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import lit_fits_client.entities.Company;
 
 /**
  * The main menu of the program for companies.
@@ -166,7 +167,6 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
         stage.setMinWidth(1400);
         stage.setMinHeight(800);
         stage.show();
-        // Check if the happyMode is true, and change the CSS.
         setStylesheet(scene, theme);
         setElements();
         btnLogout.setDisable(false);
@@ -248,12 +248,13 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyGarments.fxml"));
             Stage stageProgramMain = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewProgramController warehouseView = ((FXMLViewProgramController) fxmlLoader.getController());
+            FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             //no applogic anymore?
             warehouseView.setAppLogic(appLogic);
             //Declare local company object? get an account object from the login and use it here as a company?
             warehouseView.setCompany(company);
-            warehouseView.setLogin(stage);
+            // What stage was this anyway?
+            warehouseView.setStage(stage);
             //adapt it so it takes the theme chosen from the choice box
             warehouseView.initStage(choiceTheme.getValue(), stageProgramMain, root);
             stage.hide();

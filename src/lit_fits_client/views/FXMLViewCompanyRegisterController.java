@@ -24,11 +24,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import thebestprogramlogiclibrary.User;
+import lit_fits_client.entities.Company;
 
 /**
- * This is the Document Controller class for the registration view of the
- * program.
+ * This is the Document Controller class for the registration view of the program.
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
@@ -52,7 +51,12 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Username text field
      */
     @FXML
-    private TextField txtUsername;
+    private TextField txtNif;
+    /**
+     * Phone text field
+     */
+    @FXML
+    private TextField txtPhone;
     /**
      * Email text field
      */
@@ -79,18 +83,19 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     @FXML
     private Label lblPassMismatch;
     /**
-     * Stage to be used by the current controller
-     */
-    private Stage stage;
-    /**
      * Help button
      */
     @FXML
     private Button btnHelp;
     /**
+     * Stage to be used by the current controller
+     */
+    private Stage stage;
+    /**
      * Stage of the previous window, the login in this case
      */
-    private Stage loginStage;
+    private Stage previousStage;
+    private Company company;
     /**
      * Logger object
      */
@@ -209,17 +214,17 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      *
      * @return TextField
      */
-    public TextField getTxtUsername() {
-        return txtUsername;
+    public TextField getTxtNif() {
+        return txtNif;
     }
 
     /**
      * Setter for the txtUsername
      *
-     * @param txtUsername
+     * @param txtNif
      */
-    public void setTxtUsername(TextField txtUsername) {
-        this.txtUsername = txtUsername;
+    public void setTxtNif(TextField txtNif) {
+        this.txtNif = txtNif;
     }
 
     /**
@@ -264,7 +269,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @return Stage
      */
     public Stage getLogin() {
-        return loginStage;
+        return previousStage;
     }
 
     /**
@@ -273,23 +278,60 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param login
      */
     public void setLogin(Stage login) {
-        this.loginStage = login;
+        this.previousStage = login;
+    }
+
+    public Label getLblInvalidMail() {
+        return lblInvalidMail;
+    }
+
+    public void setLblInvalidMail(Label lblInvalidMail) {
+        this.lblInvalidMail = lblInvalidMail;
+    }
+
+    public TextField getTxtPhone() {
+        return txtPhone;
+    }
+
+    public void setTxtPhone(TextField txtPhone) {
+        this.txtPhone = txtPhone;
+    }
+
+    public Button getBtnHelp() {
+        return btnHelp;
+    }
+
+    public void setBtnHelp(Button btnHelp) {
+        this.btnHelp = btnHelp;
+    }
+
+    public Stage getPreviousStage() {
+        return previousStage;
+    }
+
+    public void setPreviousStage(Stage previousStage) {
+        this.previousStage = previousStage;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     /**
      * Initializes the register window
      *
-     * @param mode It will receive a boolean that says if it is happy or not
+     * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
      */
-    public void initStage(boolean mode, Stage stage, Parent root) {
+    public void initStage(String theme, Stage stage, Parent root) {
         this.stage = stage;
-        //matches the happiness of this window with the happiness of the previous window
-        happyMode = mode;
         Scene scene = new Scene(root);
-        //Changes the css stylesheet based on the happiness of the program
-        setStylesheet(scene);
+        setStylesheet(scene, theme);
         stage.setScene(scene);
         stage.setTitle("Registration");
         setElements();
@@ -297,22 +339,20 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         stage.setMinWidth(850);
         stage.setMinHeight(650);
         stage.show();
-        LOG.info("Register Window opened");
     }
 
     /**
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        chkHappyMode.setOnAction(this::onThemeChosen);
-        chkHappyMode.setSelected(happyMode);
+        choiceTheme.setOnAction(this::onThemeChosen);
         btnRegister.setDisable(true);
         btnRedo.setDisable(true);
         lblPassMismatch.setVisible(false);
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
-        txtUsername.requestFocus();
+        txtNif.requestFocus();
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
@@ -328,12 +368,12 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         btnRedo.setOnAction(this::onRedoPress);
         btnRedo.setMnemonicParsing(true);
         btnRedo.setText("_Redo");
-        btnHelp.setOnKeyPressed(this::onF1Pressed); // Modificacion DIN 14/11/2019
-        btnHelp.setOnAction(this::onHelpPressed); // Modificacion DIN 14/11/2019
+        btnHelp.setOnKeyPressed(this::onF1Pressed);
+        btnHelp.setOnAction(this::onHelpPressed);
     }
 
     /**
-     * Checks that the F1 key is pressed to open the help vindow
+     * Checks that the F1 key is pressed to open the help window
      *
      * @param event
      */
@@ -357,7 +397,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         Parent root = (Parent) fxmlLoader.load();
         Stage stageHelp = new Stage();
         FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(happyMode, stageHelp, root);
+        helpView.initStage(theme, stageHelp, root);
     }
 
     /**
@@ -377,9 +417,10 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Fills the array of text fields to check later if they're filled with text
      */
     private void fillArray() {
-        textFields.add(txtUsername);
+        textFields.add(txtNif);
         textFields.add(txtFullName);
         textFields.add(txtEmail);
+        textFields.add(txtPhone);
         textFields.add(txtPassword);
         textFields.add(txtRepeatPassword);
     }
@@ -388,11 +429,12 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Enables the traverse of the focus to all elements in the window
      */
     private void setFocusTraversable() {
-        txtUsername.setFocusTraversable(true);
+        txtNif.setFocusTraversable(true);
         txtPassword.setFocusTraversable(true);
         txtRepeatPassword.setFocusTraversable(true);
         txtFullName.setFocusTraversable(true);
         txtEmail.setFocusTraversable(true);
+        txtPhone.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
         btnRegister.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
@@ -403,16 +445,18 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Add listeners to all text inputs
      */
     private void setListeners() {
-        txtUsername.textProperty().addListener(this::onFieldFilledListener);
+        txtNif.textProperty().addListener(this::onFieldFilledListener);
         txtPassword.textProperty().addListener(this::onFieldFilledListener);
         txtRepeatPassword.textProperty().addListener(this::onFieldFilledListener);
         txtFullName.textProperty().addListener(this::onFieldFilledListener);
         txtEmail.textProperty().addListener(this::onFieldFilledListener);
-        txtUsername.lengthProperty().addListener(this::lenghtListener);
+        txtPhone.textProperty().addListener(this::onFieldFilledListener);
+        txtNif.lengthProperty().addListener(this::lenghtListener);
         txtPassword.lengthProperty().addListener(this::lenghtListener);
         txtRepeatPassword.lengthProperty().addListener(this::lenghtListener);
         txtFullName.lengthProperty().addListener(this::lenghtListener);
         txtEmail.lengthProperty().addListener(this::lenghtListener);
+        txtPhone.lengthProperty().addListener(this::lenghtListener);
     }
 
     public void lenghtListener(ObservableValue observable,
@@ -422,22 +466,20 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
-     * This function will cancel the register, close the window and will return
-     * to the login window
+     * This function will cancel the register, close the window and will return to the login window
      *
      * @param event
      */
     public void onBtnCancelPress(ActionEvent event) {
-        loginStage.show();
+        previousStage.show();
         stage.hide();
     }
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        user = new User();
         try {
-            setUserdata();
-            user = appLogic.registerUser(user);
+            setCompanyData();
+            company = appLogic.registerUser(user);
             try {
                 openProgramMainWindow(user);
                 stage.hide();
@@ -453,15 +495,12 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     /**
      * Sets the data of the user to be sent to the server
      */
-    private void setUserdata() {
-        user.setEmail(txtEmail.getText());
-        user.setFullName(txtFullName.getText());
-        user.setLogin(txtUsername.getText());
-        user.setPassword(txtPassword.getText());
-        user.setUserStatus(true);
-        user.setUserPrivilege(false);
-        user.setUserPrivilege(false);
-        user.setUserStatus(true);
+    private void setCompanyData() {
+        company.setEmail(txtEmail.getText());
+        company.setFullName(txtFullName.getText());
+        company.setNif(txtNif.getText());
+        company.setPassword(txtPassword.getText());
+        company.setPhoneNumber(txtPhone.getText());
     }
 
     /**
@@ -469,15 +508,16 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      *
      * @throws IOException
      */
-    private void openProgramMainWindow(User user) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewProgramMain.fxml"));
+    private void openProgramMainWindow(Company company) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageProgramMain = new Stage();
-        FXMLViewProgramController mainView = ((FXMLViewProgramController) fxmlLoader.getController());
+        FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+        //keep applogic?
         mainView.setAppLogic(appLogic);
-        mainView.setUser(user);
-        mainView.setLogin(loginStage);
-        mainView.initStage(happyMode, stageProgramMain, root);
+        mainView.setCompany(company);
+        mainView.setLogin(previousStage);
+        mainView.initStage(theme, stageProgramMain, root);
         stage.hide();
     }
 

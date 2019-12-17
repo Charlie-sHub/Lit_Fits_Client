@@ -27,17 +27,11 @@ import javafx.stage.Stage;
 //import thebestprogramlogiclibrary.User;
 
 /**
- * This is the Document Controller class for the registration view of the
- * program.
+ * This is the Document Controller class for the registration view of the program.
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
 public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControllerInput {
-    /**
-     * Invalid email label
-     */
-    @FXML
-    private Label lblInvalidMail;
     /**
      * Cancel button
      */
@@ -47,249 +41,29 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Register button
      */
     @FXML
-    private Button btnRegister;
+    private Button btnSubmit;
     /**
-     * Username text field
-     */
-    @FXML
-    private TextField txtUsername;
-    /**
-     * Email text field
-     */
-    @FXML
-    private TextField txtEmail;
-    /**
-     * Full name text field
-     */
-    @FXML
-    private TextField txtFullName;
-    /**
-     * Password text field
-     */
-    @FXML
-    private PasswordField txtPassword;
-    /**
-     * Repeat password text field
-     */
-    @FXML
-    private PasswordField txtRepeatPassword;
-    /**
-     * Label password mismatch
-     */
-    @FXML
-    private Label lblPassMismatch;
-    /**
-     * Stage to be used by the current controller
-     */
-    private Stage stage;
-    /**
-     * Help button
+     * Help window button
      */
     @FXML
     private Button btnHelp;
-    /**
-     * Stage of the previous window, the login in this case
-     */
-    private Stage loginStage;
+    private Stage stage;
     /**
      * Logger object
      */
     private static final Logger LOG = Logger.getLogger(FXMLViewCreateModifyGarmentController.class.getName());
 
     /**
-     * Getter for btnCancel
+     * Initializes the garment creation/modification window
      *
-     * @return Button
-     */
-    public Button getBtnCancel() {
-        return btnCancel;
-    }
-
-    /**
-     * Setter for btnCancel
-     *
-     * @param btnCancel
-     */
-    public void setBtnCancel(Button btnCancel) {
-        this.btnCancel = btnCancel;
-    }
-
-    /**
-     * Getter for btnRegister
-     *
-     * @return Button
-     */
-    public Button getBtnRegister() {
-        return btnRegister;
-    }
-
-    /**
-     * Setter for btnRegister
-     *
-     * @param btnRegister
-     */
-    public void setBtnRegister(Button btnRegister) {
-        this.btnRegister = btnRegister;
-    }
-
-    /**
-     * Getter for txtPassword
-     *
-     * @return PasswordField
-     */
-    public PasswordField getTxtPassword() {
-        return txtPassword;
-    }
-
-    /**
-     * Setter for txtPassword
-     *
-     * @param txtPassword
-     */
-    public void setTxtPassword(PasswordField txtPassword) {
-        this.txtPassword = txtPassword;
-    }
-
-    /**
-     * Getter for txtRepeatPassword
-     *
-     * @return PasswordField
-     */
-    public PasswordField getTxtRepeatPassword() {
-        return txtRepeatPassword;
-    }
-
-    /**
-     * Setter for txtRepeatPassword
-     *
-     * @param txtRepeatPassword
-     */
-    public void setTxtRepeatPassword(PasswordField txtRepeatPassword) {
-        this.txtRepeatPassword = txtRepeatPassword;
-    }
-
-    /**
-     * Getter for txtFullName
-     *
-     * @return TextField
-     */
-    public TextField getTxtFullName() {
-        return txtFullName;
-    }
-
-    /**
-     * Setter for txtFullName
-     *
-     * @param txtFullName
-     */
-    public void setTxtFullName(TextField txtFullName) {
-        this.txtFullName = txtFullName;
-    }
-
-    /**
-     * Getter for the txtEmail
-     *
-     * @return TextField
-     */
-    public TextField getTxtEmail() {
-        return txtEmail;
-    }
-
-    /**
-     * Setter for the txtEmail
-     *
-     * @param txtEmail
-     */
-    public void setTxtEmail(TextField txtEmail) {
-        this.txtEmail = txtEmail;
-    }
-
-    /**
-     * Getter for the txtUsername
-     *
-     * @return TextField
-     */
-    public TextField getTxtUsername() {
-        return txtUsername;
-    }
-
-    /**
-     * Setter for the txtUsername
-     *
-     * @param txtUsername
-     */
-    public void setTxtUsername(TextField txtUsername) {
-        this.txtUsername = txtUsername;
-    }
-
-    /**
-     * Getter for the lblPassMismatch
-     *
-     * @return Label
-     */
-    public Label getLblPassMismatch() {
-        return lblPassMismatch;
-    }
-
-    /**
-     * Setter for the lblPassMismatch
-     *
-     * @param lblPassMismatch
-     */
-    public void setLblPassMismatch(Label lblPassMismatch) {
-        this.lblPassMismatch = lblPassMismatch;
-    }
-
-    /**
-     * Getter for the stage of this view
-     *
-     * @return Stage
-     */
-    public Stage getStage() {
-        return stage;
-    }
-
-    /**
-     * Setter for the stage of this view
-     *
-     * @param stage
-     */
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    /**
-     * Getter for the stage of login
-     *
-     * @return Stage
-     */
-    public Stage getLogin() {
-        return loginStage;
-    }
-
-    /**
-     * Setter for the stage of login
-     *
-     * @param login
-     */
-    public void setLogin(Stage login) {
-        this.loginStage = login;
-    }
-
-    /**
-     * Initializes the register window
-     *
-     * @param mode It will receive a boolean that says if it is happy or not
+     * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
      */
-    public void initStage(boolean mode, Stage stage, Parent root) {
+    public void initStage(String theme, Stage stage, Parent root) {
         this.stage = stage;
-        //matches the happiness of this window with the happiness of the previous window
-        happyMode = mode;
         Scene scene = new Scene(root);
-        //Changes the css stylesheet based on the happiness of the program
-        setStylesheet(scene);
+        setStylesheet(scene, theme);
         stage.setScene(scene);
         stage.setTitle("Registration");
         setElements();
@@ -297,7 +71,6 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         stage.setMinWidth(850);
         stage.setMinHeight(650);
         stage.show();
-        LOG.info("Register Window opened");
     }
 
     /**
@@ -312,7 +85,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
-        txtUsername.requestFocus();
+        txtNif.requestFocus();
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
@@ -377,7 +150,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Fills the array of text fields to check later if they're filled with text
      */
     private void fillArray() {
-        textFields.add(txtUsername);
+        textFields.add(txtNif);
         textFields.add(txtFullName);
         textFields.add(txtEmail);
         textFields.add(txtPassword);
@@ -388,7 +161,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Enables the traverse of the focus to all elements in the window
      */
     private void setFocusTraversable() {
-        txtUsername.setFocusTraversable(true);
+        txtNif.setFocusTraversable(true);
         txtPassword.setFocusTraversable(true);
         txtRepeatPassword.setFocusTraversable(true);
         txtFullName.setFocusTraversable(true);
@@ -403,12 +176,12 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Add listeners to all text inputs
      */
     private void setListeners() {
-        txtUsername.textProperty().addListener(this::onFieldFilledListener);
+        txtNif.textProperty().addListener(this::onFieldFilledListener);
         txtPassword.textProperty().addListener(this::onFieldFilledListener);
         txtRepeatPassword.textProperty().addListener(this::onFieldFilledListener);
         txtFullName.textProperty().addListener(this::onFieldFilledListener);
         txtEmail.textProperty().addListener(this::onFieldFilledListener);
-        txtUsername.lengthProperty().addListener(this::lenghtListener);
+        txtNif.lengthProperty().addListener(this::lenghtListener);
         txtPassword.lengthProperty().addListener(this::lenghtListener);
         txtRepeatPassword.lengthProperty().addListener(this::lenghtListener);
         txtFullName.lengthProperty().addListener(this::lenghtListener);
@@ -422,8 +195,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
-     * This function will cancel the register, close the window and will return
-     * to the login window
+     * This function will cancel the register, close the window and will return to the login window
      *
      * @param event
      */
@@ -456,7 +228,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     private void setUserdata() {
         user.setEmail(txtEmail.getText());
         user.setFullName(txtFullName.getText());
-        user.setLogin(txtUsername.getText());
+        user.setLogin(txtNif.getText());
         user.setPassword(txtPassword.getText());
         user.setUserStatus(true);
         user.setUserPrivilege(false);
