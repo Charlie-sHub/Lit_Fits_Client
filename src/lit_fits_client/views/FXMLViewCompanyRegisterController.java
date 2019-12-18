@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.io.IOException;
@@ -95,6 +90,10 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Stage of the previous window, the login in this case
      */
     private Stage previousStage;
+    /**
+     * The company object to be used by the window, if none is given from the previous window then a new Company will be
+     * created
+     */
     private Company company;
     /**
      * Logger object
@@ -281,42 +280,92 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         this.previousStage = login;
     }
 
+    /**
+     * Getter for the invalid email label
+     *
+     * @return Label
+     */
     public Label getLblInvalidMail() {
         return lblInvalidMail;
     }
 
+    /**
+     * Setter for the invalid email label
+     *
+     * @param lblInvalidMail
+     */
     public void setLblInvalidMail(Label lblInvalidMail) {
         this.lblInvalidMail = lblInvalidMail;
     }
 
+    /**
+     * Getter for the phone text field
+     *
+     * @return TextField
+     */
     public TextField getTxtPhone() {
         return txtPhone;
     }
 
+    /**
+     * Setter for the phone text field
+     *
+     * @param txtPhone
+     */
     public void setTxtPhone(TextField txtPhone) {
         this.txtPhone = txtPhone;
     }
 
+    /**
+     * Getter for the help button
+     *
+     * @return Button
+     */
     public Button getBtnHelp() {
         return btnHelp;
     }
 
+    /**
+     * Setter for the help button
+     *
+     * @param btnHelp
+     */
     public void setBtnHelp(Button btnHelp) {
         this.btnHelp = btnHelp;
     }
 
+    /**
+     * Getter of the previous stage
+     *
+     * @return Stage
+     */
     public Stage getPreviousStage() {
         return previousStage;
     }
 
+    /**
+     * Setter for the previous stage
+     *
+     * @param previousStage
+     */
     public void setPreviousStage(Stage previousStage) {
         this.previousStage = previousStage;
     }
 
+    /**
+     * Getter of the Company used by the window
+     *
+     * @return Company
+     */
     public Company getCompany() {
         return company;
     }
 
+    /**
+     * Setter of the Company to be used by the window
+     *
+     * @param company
+     */
     public void setCompany(Company company) {
         this.company = company;
     }
@@ -333,12 +382,31 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         Scene scene = new Scene(root);
         setStylesheet(scene, theme);
         stage.setScene(scene);
-        stage.setTitle("Registration");
         setElements();
+        if (null != company) {
+            stage.setTitle("Modification");
+            fillFields();
+        } else {
+            stage.setTitle("Registration");
+            company = new Company();
+        }
         stage.setOnCloseRequest(this::onClosing);
+        //pretty sure these dimensions will have to change
         stage.setMinWidth(850);
         stage.setMinHeight(650);
         stage.show();
+    }
+
+    /**
+     * Fills the fields with the data of a given company
+     */
+    private void fillFields() {
+        txtFullName.requestFocus();
+        txtNif.setEditable(false);
+        txtNif.setText(company.getNif());
+        txtEmail.setText(company.getEmail());
+        txtFullName.setText(company.getFullName());
+        txtPhone.setText(company.getPhoneNumber());
     }
 
     /**
@@ -346,16 +414,10 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      */
     private void setElements() {
         choiceTheme.setOnAction(this::onThemeChosen);
-        btnRegister.setDisable(true);
-        btnRedo.setDisable(true);
         lblPassMismatch.setVisible(false);
         lblLength.setVisible(false);
-        setFocusTraversable();
-        setListeners();
-        txtNif.requestFocus();
-        textFields = new ArrayList<>();
-        fillArray();
-        undoneStrings = new ArrayList<>();
+        btnRegister.setDisable(true);
+        btnRedo.setDisable(true);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnCancel.setMnemonicParsing(true);
         btnCancel.setText("_Cancel");
@@ -370,6 +432,12 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         btnRedo.setText("_Redo");
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         btnHelp.setOnAction(this::onHelpPressed);
+        txtNif.requestFocus();
+        setFocusTraversable();
+        setListeners();
+        textFields = new ArrayList<>();
+        fillArray();
+        undoneStrings = new ArrayList<>();
     }
 
     /**
@@ -393,7 +461,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @throws IOException
      */
     private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewHelp.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageHelp = new Stage();
         FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
@@ -401,7 +469,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Checks when the help button is pressed
+     * Opens the help window when the help button is pressed
      *
      * @param event
      */
@@ -459,14 +527,19 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         txtPhone.lengthProperty().addListener(this::lenghtListener);
     }
 
-    public void lenghtListener(ObservableValue observable,
-            Number oldValue,
-            Number newValue) {
-        lengthCheck(btnRegister); // Modificacion DIN 14/11/2019
+    /**
+     * Simply calls the proper length listener method
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
+    public void lenghtListener(ObservableValue observable, Number oldValue, Number newValue) {
+        lengthCheck(btnRegister);
     }
 
     /**
-     * This function will cancel the register, close the window and will return to the login window
+     * This function will cancel the register/modification, close the window and will return to the previous window
      *
      * @param event
      */
@@ -479,6 +552,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     public void onRegisterPress(ActionEvent event) {
         try {
             setCompanyData();
+            // how to distinguish between making a PUT to update and a POST to insert a new company? check if their id is null perhaps?
             company = appLogic.registerUser(user);
             try {
                 openProgramMainWindow(user);
@@ -493,7 +567,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Sets the data of the user to be sent to the server
+     * Sets the data of the company to be sent to the server
      */
     private void setCompanyData() {
         company.setEmail(txtEmail.getText());
@@ -528,16 +602,13 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param oldValue
      * @param newValue
      */
-    public void onFieldFilledListener(ObservableValue observable,
-            String oldValue,
-            String newValue) {
-        // Modificacion DIN 13/11/2019        
+    public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
         boolean enableRegisterPass = false;
         boolean enableRegisterEmail = false;
         enableRegisterPass = passwordMatchCheck();
         enableRegisterEmail = emailPatternCheck();
         if (enableRegisterPass & enableRegisterEmail) {
-            onFieldFilled(btnRegister); // Modificacion DIN 14/11/2019
+            onFieldFilled(btnRegister);
         } else {
             btnRegister.setDisable(true);
         }
