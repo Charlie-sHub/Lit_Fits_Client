@@ -498,6 +498,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtDesigner.setText(garment.getDesigner());
         txtPrice.setText(garment.getPrice().toString());
         //Fill the values for the combo boxes
+        //Set value or set CHOSEN value or what?
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
@@ -507,6 +508,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Sets the properties for several elements of the window
      */
     private void setElements() {
+        //Get list of colors and materials to fill those combo boxes with
+        //Fill the other combo boxes with the enums
         choiceTheme.setOnAction(this::onThemeChosen);
         lblLength.setVisible(false);
         btnSubmit.setDisable(true);
