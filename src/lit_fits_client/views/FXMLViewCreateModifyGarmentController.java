@@ -13,8 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -36,7 +36,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Register button
      */
     @FXML
-    private Button btnRegister;
+    private Button btnSubmit;
     /**
      * Username text field
      */
@@ -53,11 +53,61 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     @FXML
     private Button btnHelp;
     /**
+     * Combo box of moods
+     */
+    @FXML
+    private ComboBox comboMood;
+    /**
+     * Combo box of body parts
+     */
+    @FXML
+    private ComboBox comboBodyPart;
+    /**
+     * Combo box of the types of garment
+     */
+    @FXML
+    private ComboBox comboGarmentType;
+    /**
+     * Combo box of colors
+     */
+    @FXML
+    private ComboBox comboColors;
+    /**
+     * Combo box of materials
+     */
+    @FXML
+    private ComboBox comboMaterials;
+    /**
+     * Label for the price text field
+     */
+    @FXML
+    private Label lblPrice;
+    /**
+     * Label that appears when a field has too much text
+     */
+    @FXML
+    private Label lblLength;
+    /**
+     * Text field for entering the price of the garment
+     */
+    @FXML
+    private TextField txtPrice;
+    /**
+     * Label that appears when the price doesn't match the pattern
+     */
+    @FXML
+    private Label lblInvalidPrice;
+    /**
+     * Label that appears when the price doesn't match the pattern
+     */
+    @FXML
+    private Label lblInvalidBarcode;
+    /**
      * Stage to be used by the current controller
      */
     private Stage stage;
     /**
-     * Stage of the previous window, the login in this case
+     * Stage of the previous window
      */
     private Stage previousStage;
     /**
@@ -89,21 +139,21 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
-     * Getter for btnRegister
+     * Getter for btnSubmit
      *
      * @return Button
      */
     public Button getBtnRegister() {
-        return btnRegister;
+        return btnSubmit;
     }
 
     /**
-     * Setter for btnRegister
+     * Setter for btnSubmit
      *
-     * @param btnRegister
+     * @param btnSubmit
      */
-    public void setBtnRegister(Button btnRegister) {
-        this.btnRegister = btnRegister;
+    public void setBtnRegister(Button btnSubmit) {
+        this.btnSubmit = btnSubmit;
     }
 
     /**
@@ -141,6 +191,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     public void setTxtBarcode(TextField txtBarcode) {
         this.txtBarcode = txtBarcode;
     }
+
     /**
      * Getter for the stage of this view
      *
@@ -157,24 +208,6 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    /**
-     * Getter for the stage of login
-     *
-     * @return Stage
-     */
-    public Stage getLogin() {
-        return previousStage;
-    }
-
-    /**
-     * Setter for the stage of login
-     *
-     * @param login
-     */
-    public void setLogin(Stage login) {
-        this.previousStage = login;
     }
 
     /**
@@ -232,6 +265,204 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter for the submit button
+     *
+     * @return Button
+     */
+    public Button getBtnSubmit() {
+        return btnSubmit;
+    }
+
+    /**
+     * Setter for the submit button
+     *
+     * @param btnSubmit
+     */
+    public void setBtnSubmit(Button btnSubmit) {
+        this.btnSubmit = btnSubmit;
+    }
+
+    /**
+     * Getter for the mood combo box
+     *
+     * @return ComboBox
+     */
+    public ComboBox getComboMood() {
+        return comboMood;
+    }
+
+    /**
+     * Setter for the mood combo box
+     *
+     * @param comboMood
+     */
+    public void setComboMood(ComboBox comboMood) {
+        this.comboMood = comboMood;
+    }
+
+    /**
+     * Getter for the body part combo box
+     *
+     * @return ComboBox
+     */
+    public ComboBox getComboBodyPart() {
+        return comboBodyPart;
+    }
+
+    /**
+     * Setter for the body parts combo box
+     *
+     * @param comboMood
+     */
+    public void setComboBodyPart(ComboBox comboBodyPart) {
+        this.comboBodyPart = comboBodyPart;
+    }
+
+    /**
+     * Getter for the garment type combo box
+     *
+     * @return ComboBox
+     */
+    public ComboBox getComboGarmentType() {
+        return comboGarmentType;
+    }
+
+    /**
+     * Setter for the garment type combo box
+     *
+     * @param comboMood
+     */
+    public void setComboGarmentType(ComboBox comboGarmentType) {
+        this.comboGarmentType = comboGarmentType;
+    }
+
+    /**
+     * Getter for the colors combo box
+     *
+     * @return ComboBox
+     */
+    public ComboBox getComboColors() {
+        return comboColors;
+    }
+
+    /**
+     * Setter for the colors combo box
+     *
+     * @param comboMood
+     */
+    public void setComboColors(ComboBox comboColors) {
+        this.comboColors = comboColors;
+    }
+
+    /**
+     * Getter for the materials combo box
+     *
+     * @return ComboBox
+     */
+    public ComboBox getComboMaterials() {
+        return comboMaterials;
+    }
+
+    /**
+     * Setter for the materials combo box
+     *
+     * @param comboMood
+     */
+    public void setComboMaterials(ComboBox comboMaterials) {
+        this.comboMaterials = comboMaterials;
+    }
+
+    /**
+     * Getter for the price label
+     *
+     * @return Label
+     */
+    public Label getLblPrice() {
+        return lblPrice;
+    }
+
+    /**
+     * Setter for the price label
+     *
+     * @param lblPrice
+     */
+    public void setLblPrice(Label lblPrice) {
+        this.lblPrice = lblPrice;
+    }
+
+    /**
+     * Getter for the length label
+     *
+     * @return label
+     */
+    public Label getLblLength() {
+        return lblLength;
+    }
+
+    /**
+     * Setter for the length label
+     *
+     * @param lblLength
+     */
+    public void setLblLength(Label lblLength) {
+        this.lblLength = lblLength;
+    }
+
+    /**
+     * Getter for the price text field
+     *
+     * @return TextField
+     */
+    public TextField getTxtPrice() {
+        return txtPrice;
+    }
+
+    /**
+     * Setter for the price text field
+     *
+     * @param txtPrice
+     */
+    public void setTxtPrice(TextField txtPrice) {
+        this.txtPrice = txtPrice;
+    }
+
+    /**
+     * Getter for the invalid price label
+     *
+     * @return Label
+     */
+    public Label getLblInvalidPrice() {
+        return lblInvalidPrice;
+    }
+
+    /**
+     * Setter for the invalid price label
+     *
+     * @param lblInvalidPrice
+     */
+    public void setLblInvalidPrice(Label lblInvalidPrice) {
+        this.lblInvalidPrice = lblInvalidPrice;
+    }
+
+    /**
+     * Getter for the invalid barcode label
+     *
+     * @return Label
+     */
+    public Label getLblInvalidBarcode() {
+        return lblInvalidBarcode;
+    }
+
+    /**
+     * Setter for the invalid barcode label
+     *
+     * @param lblInvalidBarcode
+     */
+    public void setLblInvalidBarcode(Label lblInvalidBarcode) {
+        this.lblInvalidBarcode = lblInvalidBarcode;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -262,11 +493,14 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Fills the fields with the data of a given garment
      */
     private void fillFields() {
-        txtDesigner.requestFocus();
-        txtBarcode.setEditable(false);
+        txtBarcode.requestFocus();
         txtBarcode.setText(garment.getBarcode());
         txtDesigner.setText(garment.getDesigner());
+        txtPrice.setText(garment.getPrice().toString());
         //Fill the values for the combo boxes
+        comboBodyPart.setValue(garment.getBodyPart().toString());
+        comboGarmentType.setValue(garment.getGarmentType().toString());
+        comboMood.setValue(garment.getMood().toString());
     }
 
     /**
@@ -275,14 +509,14 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     private void setElements() {
         choiceTheme.setOnAction(this::onThemeChosen);
         lblLength.setVisible(false);
-        btnRegister.setDisable(true);
+        btnSubmit.setDisable(true);
         btnRedo.setDisable(true);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnCancel.setMnemonicParsing(true);
         btnCancel.setText("_Cancel");
-        btnRegister.setOnAction(this::onRegisterPress);
-        btnRegister.setMnemonicParsing(true);
-        btnRegister.setText("_Register");
+        btnSubmit.setOnAction(this::onRegisterPress);
+        btnSubmit.setMnemonicParsing(true);
+        btnSubmit.setText("_Register");
         btnUndo.setOnAction(this::onUndoPress);
         btnUndo.setMnemonicParsing(true);
         btnUndo.setText("_Undo");
@@ -356,7 +590,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtBarcode.setFocusTraversable(true);
         txtDesigner.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
-        btnRegister.setFocusTraversable(true);
+        btnSubmit.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
         //Set the comboboxes traversable too
@@ -381,7 +615,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @param newValue
      */
     public void lenghtListener(ObservableValue observable, Number oldValue, Number newValue) {
-        lengthCheck(btnRegister);
+        lengthCheck(btnSubmit);
     }
 
     /**
@@ -422,72 +656,53 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
-     * This method starts the main program window
-     *
-     * @throws IOException
-     */
-    private void openProgramMainWindow(Garment garment) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentMainMenu.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageProgramMain = new Stage();
-        FXMLViewGarmentMainMenuController mainView = ((FXMLViewGarmentMainMenuController) fxmlLoader.getController());
-        //keep applogic?
-        mainView.setAppLogic(appLogic);
-        mainView.setGarment(garment);
-        mainView.setLogin(previousStage);
-        mainView.initStage(theme, stageProgramMain, root);
-        stage.hide();
-    }
-
-    /**
-     * Enables or disables the btnRegister based on several factors
+     * Enables or disables the btnSubmit based on several factors
      *
      * @param observable
      * @param oldValue
      * @param newValue
      */
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
-        boolean enableRegisterPass = false;
-        boolean enableRegisterEmail = false;
-        enableRegisterPass = passwordMatchCheck();
-        enableRegisterEmail = emailPatternCheck();
-        if (enableRegisterPass & enableRegisterEmail) {
-            onFieldFilled(btnRegister);
+        boolean enableRegisterBarcode = false;
+        boolean enableRegisterPrice = false;
+        enableRegisterBarcode = barcodePatternCheck();
+        enableRegisterPrice = pricePatternCheck();
+        if (enableRegisterPrice & enableRegisterBarcode) {
+            onFieldFilled(btnSubmit);
         } else {
-            btnRegister.setDisable(true);
+            btnSubmit.setDisable(true);
         }
     }
 
     /**
-     * Checks that the email follows the email pattern
+     * Checks that the price follows the price pattern
      *
-     * @return boolean true if the email matches the pattern
+     * @return boolean true if the price matches the pattern
      */
-    private boolean emailPatternCheck() {
+    private boolean pricePatternCheck() {
         boolean enableRegister;
-        if (!Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim())) {
+        if (!Pattern.matches("[0-9]+,{1}[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim())) {
             enableRegister = false;
         } else {
             enableRegister = true;
         }
-        lblInvalidMail.setVisible(!enableRegister);
+        lblInvalidPrice.setVisible(!enableRegister);
         return enableRegister;
     }
 
     /**
-     * Checks that the passwords entered match each other
+     * Checks that the barcode follows the barcode pattern
      *
-     * @return boolean true if the passwords are the same
+     * @return boolean true if the barcode matches the pattern
      */
-    private boolean passwordMatchCheck() {
+    private boolean barcodePatternCheck() {
         boolean enableRegister;
-        if (txtPassword.getText().trim().equals(txtRepeatPassword.getText().trim())) {
-            lblPassMismatch.setVisible(false);
-            enableRegister = true;
-        } else {
-            lblPassMismatch.setVisible(true);
+        if (!Pattern.matches("[0-9]+", txtBarcode.getText().trim())) {
             enableRegister = false;
+        } else {
+            enableRegister = true;
         }
+        lblInvalidBarcode.setVisible(!enableRegister);
         return enableRegister;
     }
 }

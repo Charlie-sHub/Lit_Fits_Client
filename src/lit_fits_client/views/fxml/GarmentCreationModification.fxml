@@ -28,33 +28,33 @@
             <children>
                 <AnchorPane prefHeight="572.0" prefWidth="1005.0">
                     <children>
-                        <Label fx:id="lblBarcode" layoutX="240.0" layoutY="122.0" prefHeight="18.0" prefWidth="172.0" text="Barcode:">
+                        <Label fx:id="lblBarcode" layoutX="240.0" layoutY="108.0" prefHeight="18.0" prefWidth="172.0" text="Barcode:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblDesigner" layoutX="240.0" layoutY="163.0" prefHeight="18.0" prefWidth="172.0" text="Designer:">
+                        <Label fx:id="lblDesigner" layoutX="240.0" layoutY="187.0" prefHeight="18.0" prefWidth="172.0" text="Designer:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblMood" layoutX="240.0" layoutY="203.0" prefHeight="18.0" prefWidth="172.0" text="Mood:">
+                        <Label fx:id="lblMood" layoutX="240.0" layoutY="227.0" prefHeight="18.0" prefWidth="172.0" text="Mood:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblGarmentType" layoutX="240.0" layoutY="283.0" prefHeight="18.0" prefWidth="172.0" text="Garment Type:">
+                        <Label fx:id="lblGarmentType" layoutX="240.0" layoutY="307.0" prefHeight="18.0" prefWidth="172.0" text="Garment Type:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblColors" layoutX="240.0" layoutY="323.0" prefHeight="18.0" prefWidth="171.0" text="Colors:">
+                        <Label fx:id="lblColors" layoutX="240.0" layoutY="347.0" prefHeight="18.0" prefWidth="171.0" text="Colors:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtBarcode" layoutX="421.0" layoutY="117.0" prefHeight="26.0" prefWidth="240.0" />
-                        <Button id="btnRegister" fx:id="btnRegister" layoutX="471.0" layoutY="466.0" mnemonicParsing="false" text="Submit">
+                        <TextField fx:id="txtBarcode" layoutX="421.0" layoutY="104.0" prefHeight="26.0" prefWidth="240.0" />
+                        <Button id="btnRegister" fx:id="btnSubmit" layoutX="471.0" layoutY="466.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
@@ -64,26 +64,34 @@
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Label fx:id="lblLength" alignment="CENTER" contentDisplay="CENTER" layoutX="441.0" layoutY="410.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
+                        <Label fx:id="lblLength" alignment="CENTER" contentDisplay="CENTER" layoutX="441.0" layoutY="423.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
                   <Button fx:id="btnUndo" layoutX="420.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Undo" />
                   <Button fx:id="btnRedo" layoutX="492.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Redo" />
                   <Button fx:id="btnHelp" layoutX="594.0" layoutY="40.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" text="Help" />
-                  <Label fx:id="lblBodyPart" layoutX="240.0" layoutY="243.0" prefHeight="18.0" prefWidth="172.0" text="Body Part:">
+                  <Label fx:id="lblBodyPart" layoutX="240.0" layoutY="267.0" prefHeight="18.0" prefWidth="172.0" text="Body Part:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDesigner" layoutX="421.0" layoutY="160.0" prefHeight="25.0" prefWidth="240.0" />
-                  <Label fx:id="lblMaterials" layoutX="240.0" layoutY="363.0" prefHeight="18.0" prefWidth="171.0" text="Materials:">
+                  <TextField fx:id="txtDesigner" layoutX="421.0" layoutY="184.0" prefHeight="25.0" prefWidth="240.0" />
+                  <Label fx:id="lblMaterials" layoutX="240.0" layoutY="387.0" prefHeight="18.0" prefWidth="171.0" text="Materials:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="comboBodyPart" layoutX="421.0" layoutY="239.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboMood" layoutX="421.0" layoutY="199.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboGarmenttype" layoutX="422.0" layoutY="279.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboColors" layoutX="422.0" layoutY="319.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboMaterials" layoutX="422.0" layoutY="359.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboBodyPart" layoutX="421.0" layoutY="263.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboMood" layoutX="421.0" layoutY="223.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboGarmentType" layoutX="422.0" layoutY="303.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboColors" layoutX="422.0" layoutY="343.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboMaterials" layoutX="422.0" layoutY="383.0" prefHeight="26.0" prefWidth="240.0" />
+                  <Label fx:id="lblPrice" layoutX="240.0" layoutY="148.0" prefHeight="18.0" prefWidth="172.0" text="Price:">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtPrice" layoutX="422.0" layoutY="144.0" prefHeight="26.0" prefWidth="240.0" />
+                  <Label fx:id="lblInvalidBarcode" contentDisplay="CENTER" layoutX="677.0" layoutY="108.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Barcode" textAlignment="CENTER" textFill="#fc0400" />
+                  <Label fx:id="lblinvalidprice" contentDisplay="CENTER" layoutX="677.0" layoutY="148.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Price" textAlignment="CENTER" textFill="#fc0400" />
                     </children>
                 </AnchorPane>
             </children>

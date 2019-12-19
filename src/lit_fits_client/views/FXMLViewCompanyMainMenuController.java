@@ -216,13 +216,11 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterModifyAccount.fxml"));
             Stage stageProgramMain = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewProgramController modifyAccountView = ((FXMLViewProgramController) fxmlLoader.getController());
+            FXMLViewCompanyRegisterController modifyAccountView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
             //no applogic anymore?
             modifyAccountView.setAppLogic(appLogic);
-            //Declare local company object? get an account object from the login and use it here as a company?
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
-            //adapt it so it takes the theme chosen from the choice box
             modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root);
             stage.hide();
         } catch (IOException ex) {
@@ -244,11 +242,8 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             //no applogic anymore?
             warehouseView.setAppLogic(appLogic);
-            //Declare local company object? get an account object from the login and use it here as a company?
             warehouseView.setCompany(company);
-            // What stage was this anyway?
             warehouseView.setStage(stage);
-            //adapt it so it takes the theme chosen from the choice box
             warehouseView.initStage(choiceTheme.getValue(), stageProgramMain, root);
             stage.hide();
         } catch (IOException ex) {

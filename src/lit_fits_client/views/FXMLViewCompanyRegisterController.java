@@ -33,6 +33,11 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     @FXML
     private Label lblInvalidMail;
     /**
+     * Invalid NIF label
+     */
+    @FXML
+    private Label lblInvalidNIF;
+    /**
      * Cancel button
      */
     @FXML
@@ -41,7 +46,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Register button
      */
     @FXML
-    private Button btnRegister;
+    private Button btnSubmit;
     /**
      * Username text field
      */
@@ -119,21 +124,21 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Getter for btnRegister
+     * Getter for btnSubmit
      *
      * @return Button
      */
     public Button getBtnRegister() {
-        return btnRegister;
+        return btnSubmit;
     }
 
     /**
-     * Setter for btnRegister
+     * Setter for btnSubmit
      *
-     * @param btnRegister
+     * @param btnSubmit
      */
-    public void setBtnRegister(Button btnRegister) {
-        this.btnRegister = btnRegister;
+    public void setBtnRegister(Button btnSubmit) {
+        this.btnSubmit = btnSubmit;
     }
 
     /**
@@ -371,6 +376,24 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
+     * Gets the invalid nif label
+     *
+     * @return Label
+     */
+    public Label getLblInvalidNIF() {
+        return lblInvalidNIF;
+    }
+
+    /**
+     * Sets the invalid nif label
+     *
+     * @param lblInvalidNIF
+     */
+    public void setLblInvalidNIF(Label lblInvalidNIF) {
+        this.lblInvalidNIF = lblInvalidNIF;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -416,14 +439,14 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         choiceTheme.setOnAction(this::onThemeChosen);
         lblPassMismatch.setVisible(false);
         lblLength.setVisible(false);
-        btnRegister.setDisable(true);
+        btnSubmit.setDisable(true);
         btnRedo.setDisable(true);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnCancel.setMnemonicParsing(true);
         btnCancel.setText("_Cancel");
-        btnRegister.setOnAction(this::onRegisterPress);
-        btnRegister.setMnemonicParsing(true);
-        btnRegister.setText("_Register");
+        btnSubmit.setOnAction(this::onRegisterPress);
+        btnSubmit.setMnemonicParsing(true);
+        btnSubmit.setText("_Register");
         btnUndo.setOnAction(this::onUndoPress);
         btnUndo.setMnemonicParsing(true);
         btnUndo.setText("_Undo");
@@ -504,7 +527,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         txtEmail.setFocusTraversable(true);
         txtPhone.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
-        btnRegister.setFocusTraversable(true);
+        btnSubmit.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
     }
@@ -535,7 +558,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param newValue
      */
     public void lenghtListener(ObservableValue observable, Number oldValue, Number newValue) {
-        lengthCheck(btnRegister);
+        lengthCheck(btnSubmit);
     }
 
     /**
@@ -596,7 +619,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Enables or disables the btnRegister based on several factors
+     * Enables or disables the btnSubmit based on several factors
      *
      * @param observable
      * @param oldValue
@@ -605,12 +628,14 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
         boolean enableRegisterPass = false;
         boolean enableRegisterEmail = false;
+        boolean enableRegisterNIF = false;
         enableRegisterPass = passwordMatchCheck();
         enableRegisterEmail = emailPatternCheck();
-        if (enableRegisterPass & enableRegisterEmail) {
-            onFieldFilled(btnRegister);
+        enableRegisterNIF = nifPatternCheck();
+        if (enableRegisterPass & enableRegisterEmail & enableRegisterNIF) {
+            onFieldFilled(btnSubmit);
         } else {
-            btnRegister.setDisable(true);
+            btnSubmit.setDisable(true);
         }
     }
 
@@ -627,6 +652,22 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
             enableRegister = true;
         }
         lblInvalidMail.setVisible(!enableRegister);
+        return enableRegister;
+    }
+
+    /**
+     * Checks that the nif follows the nif pattern
+     *
+     * @return boolean true if the nif matches the pattern
+     */
+    private boolean nifPatternCheck() {
+        boolean enableRegister;
+        if (!Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", txtNif.getText().trim())) {
+            enableRegister = false;
+        } else {
+            enableRegister = true;
+        }
+        lblInvalidNIF.setVisible(!enableRegister);
         return enableRegister;
     }
 
