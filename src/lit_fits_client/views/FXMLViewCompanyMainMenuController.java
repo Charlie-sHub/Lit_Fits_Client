@@ -171,18 +171,14 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      */
     private void setElements() {
         choiceTheme.setOnAction(this::onThemeChosen);
-        Tooltip choiceThemeTip = new Tooltip("Choose the theme you like the most");
-        choiceTheme.setTooltip(choiceThemeTip);
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         // Fill the ChoiceBox
         btnLogout.setOnAction(this::onBtnLogoutPress);
-        Tooltip btnLogOutTip = new Tooltip("Log out of the program");
-        btnLogout.setTooltip(btnLogOutTip);
+        btnLogout.setTooltip(new Tooltip("Log out of the program"));
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
-        Tooltip btnModifyAccountTip = new Tooltip("Open the window to modify the current account");
-        btnModifyAccount.setTooltip(btnModifyAccountTip);
+        btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
-        Tooltip btnWarehouseTip = new Tooltip("Check the list of garments, add, delete or modify them too");
-        btnWarehouse.setTooltip(btnWarehouseTip);
+        btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
         setFocusTraversable();
     }
 
@@ -237,14 +233,14 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
     private void onBtnWarehousePress(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyGarments.fxml"));
-            Stage stageProgramMain = new Stage();
+            Stage stageWarehouse = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             //no applogic anymore?
             warehouseView.setAppLogic(appLogic);
             warehouseView.setCompany(company);
-            warehouseView.setStage(stage);
-            warehouseView.initStage(choiceTheme.getValue(), stageProgramMain, root);
+            warehouseView.setStageMainMenu(stage);
+            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root);
             stage.hide();
         } catch (IOException ex) {
             createDialog(ex);

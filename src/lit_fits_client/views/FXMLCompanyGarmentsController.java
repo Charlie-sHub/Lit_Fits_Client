@@ -1,18 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
+import java.io.IOException;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lit_fits_client.entities.Company;
+import lit_fits_client.entities.Garment;
 
 /**
  * The "Warehouse" window for companies
@@ -33,21 +34,42 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     @FXML
     private TableView tableGarments;
     private Stage stage;
+    private Stage stageMainMenu;
     private Company company;
     private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
 
+    /**
+     * Getter of the promote button
+     *
+     * @return Button
+     */
     public Button getButtonPromote() {
         return buttonPromote;
     }
 
+    /**
+     * Setter for the promote button
+     *
+     * @param buttonPromote
+     */
     public void setButtonPromote(Button buttonPromote) {
         this.buttonPromote = buttonPromote;
     }
 
+    /**
+     * Getter of the add button
+     *
+     * @return Button
+     */
     public Button getButtonAdd() {
         return buttonAdd;
     }
 
+    /**
+     * Setter for the add button
+     *
+     * @param buttonAdd
+     */
     public void setButtonAdd(Button buttonAdd) {
         this.buttonAdd = buttonAdd;
     }
@@ -56,54 +78,128 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         return buttonDelete;
     }
 
+    /**
+     * Setter for the delete button
+     *
+     * @param buttonDelete
+     */
     public void setButtonDelete(Button buttonDelete) {
         this.buttonDelete = buttonDelete;
     }
 
+    /**
+     * Getter of the modify button
+     *
+     * @return Button
+     */
     public Button getButtonModify() {
         return buttonModify;
     }
 
+    /**
+     * Setter for the modify button
+     *
+     * @param buttonModify
+     */
     public void setButtonModify(Button buttonModify) {
         this.buttonModify = buttonModify;
     }
 
+    /**
+     * Getter for the cancel button
+     *
+     * @return Button
+     */
     public Button getButtonCancel() {
         return buttonCancel;
     }
 
+    /**
+     * Setter for the cancel button
+     *
+     * @param buttonCancel
+     */
     public void setButtonCancel(Button buttonCancel) {
         this.buttonCancel = buttonCancel;
     }
 
+    /**
+     * Getter of the table of garments
+     *
+     * @return TableView
+     */
     public TableView getTableGarments() {
         return tableGarments;
     }
 
+    /**
+     * Setter of the table of garments
+     *
+     * @param tableGarments
+     */
     public void setTableGarments(TableView tableGarments) {
         this.tableGarments = tableGarments;
     }
 
+    /**
+     * Getter of the stage in use by this window
+     *
+     * @return Stage
+     */
     public Stage getStage() {
         return stage;
     }
 
+    /**
+     * Setter of the stage to be used by this window
+     *
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Getter of the company in use by this window
+     *
+     * @return Company
+     */
     public Company getCompany() {
         return company;
     }
 
+    /**
+     * Setter for the company this window will use
+     *
+     * @param company
+     */
     public void setCompany(Company company) {
         this.company = company;
     }
+
+    /**
+     * Getter of the main menu stage
+     *
+     * @return Stage
+     */
+    public Stage getStageMainMenu() {
+        return stageMainMenu;
+    }
+
+    /**
+     * Setter for the main menu stage
+     *
+     * @param stageMainMenu
+     */
+    public void setStageMainMenu(Stage stageMainMenu) {
+        this.stageMainMenu = stageMainMenu;
+    }
+
     /**
      * This method initializes the window
      *
-     * @param happyMode It receives a boolean to change to happy mode css or not
      *
+     * @param theme the chosen css theme
      * @param root The Parent used in previous windows
      *
      * @param stage
@@ -121,7 +217,124 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         stage.setOnCloseRequest(this::onClosing);
     }
 
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
-        
+        // Fill the ChoiceBox of themes or take an alredy filled box?
+        // Set the chosen choice of theme
+        // Fill the table with the list of garments of the company
+        setMnemonicText();
+        setOnAction();
+        setTooltips();
+    }
+
+    /**
+     * Sets the text used for mnemonic parsing
+     */
+    private void setMnemonicText() {
+        buttonAdd.setText("_Add");
+        buttonCancel.setText("_Cancel");
+        buttonDelete.setText("_Delete");
+        buttonModify.setText("_Modify");
+        buttonPromote.setText("_Promote");
+    }
+
+    /**
+     * Sets the tooltip text for the elements of the window
+     */
+    private void setTooltips() {
+        buttonPromote.setTooltip(new Tooltip("Request the promotion of a garment"));
+        buttonAdd.setTooltip(new Tooltip("Add a new garment"));
+        buttonCancel.setTooltip(new Tooltip("Go back to the main menu"));
+        buttonDelete.setTooltip(new Tooltip("Delete the garment chosen"));
+        buttonModify.setTooltip(new Tooltip("Modify the data of a garment"));
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
+        tableGarments.setTooltip(new Tooltip("List of garments owned by the company"));
+    }
+
+    /**
+     * Sets what happens when the buttons are pressed
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        buttonAdd.setOnAction(this::onBtnAddPress);
+        buttonCancel.setOnAction(this::onBtnCancelPress);
+        buttonDelete.setOnAction(this::onBtnDeletePress);
+        buttonModify.setOnAction(this::onBtnModifyPress);
+        buttonPromote.setOnAction(this::onBtnPromotePress);
+    }
+
+    /**
+     * Opens the garment creation/modification window with a new garment
+     *
+     * @param event
+     */
+    private void onBtnAddPress(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            Stage stageCreate = new Stage();
+            Parent root = (Parent) fxmlLoader.load();
+            FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
+            //no applogic anymore?
+            garmentCreationView.setAppLogic(appLogic);
+            Garment newGarment = null;
+            garmentCreationView.setGarment(newGarment);
+            garmentCreationView.setStage(stage);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root);
+        } catch (IOException ex) {
+            createDialog(ex);
+            LOG.severe(ex.getMessage());
+        }
+    }
+
+    /**
+     * Opens the garment creation/modification window with the chosen garment
+     *
+     * @param event
+     */
+    private void onBtnModifyPress(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            Stage stageModify = new Stage();
+            Parent root = (Parent) fxmlLoader.load();
+            FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
+            //no applogic anymore?
+            garmentCreationView.setAppLogic(appLogic);
+            garmentCreationView.setGarment(garment); // take the chosen garment from the table
+            garmentCreationView.setStage(stage);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root);
+        } catch (IOException ex) {
+            createDialog(ex);
+            LOG.severe(ex.getMessage());
+        }
+    }
+
+    /**
+     * Deletes the chosen garment when the delete button is pressed
+     *
+     * @param event
+     */
+    private void onBtnDeletePress(ActionEvent event) {
+        //Request deletion to the server
+    }
+
+    /**
+     * Closes the current window and shows again the main menu window
+     *
+     * @param event
+     */
+    private void onBtnCancelPress(ActionEvent event) {
+        stage.close();
+        stageMainMenu.show();
+    }
+
+    /**
+     * Sends a promotion request to the server when the promote button is pressed
+     *
+     * @param event
+     */
+    private void onBtnPromotePress(ActionEvent event) {
+        // Get the garment from the table and set promoted to true
     }
 }

@@ -16,8 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lit_fits_client.entities.Garment;
 
@@ -471,6 +473,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     public void initStage(String theme, Stage stage, Parent root) {
         this.stage = stage;
+        stage.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(root);
         setStylesheet(scene, theme);
         stage.setScene(scene);
@@ -509,25 +512,16 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void setElements() {
         //Get list of colors and materials to fill those combo boxes with
+        //How to choose several colors and materials?
         //Fill the other combo boxes with the enums
-        choiceTheme.setOnAction(this::onThemeChosen);
+        setTooltips();
         lblLength.setVisible(false);
         btnSubmit.setDisable(true);
         btnRedo.setDisable(true);
-        btnCancel.setOnAction(this::onBtnCancelPress);
-        btnCancel.setMnemonicParsing(true);
-        btnCancel.setText("_Cancel");
-        btnSubmit.setOnAction(this::onRegisterPress);
-        btnSubmit.setMnemonicParsing(true);
-        btnSubmit.setText("_Register");
-        btnUndo.setOnAction(this::onUndoPress);
-        btnUndo.setMnemonicParsing(true);
-        btnUndo.setText("_Undo");
-        btnRedo.setOnAction(this::onRedoPress);
-        btnRedo.setMnemonicParsing(true);
-        btnRedo.setText("_Redo");
+        setOnAction();
         btnHelp.setOnKeyPressed(this::onF1Pressed);
-        btnHelp.setOnAction(this::onHelpPressed);
+        setTextMnemonic();
+        setButtonsMnemonicParsing();
         txtBarcode.requestFocus();
         setFocusTraversable();
         setListeners();
@@ -537,44 +531,52 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
-     * Checks that the F1 key is pressed to open the help window
-     *
-     * @param event
+     * Sets the tooltip text for the elements of the window
      */
-    private void onF1Pressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.F1) {
-            try {
-                openHelpView();
-            } catch (Exception e) {
-                createDialog(e);
-            }
-        }
+    private void setTooltips() {
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
+        btnCancel.setTooltip(new Tooltip("Get back"));
+        btnHelp.setTooltip(new Tooltip("Displays a window with help"));
+        btnRedo.setTooltip(new Tooltip("Redoes everything undo erased"));
+        btnSubmit.setTooltip(new Tooltip("Send the information"));
+        btnUndo.setTooltip(new Tooltip("Erases everything"));
+        comboBodyPart.setTooltip(new Tooltip("Choose where the garment is worn"));
+        comboGarmentType.setTooltip(new Tooltip("Erases everything"));
+        comboMood.setTooltip(new Tooltip("Erases everything"));
+        comboColors.setTooltip(new Tooltip("Choose the colors of the garment"));
+        comboMaterials.setTooltip(new Tooltip("Choose the materials of the garment"));
     }
 
     /**
-     * Open the help window
-     *
-     * @throws IOException
+     * Sets the mnemonic parsing to true
      */
-    private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageHelp = new Stage();
-        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(theme, stageHelp, root);
+    private void setButtonsMnemonicParsing() {
+        btnSubmit.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        btnRedo.setMnemonicParsing(true);
+        btnUndo.setMnemonicParsing(true);
     }
 
     /**
-     * Opens the help window when the help button is pressed
-     *
-     * @param event
+     * Sets the text used for mnemonic parsing
      */
-    private void onHelpPressed(ActionEvent event) {
-        try {
-            openHelpView();
-        } catch (Exception e) {
-            createDialog(e);
-        }
+    private void setTextMnemonic() {
+        btnCancel.setText("_Cancel");
+        btnSubmit.setText("_Register");
+        btnUndo.setText("_Undo");
+        btnRedo.setText("_Redo");
+    }
+
+    /**
+     * Sets what happens when the buttons are pressed
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        btnCancel.setOnAction(this::onBtnCancelPress);
+        btnSubmit.setOnAction(this::onRegisterPress);
+        btnUndo.setOnAction(this::onUndoPress);
+        btnHelp.setOnAction(this::onHelpPressed);
+        btnRedo.setOnAction(this::onRedoPress);
     }
 
     /**
@@ -707,5 +709,46 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         }
         lblInvalidBarcode.setVisible(!enableRegister);
         return enableRegister;
+    }
+
+    /**
+     * Checks that the F1 key is pressed to open the help window
+     *
+     * @param event
+     */
+    private void onF1Pressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.F1) {
+            try {
+                openHelpView();
+            } catch (Exception e) {
+                createDialog(e);
+            }
+        }
+    }
+
+    /**
+     * Open the help window
+     *
+     * @throws IOException
+     */
+    private void openHelpView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageHelp = new Stage();
+        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
+        helpView.initStage(theme, stageHelp, root);
+    }
+
+    /**
+     * Opens the help window when the help button is pressed
+     *
+     * @param event
+     */
+    private void onHelpPressed(ActionEvent event) {
+        try {
+            openHelpView();
+        } catch (Exception e) {
+            createDialog(e);
+        }
     }
 }
