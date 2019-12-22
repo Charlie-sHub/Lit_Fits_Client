@@ -22,72 +22,163 @@ public class GarmentClient {
     // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
     private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
+    /**
+     * Constructor of the Garment client
+     */
     public GarmentClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("litfitsserver.entities.garment");
     }
 
+    /**
+     * Finds the garment with the given barcode
+     *
+     * @param <T>
+     * @param responseType
+     * @param barcode
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarmentGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("barcode/{0}", new Object[]{barcode}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Finds all the garments with or without requested promotions
+     *
+     * @param <T>
+     * @param responseType
+     * @param requested
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarmentGarmentsByRequest(Class<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("request/{0}", new Object[]{requested}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Creates a new garment
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
     public void createGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    /**
+     * Updates a garment with the data send
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
     public void editGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    /**
+     * Counts the total amount of garments
+     *
+     * @return
+     * @throws ClientErrorException
+     */
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
+    /**
+     * Finds a garment by id
+     *
+     * @param <T>
+     * @param responseType
+     * @param id
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarment(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Finds all garments
+     *
+     * @param <T>
+     * @param responseType
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarmentAll(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Finds all promoted garments
+     *
+     * @param <T>
+     * @param responseType
+     * @param promoted
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarmentGarmentsPromoted(Class<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("promotion/{0}", new Object[]{promoted}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Finds all the garments of a given company
+     *
+     * @param <T>
+     * @param responseType
+     * @param nif
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T findGarmentGarmentsByCompany(Class<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    /**
+     * Gets the picture of the garment
+     *
+     * @param <T>
+     * @param responseType
+     * @param id
+     * @return
+     * @throws ClientErrorException
+     */
     public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("picture/{0}", new Object[]{id}));
         return resource.get(responseType);
     }
 
+    /**
+     * Deletes the garment associated with the given id
+     *
+     * @param id
+     * @throws ClientErrorException
+     */
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
+    /**
+     * Closes the client
+     */
     public void close() {
         client.close();
     }
-    
 }

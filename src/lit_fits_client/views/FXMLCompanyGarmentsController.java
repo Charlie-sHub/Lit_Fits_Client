@@ -10,8 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
 
@@ -21,20 +22,47 @@ import lit_fits_client.entities.Garment;
  * @author Carlos Mendez
  */
 public class FXMLCompanyGarmentsController extends FXMLDocumentController {
+    /**
+     * Garment promotion button
+     */
     @FXML
     private Button buttonPromote;
+    /**
+     * Button to add garments
+     */
     @FXML
     private Button buttonAdd;
+    /**
+     * Delete garment button
+     */
     @FXML
     private Button buttonDelete;
+    /**
+     * Modify garment button
+     */
     @FXML
     private Button buttonModify;
+    /**
+     * Cancel button
+     */
     @FXML
     private Button buttonCancel;
+    /**
+     * Table with the company's garments
+     */
     @FXML
     private TableView tableGarments;
+    /**
+     * Stage of the view
+     */
     private Stage stage;
+    /**
+     * Stage of the main menu
+     */
     private Stage stageMainMenu;
+    /**
+     * Company logged in
+     */
     private Company company;
     private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
 
@@ -276,8 +304,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             Stage stageCreate = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
-            //no applogic anymore?
-            garmentCreationView.setAppLogic(appLogic);
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setStage(stage);
@@ -295,12 +321,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnModifyPress(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            FXMLLoader fxmlLoader;
+            fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
             Stage stageModify = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
-            //no applogic anymore?
-            garmentCreationView.setAppLogic(appLogic);
             garmentCreationView.setGarment(garment); // take the chosen garment from the table
             garmentCreationView.setStage(stage);
             garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root);
@@ -316,7 +341,13 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param event
      */
     private void onBtnDeletePress(ActionEvent event) {
-        //Request deletion to the server
+        Garment garment = null; // take the chosen garment from the table
+        GarmentClient garmentClient = new GarmentClient();
+        try {
+            garmentClient.remove(garment.getId());
+        } catch (ClientErrorException e) {
+            createDialog(e);
+        }
     }
 
     /**
@@ -335,6 +366,13 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param event
      */
     private void onBtnPromotePress(ActionEvent event) {
-        // Get the garment from the table and set promoted to true
+        Garment garment = null; // take the chosen garment from the table
+        GarmentClient garmentClient = new GarmentClient();
+        try {
+            garment.setPromoted(true);
+            garmentClient.editGarment(garment);
+        } catch (ClientErrorException e) {
+            createDialog(e);
+        }
     }
 }

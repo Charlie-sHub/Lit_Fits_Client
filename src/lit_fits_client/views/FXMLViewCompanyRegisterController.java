@@ -19,6 +19,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.CompanyClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 
 /**
@@ -402,7 +405,8 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      */
     public void initStage(String theme, Stage stage, Parent root) {
         this.stage = stage;
-        Scene scene = new Scene(root);
+        Scene scene;
+        scene = new Scene(root);
         setStylesheet(scene, theme);
         stage.setScene(scene);
         setElements();
@@ -412,6 +416,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         } else {
             stage.setTitle("Registration");
             company = new Company();
+            company.setId(0);
         }
         stage.setOnCloseRequest(this::onClosing);
         //pretty sure these dimensions will have to change
@@ -472,7 +477,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         if (event.getCode() == KeyCode.F1) {
             try {
                 openHelpView();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 createDialog(e);
             }
         }
@@ -499,7 +504,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     private void onHelpPressed(ActionEvent event) {
         try {
             openHelpView();
-        } catch (Exception e) {
+        } catch (IOException e) {
             createDialog(e);
         }
     }
@@ -573,29 +578,38 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
+        CompanyClient companyClient = new CompanyClient();
+        PublicKeyClient publicKeyClient = new PublicKeyClient();
         try {
-            setCompanyData();
-            // how to distinguish between making a PUT to update and a POST to insert a new company? check if their id is null perhaps?
-            company = appLogic.registerUser(user);
+            setCompanyData(publicKeyClient.getPublicKey(byte[].class));
+            if (company.getId() == 0) {
+                companyClient.edit(company);
+            } else {
+                companyClient.create(company);
+            }
             try {
-                openProgramMainWindow(user);
+                openCompanyMainMenu(company);
                 stage.hide();
             } catch (IOException e) {
                 LOG.severe(e.getMessage());
             }
-        } catch (Exception e) {
+        } catch (ClientErrorException e) {
             createDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        } finally {
+            companyClient.close();
+            publicKeyClient.close();
         }
     }
 
     /**
      * Sets the data of the company to be sent to the server
      */
-    private void setCompanyData() {
+    private void setCompanyData(byte[] publicKey) {
         company.setEmail(txtEmail.getText());
         company.setFullName(txtFullName.getText());
         company.setNif(txtNif.getText());
+        //Gotta encrypt the password
         company.setPassword(txtPassword.getText());
         company.setPhoneNumber(txtPhone.getText());
     }
@@ -605,13 +619,11 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      *
      * @throws IOException
      */
-    private void openProgramMainWindow(Company company) throws IOException {
+    private void openCompanyMainMenu(Company company) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageProgramMain = new Stage();
         FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
-        //keep applogic?
-        mainView.setAppLogic(appLogic);
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
         mainView.initStage(theme, stageProgramMain, root);
@@ -626,13 +638,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param newValue
      */
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
-        boolean enableRegisterPass = false;
-        boolean enableRegisterEmail = false;
-        boolean enableRegisterNIF = false;
-        enableRegisterPass = passwordMatchCheck();
-        enableRegisterEmail = emailPatternCheck();
-        enableRegisterNIF = nifPatternCheck();
-        if (enableRegisterPass & enableRegisterEmail & enableRegisterNIF) {
+        if (passwordMatchCheck() & emailPatternCheck() & nifPatternCheck()) {
             onFieldFilled(btnSubmit);
         } else {
             btnSubmit.setDisable(true);
@@ -646,11 +652,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      */
     private boolean emailPatternCheck() {
         boolean enableRegister;
-        if (!Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim())) {
-            enableRegister = false;
-        } else {
-            enableRegister = true;
-        }
+        enableRegister = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
         lblInvalidMail.setVisible(!enableRegister);
         return enableRegister;
     }
@@ -662,11 +664,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      */
     private boolean nifPatternCheck() {
         boolean enableRegister;
-        if (!Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", txtNif.getText().trim())) {
-            enableRegister = false;
-        } else {
-            enableRegister = true;
-        }
+        enableRegister = Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", txtNif.getText().trim());
         lblInvalidNIF.setVisible(!enableRegister);
         return enableRegister;
     }

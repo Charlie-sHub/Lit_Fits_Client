@@ -24,7 +24,7 @@ public class CompanyClient {
     private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
-     * Constructor
+     * Constructor of the Company client
      */
     public CompanyClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

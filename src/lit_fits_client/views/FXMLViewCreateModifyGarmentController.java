@@ -21,6 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Garment;
 
 /**
@@ -84,11 +87,6 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     @FXML
     private Label lblPrice;
-    /**
-     * Label that appears when a field has too much text
-     */
-    @FXML
-    private Label lblLength;
     /**
      * Text field for entering the price of the garment
      */
@@ -314,7 +312,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     /**
      * Setter for the body parts combo box
      *
-     * @param comboMood
+     * @param comboBodyPart
      */
     public void setComboBodyPart(ComboBox comboBodyPart) {
         this.comboBodyPart = comboBodyPart;
@@ -332,7 +330,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     /**
      * Setter for the garment type combo box
      *
-     * @param comboMood
+     * @param comboGarmentType
      */
     public void setComboGarmentType(ComboBox comboGarmentType) {
         this.comboGarmentType = comboGarmentType;
@@ -350,7 +348,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     /**
      * Setter for the colors combo box
      *
-     * @param comboMood
+     * @param comboColors
      */
     public void setComboColors(ComboBox comboColors) {
         this.comboColors = comboColors;
@@ -368,7 +366,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     /**
      * Setter for the materials combo box
      *
-     * @param comboMood
+     * @param comboMaterials
      */
     public void setComboMaterials(ComboBox comboMaterials) {
         this.comboMaterials = comboMaterials;
@@ -390,24 +388,6 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     public void setLblPrice(Label lblPrice) {
         this.lblPrice = lblPrice;
-    }
-
-    /**
-     * Getter for the length label
-     *
-     * @return label
-     */
-    public Label getLblLength() {
-        return lblLength;
-    }
-
-    /**
-     * Setter for the length label
-     *
-     * @param lblLength
-     */
-    public void setLblLength(Label lblLength) {
-        this.lblLength = lblLength;
     }
 
     /**
@@ -635,26 +615,29 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
 
     @Override
     public void onRegisterPress(ActionEvent event) {
+        GarmentClient garmentClient = new GarmentClient();
+        PublicKeyClient publicKeyClient = new PublicKeyClient();
         try {
-            setGarmentData();
-            // how to distinguish between making a PUT to update and a POST to insert a new garment? check if their id is null perhaps?
-            garment = appLogic.registerUser(user);
-            try {
-                openProgramMainWindow(user);
-                stage.hide();
-            } catch (IOException e) {
-                LOG.severe(e.getMessage());
+            setGarmentData(publicKeyClient.getPublicKey(byte[].class));
+            if (garment.getId() == 0) {
+                garmentClient.editGarment(garment);
+            } else {
+                garmentClient.createGarment(garment);
             }
-        } catch (Exception e) {
+            stage.hide();
+        } catch (ClientErrorException e) {
             createDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        }finally {
+            garmentClient.close();
+            publicKeyClient.close();
         }
     }
 
     /**
      * Sets the data of the garment to be sent to the server
      */
-    private void setGarmentData() {
+    private void setGarmentData(byte[] publicKey) {
         garment.setBarcode(txtBarcode.getText());
         garment.setDesigner(txtDesigner.getText());
         //set the combo box values too of course
@@ -668,11 +651,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @param newValue
      */
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
-        boolean enableRegisterBarcode = false;
-        boolean enableRegisterPrice = false;
-        enableRegisterBarcode = barcodePatternCheck();
-        enableRegisterPrice = pricePatternCheck();
-        if (enableRegisterPrice & enableRegisterBarcode) {
+        if (pricePatternCheck() & barcodePatternCheck()) {
             onFieldFilled(btnSubmit);
         } else {
             btnSubmit.setDisable(true);
@@ -686,11 +665,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private boolean pricePatternCheck() {
         boolean enableRegister;
-        if (!Pattern.matches("[0-9]+,{1}[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim())) {
-            enableRegister = false;
-        } else {
-            enableRegister = true;
-        }
+        enableRegister = Pattern.matches("[0-9]+,{1}[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim());
         lblInvalidPrice.setVisible(!enableRegister);
         return enableRegister;
     }
@@ -702,11 +677,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private boolean barcodePatternCheck() {
         boolean enableRegister;
-        if (!Pattern.matches("[0-9]+", txtBarcode.getText().trim())) {
-            enableRegister = false;
-        } else {
-            enableRegister = true;
-        }
+        enableRegister = Pattern.matches("[0-9]+", txtBarcode.getText().trim());
         lblInvalidBarcode.setVisible(!enableRegister);
         return enableRegister;
     }
@@ -720,7 +691,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         if (event.getCode() == KeyCode.F1) {
             try {
                 openHelpView();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 createDialog(e);
             }
         }
@@ -747,7 +718,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     private void onHelpPressed(ActionEvent event) {
         try {
             openHelpView();
-        } catch (Exception e) {
+        } catch (IOException e) {
             createDialog(e);
         }
     }

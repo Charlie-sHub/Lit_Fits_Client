@@ -18,14 +18,32 @@ import lit_fits_client.entities.Company;
  * @author Carlos Mendez
  */
 public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
+    /**
+     * the log out button
+     */
     @FXML
     private Button btnLogout;
+    /**
+     * The warehouse button, to open the warehouse view
+     */
     @FXML
     private Button btnWarehouse;
+    /**
+     * The modify account button
+     */
     @FXML
     private Button btnModifyAccount;
+    /**
+     * The stage used by this view
+     */
     private Stage stage;
+    /**
+     * The login stage
+     */
     private Stage loginStage;
+    /**
+     * The company that logged in
+     */
     private Company company;
     private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
 
@@ -146,8 +164,8 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
     /**
      * This method initializes the window
      *
-     * @param happyMode It receives a boolean to change to happy mode css or not
      *
+     * @param theme the chosen css theme
      * @param root The Parent used in previous windows
      *
      * @param stage
@@ -213,8 +231,6 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             Stage stageProgramMain = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLViewCompanyRegisterController modifyAccountView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
-            //no applogic anymore?
-            modifyAccountView.setAppLogic(appLogic);
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
             modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root);
@@ -236,8 +252,6 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             Stage stageWarehouse = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
-            //no applogic anymore?
-            warehouseView.setAppLogic(appLogic);
             warehouseView.setCompany(company);
             warehouseView.setStageMainMenu(stage);
             warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root);
