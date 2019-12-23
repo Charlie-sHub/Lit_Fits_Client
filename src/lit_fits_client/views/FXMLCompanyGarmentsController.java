@@ -344,7 +344,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         Garment garment = null; // take the chosen garment from the table
         GarmentClient garmentClient = new GarmentClient();
         try {
-            garmentClient.remove(garment.getId());
+            garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
             createDialog(e);
         }

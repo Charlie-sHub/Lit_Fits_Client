@@ -16,7 +16,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Carlos Mendez
  */
-public class PublicKeyClient {
+public class PublicKeyClient implements PublicKeyClientInterface {
     private WebTarget webTarget;
     private Client client;
     // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
@@ -27,11 +27,13 @@ public class PublicKeyClient {
         webTarget = client.target(BASE_URI).path("litfitsserver.encryption.publicKey");
     }
 
+    @Override
     public <T> T getPublicKey(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public void close() {
         client.close();
     }

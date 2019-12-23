@@ -16,7 +16,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Carlos Mendez
  */
-public class GarmentClient {
+public class GarmentClient implements GarmentClientInterface {
     private WebTarget webTarget;
     private Client client;
     // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
@@ -39,6 +39,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarmentGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("barcode/{0}", new Object[]{barcode}));
@@ -54,6 +55,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarmentGarmentsByRequest(Class<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("request/{0}", new Object[]{requested}));
@@ -66,6 +68,7 @@ public class GarmentClient {
      * @param requestEntity
      * @throws ClientErrorException
      */
+    @Override
     public void createGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -76,6 +79,7 @@ public class GarmentClient {
      * @param requestEntity
      * @throws ClientErrorException
      */
+    @Override
     public void editGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -86,6 +90,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
@@ -101,6 +106,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarment(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
@@ -115,6 +121,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarmentAll(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -129,6 +136,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarmentGarmentsPromoted(Class<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("promotion/{0}", new Object[]{promoted}));
@@ -144,6 +152,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findGarmentGarmentsByCompany(Class<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
@@ -159,6 +168,7 @@ public class GarmentClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("picture/{0}", new Object[]{id}));
@@ -171,6 +181,7 @@ public class GarmentClient {
      * @param id
      * @throws ClientErrorException
      */
+    @Override
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
@@ -178,6 +189,7 @@ public class GarmentClient {
     /**
      * Closes the client
      */
+    @Override
     public void close() {
         client.close();
     }

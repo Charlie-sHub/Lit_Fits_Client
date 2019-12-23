@@ -16,7 +16,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Carlos Mendez
  */
-public class ColorClient {
+public class ColorClient implements ColorClientInterface {
     private WebTarget webTarget;
     private Client client;
     // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
@@ -33,6 +33,7 @@ public class ColorClient {
      * @param requestEntity
      * @throws ClientErrorException 
      */
+    @Override
     public void edit(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -44,6 +45,7 @@ public class ColorClient {
      * @return
      * @throws ClientErrorException 
      */
+    @Override
     public <T> T find(Class<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{name}));
@@ -54,6 +56,7 @@ public class ColorClient {
      * @return
      * @throws ClientErrorException 
      */
+    @Override
     public String count() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
@@ -64,6 +67,7 @@ public class ColorClient {
      * @param requestEntity
      * @throws ClientErrorException 
      */
+    @Override
     public void create(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -74,6 +78,7 @@ public class ColorClient {
      * @return
      * @throws ClientErrorException 
      */
+    @Override
     public <T> T findAll(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -83,12 +88,14 @@ public class ColorClient {
      * @param name
      * @throws ClientErrorException 
      */
+    @Override
     public void remove(String name) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{name})).request().delete();
     }
     /**
      * Closes the client
      */
+    @Override
     public void close() {
         client.close();
     }

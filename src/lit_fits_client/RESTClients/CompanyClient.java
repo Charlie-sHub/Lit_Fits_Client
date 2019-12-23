@@ -17,7 +17,7 @@ import lit_fits_client.entities.Company;
  *
  * @author Carlos Mendez
  */
-public class CompanyClient {
+public class CompanyClient implements CompanyClientInterface {
     private WebTarget webTarget;
     private Client client;
     // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
@@ -37,6 +37,7 @@ public class CompanyClient {
      * @return String
      * @throws ClientErrorException
      */
+    @Override
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
@@ -49,6 +50,7 @@ public class CompanyClient {
      * @param nif
      * @throws ClientErrorException
      */
+    @Override
     public void reestablishPassword(String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("passwordReestablishment/{0}", new Object[]{nif}));
@@ -60,6 +62,7 @@ public class CompanyClient {
      * @param company
      * @throws ClientErrorException
      */
+    @Override
     public void edit(Company company) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(company, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -73,6 +76,7 @@ public class CompanyClient {
      * @return Company
      * @throws ClientErrorException
      */
+    @Override
     public <T> T find(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
@@ -85,6 +89,7 @@ public class CompanyClient {
      * @param requestEntity
      * @throws ClientErrorException
      */
+    @Override
     public void create(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -98,6 +103,7 @@ public class CompanyClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findCompanyByNif(Class<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
@@ -113,6 +119,7 @@ public class CompanyClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException {
         return webTarget.path("login").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
     }
@@ -125,6 +132,7 @@ public class CompanyClient {
      * @return
      * @throws ClientErrorException
      */
+    @Override
     public <T> T findAll(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -136,6 +144,7 @@ public class CompanyClient {
      * @param id
      * @throws ClientErrorException
      */
+    @Override
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
@@ -143,6 +152,7 @@ public class CompanyClient {
     /**
      * Closes the instance of the client
      */
+    @Override
     public void close() {
         client.close();
     }
