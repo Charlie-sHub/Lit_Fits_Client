@@ -36,15 +36,10 @@ public class ApplicationMain extends Application {
     public void start(Stage stage) throws Exception {
         String host = ResourceBundle.getBundle("thebestprogramdesktop.connection").getString("host");
         int port = Integer.parseInt(ResourceBundle.getBundle("thebestprogramdesktop.connection").getString("port"));
-        //Do we keep using applogic?
-        ApplicationLogicImplementation appLogic = ApplicationLogicFactory.getAppLogicImpl();
-        appLogic.setHost(host);
-        appLogic.setPort(port);
-        String theme = Boolean.parseBoolean(ResourceBundle.getBundle("lit_fits_client.views.theme").getString("theme"));
+        String theme = ResourceBundle.getBundle("lit_fits_client.views.theme").getString("theme");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/fxml/ViewLogin.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         FXMLViewLoginController loginView = ((FXMLViewLoginController) fxmlLoader.getController());
-        loginView.setAppLogic(appLogic);
         loginView.setStage(stage);
         loginView.initStage(theme, root);
     }
