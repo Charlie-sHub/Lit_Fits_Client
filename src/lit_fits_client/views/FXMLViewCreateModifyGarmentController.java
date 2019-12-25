@@ -22,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Garment;
@@ -615,8 +616,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = new GarmentClient();
-        PublicKeyClient publicKeyClient = new PublicKeyClient();
+        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
         try {
             setGarmentData(publicKeyClient.getPublicKey(byte[].class));
             if (garment.getId() == 0) {
@@ -628,7 +629,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         } catch (ClientErrorException e) {
             createDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
-        }finally {
+        } finally {
             garmentClient.close();
             publicKeyClient.close();
         }

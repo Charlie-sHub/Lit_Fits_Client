@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
@@ -342,7 +343,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnDeletePress(ActionEvent event) {
         Garment garment = null; // take the chosen garment from the table
-        GarmentClient garmentClient = new GarmentClient();
+        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
         try {
             garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
@@ -367,7 +368,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = null; // take the chosen garment from the table
-        GarmentClient garmentClient = new GarmentClient();
+        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
         try {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);

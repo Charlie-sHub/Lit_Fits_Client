@@ -39,17 +39,9 @@ public class FXMLDocumentController {
     protected ChoiceBox<String> choiceTheme;
     //protected User user;
     protected String theme;
-    //protected ApplicationLogicImplementation appLogic;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
-    /*public ApplicationLogicImplementation getAppLogic() {
-        return appLogic;
-    }
-
-    public void setAppLogic(ApplicationLogicImplementation appLogic) {
-        this.appLogic = appLogic;
-    }
-
+    /*
     public User getUser() {
         return user;
     }
@@ -90,7 +82,7 @@ public class FXMLDocumentController {
      * @param event
      */
     public void onThemeChosen(ActionEvent event) {
-        //Gotta send the path to the theme chosen
+        //pick the path from the ChoiceBox
         String path = "";
         setStylesheet(((CheckBox) event.getSource()).getScene(), path);
     }
@@ -99,10 +91,11 @@ public class FXMLDocumentController {
      * Based on the happiness of the window is set the correct mood
      *
      * @author Carlos Rafael Mendez Gonzalez
-     * @param scene scene to b loaded with the stylesheet
+     * @param scene scene to be loaded with the stylesheet
+     * @param themePath
      */
     public void setStylesheet(Scene scene, String themePath) {
-        // How should we remove the previous theme?
+        // How should we remove the theme to have the default look? just add an empty css?
         scene.getStylesheets().add(getClass().getResource(themePath).toExternalForm());
     }
 
@@ -148,12 +141,10 @@ public class FXMLDocumentController {
      * @param event makes the method a handler
      */
     public void onClosing(WindowEvent event) {
-        // gotta adapt this so it saves the different theme paths
         OutputStream out = null;
         try {
             out = new FileOutputStream("theme.properties");
             Properties properties = new Properties();
-            String happy;
             properties.setProperty("theme", theme);
             properties.store(out, null);
         } catch (IOException e) {
