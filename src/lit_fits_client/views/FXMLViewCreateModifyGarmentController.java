@@ -1,5 +1,6 @@
 package lit_fits_client.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
@@ -24,7 +27,6 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
 
@@ -104,6 +106,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     @FXML
     private Label lblInvalidBarcode;
+    /**
+     * The ImageView for the picture of the Garment
+     */
+    @FXML
+    private ImageView imageViewGarmentPicture;
     /**
      * Stage to be used by the current controller
      */
@@ -469,6 +476,24 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter for the ImageView
+     *
+     * @return ImageView
+     */
+    public ImageView getImageViewGarmentPicture() {
+        return imageViewGarmentPicture;
+    }
+
+    /**
+     * Setter for the ImageView
+     *
+     * @param imageViewGarmentPicture
+     */
+    public void setImageViewGarmentPicture(ImageView imageViewGarmentPicture) {
+        this.imageViewGarmentPicture = imageViewGarmentPicture;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -509,6 +534,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
+        Image garmentPicture = new Image(garment.getPicture().getAbsolutePath());
+        imageViewGarmentPicture.setImage(garmentPicture);
     }
 
     /**
@@ -518,6 +545,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         //Get list of colors and materials to fill those combo boxes with
         //How to choose several colors and materials?
         //Fill the other combo boxes with the enums
+        Image image = new Image("/placeholder.jpg");
+        imageViewGarmentPicture.setImage(image);
         setTooltips();
         lblLength.setVisible(false);
         btnSubmit.setDisable(true);
@@ -581,6 +610,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
+        imageViewGarmentPicture.setOnMouseClicked(this::onImageViewPress);
     }
 
     /**
@@ -667,6 +697,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setAvailable(true);
         garment.setPromoted(false);
         garment.setPromotionRequest(false);
+        garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
         //set the combo box values too of course
     }
 
@@ -683,6 +714,14 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         } else {
             btnSubmit.setDisable(true);
         }
+    }
+
+    /**
+     * Opens a file chooser to change the Image
+     */
+    public void onImageViewPress() {
+        // Open File chooser let the user select an image
+        // Set that image for the ImageView
     }
 
     /**

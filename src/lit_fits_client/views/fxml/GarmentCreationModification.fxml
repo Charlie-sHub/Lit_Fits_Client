@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -28,70 +30,75 @@
             <children>
                 <AnchorPane prefHeight="572.0" prefWidth="1005.0">
                     <children>
-                        <Label fx:id="lblBarcode" layoutX="240.0" layoutY="108.0" prefHeight="18.0" prefWidth="172.0" text="Barcode:">
+                        <Label fx:id="lblBarcode" layoutX="91.0" layoutY="106.0" prefHeight="18.0" prefWidth="172.0" text="Barcode:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblDesigner" layoutX="240.0" layoutY="187.0" prefHeight="18.0" prefWidth="172.0" text="Designer:">
+                        <Label fx:id="lblDesigner" layoutX="91.0" layoutY="185.0" prefHeight="18.0" prefWidth="172.0" text="Designer:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblMood" layoutX="240.0" layoutY="227.0" prefHeight="18.0" prefWidth="172.0" text="Mood:">
+                        <Label fx:id="lblMood" layoutX="91.0" layoutY="225.0" prefHeight="18.0" prefWidth="172.0" text="Mood:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblGarmentType" layoutX="240.0" layoutY="307.0" prefHeight="18.0" prefWidth="172.0" text="Garment Type:">
+                        <Label fx:id="lblGarmentType" layoutX="91.0" layoutY="305.0" prefHeight="18.0" prefWidth="172.0" text="Garment Type:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblColors" layoutX="240.0" layoutY="347.0" prefHeight="18.0" prefWidth="171.0" text="Colors:">
+                        <Label fx:id="lblColors" layoutX="91.0" layoutY="345.0" prefHeight="18.0" prefWidth="171.0" text="Colors:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtBarcode" layoutX="421.0" layoutY="104.0" prefHeight="26.0" prefWidth="240.0" />
-                        <Button id="btnRegister" fx:id="btnSubmit" layoutX="471.0" layoutY="466.0" mnemonicParsing="false" text="Submit">
+                        <TextField fx:id="txtBarcode" layoutX="272.0" layoutY="102.0" prefHeight="26.0" prefWidth="240.0" />
+                        <Button id="btnRegister" fx:id="btnSubmit" layoutX="432.0" layoutY="464.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Button fx:id="btnCancel" layoutX="585.0" layoutY="466.0" mnemonicParsing="false" text="Cancel">
+                        <Button fx:id="btnCancel" layoutX="546.0" layoutY="464.0" mnemonicParsing="false" text="Cancel">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Label fx:id="lblLength" alignment="CENTER" contentDisplay="CENTER" layoutX="441.0" layoutY="423.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
-                  <Button fx:id="btnUndo" layoutX="420.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Undo" />
-                  <Button fx:id="btnRedo" layoutX="492.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Redo" />
-                  <Button fx:id="btnHelp" layoutX="594.0" layoutY="40.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" text="Help" />
-                  <Label fx:id="lblBodyPart" layoutX="240.0" layoutY="267.0" prefHeight="18.0" prefWidth="172.0" text="Body Part:">
+                        <Label fx:id="lblLength" alignment="CENTER" contentDisplay="CENTER" layoutX="292.0" layoutY="421.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
+                  <Button fx:id="btnUndo" layoutX="381.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Undo" />
+                  <Button fx:id="btnRedo" layoutX="453.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Redo" />
+                  <Button fx:id="btnHelp" layoutX="555.0" layoutY="38.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" text="Help" />
+                  <Label fx:id="lblBodyPart" layoutX="91.0" layoutY="265.0" prefHeight="18.0" prefWidth="172.0" text="Body Part:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDesigner" layoutX="421.0" layoutY="184.0" prefHeight="25.0" prefWidth="240.0" />
-                  <Label fx:id="lblMaterials" layoutX="240.0" layoutY="387.0" prefHeight="18.0" prefWidth="171.0" text="Materials:">
+                  <TextField fx:id="txtDesigner" layoutX="272.0" layoutY="182.0" prefHeight="25.0" prefWidth="240.0" />
+                  <Label fx:id="lblMaterials" layoutX="91.0" layoutY="385.0" prefHeight="18.0" prefWidth="171.0" text="Materials:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="comboBodyPart" layoutX="421.0" layoutY="263.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboMood" layoutX="421.0" layoutY="223.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboGarmentType" layoutX="422.0" layoutY="303.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboColors" layoutX="422.0" layoutY="343.0" prefHeight="26.0" prefWidth="240.0" />
-                  <ComboBox fx:id="comboMaterials" layoutX="422.0" layoutY="383.0" prefHeight="26.0" prefWidth="240.0" />
-                  <Label fx:id="lblPrice" layoutX="240.0" layoutY="148.0" prefHeight="18.0" prefWidth="172.0" text="Price:">
+                  <ComboBox fx:id="comboBodyPart" layoutX="272.0" layoutY="261.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboMood" layoutX="272.0" layoutY="221.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboGarmentType" layoutX="273.0" layoutY="301.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboColors" layoutX="273.0" layoutY="341.0" prefHeight="26.0" prefWidth="240.0" />
+                  <ComboBox fx:id="comboMaterials" layoutX="273.0" layoutY="381.0" prefHeight="26.0" prefWidth="240.0" />
+                  <Label fx:id="lblPrice" layoutX="91.0" layoutY="146.0" prefHeight="18.0" prefWidth="172.0" text="Price:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPrice" layoutX="422.0" layoutY="144.0" prefHeight="26.0" prefWidth="240.0" />
-                  <Label fx:id="lblInvalidBarcode" contentDisplay="CENTER" layoutX="677.0" layoutY="108.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Barcode" textAlignment="CENTER" textFill="#fc0400" />
-                  <Label fx:id="lblinvalidprice" contentDisplay="CENTER" layoutX="677.0" layoutY="148.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Price" textAlignment="CENTER" textFill="#fc0400" />
+                  <TextField fx:id="txtPrice" layoutX="273.0" layoutY="142.0" prefHeight="26.0" prefWidth="240.0" />
+                  <Label fx:id="lblInvalidBarcode" contentDisplay="CENTER" layoutX="528.0" layoutY="106.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Barcode" textAlignment="CENTER" textFill="#fc0400" />
+                  <Label fx:id="lblinvalidprice" contentDisplay="CENTER" layoutX="528.0" layoutY="146.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Price" textAlignment="CENTER" textFill="#fc0400" />
+                  <ImageView fx:id="imageViewGarmentPicture" fitHeight="230.0" fitWidth="230.0" layoutX="550.0" layoutY="182.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../../../../../Pictures/t-shirt-hoodie-raglan-sleeve-shirt-design-cliparts-png-download-t-shirt-png-black-and-white-900_920.jpg" />
+                     </image>
+                  </ImageView>
                     </children>
                 </AnchorPane>
             </children>
