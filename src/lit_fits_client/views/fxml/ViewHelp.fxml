@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.web.WebView?>
 
-<BorderPane prefHeight="200.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thebestprogramdesktop.views.FXMLHelpController">
+<BorderPane fx:id="paneHelp" prefHeight="200.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thebestprogramdesktop.views.FXMLHelpController">
    <center>
       <WebView fx:id="helpView" prefHeight="200.0" prefWidth="640.0" BorderPane.alignment="CENTER" />
    </center>

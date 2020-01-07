@@ -25,6 +25,7 @@ import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
+import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
 
 /**
@@ -116,6 +117,10 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * created
      */
     private Garment garment;
+    /**
+     * The company that logged in
+     */
+    private Company company;
     /**
      * Logger object
      */
@@ -446,6 +451,24 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter of the company
+     *
+     * @return Company
+     */
+    public Company getCompany() {
+        return company;
+    }
+
+    /**
+     * Setter of the Company
+     *
+     * @param company
+     */
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -617,9 +640,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     @Override
     public void onRegisterPress(ActionEvent event) {
         GarmentClient garmentClient = new ClientFactory().getGarmentClient();
-        PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
         try {
-            setGarmentData(publicKeyClient.getPublicKey(byte[].class));
+            setGarmentData();
             if (garment.getId() == 0) {
                 garmentClient.editGarment(garment);
             } else {
@@ -631,16 +653,20 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             garmentClient.close();
-            publicKeyClient.close();
         }
     }
 
     /**
      * Sets the data of the garment to be sent to the server
      */
-    private void setGarmentData(byte[] publicKey) {
+    private void setGarmentData() {
         garment.setBarcode(txtBarcode.getText());
+        garment.setPrice(Double.valueOf(txtPrice.getText()));
         garment.setDesigner(txtDesigner.getText());
+        garment.setCompany(company);
+        garment.setAvailable(true);
+        garment.setPromoted(false);
+        garment.setPromotionRequest(false);
         //set the combo box values too of course
     }
 

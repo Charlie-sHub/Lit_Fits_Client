@@ -1,0 +1,113 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package lit_fits_client.views;
+
+import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
+import org.junit.Test;
+import static org.testfx.api.FxAssert.verifyThat;
+import org.testfx.framework.junit.ApplicationTest;
+import static org.testfx.matcher.base.NodeMatchers.isDisabled;
+import static org.testfx.matcher.base.NodeMatchers.isEnabled;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
+import lit_fits_client.ApplicationMain;
+
+/**
+ *
+ * @author Ander Rodriguez
+ */
+public class FXMLViewLoginControllerIT extends ApplicationTest {
+    @Override
+    public void start(Stage stage) throws Exception {
+        new ApplicationMain().start(stage);
+    }
+
+    /**
+     * Test of
+     */
+    @Test
+    public void testBtnLoginIsInitiallyDisabled() {
+        verifyThat("#btnLogin", isDisabled());
+    }
+
+    /**
+     * Test of button register is initially enabled
+     */
+    @Test
+    public void testBtnRegisterIsEnabled() {
+        verifyThat("#btnRegister", isEnabled());
+    }
+
+    /**
+     * Test of
+     */
+    @Test
+    public void testBtnLoginGetsEnabled() {
+        clickOn("#txtUsername");
+        write("Username");
+        clickOn("#fieldPassword");
+        write("abcd*1234");
+        verifyThat("#btnLogin", isEnabled());
+    }
+
+    /**
+     * Test of
+     */
+    @Test
+    public void testBtnLoginAction() {
+        clickOn("#txtUsername");
+        write("Ander");
+        clickOn("#fieldPassword");
+        write("abcd*1234");
+        clickOn("#btnLogin");
+        verifyThat("#borderPaneMain", isVisible());
+    }
+
+    /**
+     * Test the action of button register do
+     */
+    @Test
+    public void testBtnRegisterAction() {
+        clickOn("#btnRegister");
+        verifyThat("#borderPaneRegister", isVisible());
+    }
+
+    /**
+     * Test of
+     */
+    @Test
+    public void testAltL() {
+        clickOn("#txtUsername");
+        write("Ander");
+        clickOn("#fieldPassword");
+        write("abcd*1234");
+        press(KeyCode.ALT, KeyCode.L);
+        verifyThat("#borderPaneMain", isVisible());
+    }
+
+    /**
+     * Test of
+     */
+    @Test
+    public void testAltS() {
+        press(KeyCode.ALT, KeyCode.S);
+        verifyThat("#borderPaneRegister", isVisible());
+    }
+
+    @Test
+    public void testLength() {
+        clickOn("#txtUsername");
+        write("test of lengthhhhhhhhhhhhhhhhhhh");
+        verifyThat("#btnLogin", isDisabled());
+    }
+
+    @Test
+    public void testUndo() {
+        clickOn("#txtUsername");
+        write("test of undo");
+        clickOn("#btnUndo");
+    }
+}

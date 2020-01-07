@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPaneWarehouse" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <center>
     <VBox alignment="CENTER" BorderPane.alignment="CENTER">
       <children>
