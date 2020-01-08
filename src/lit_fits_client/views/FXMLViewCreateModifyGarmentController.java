@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -22,13 +24,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.ColorClient;
 import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.RESTClients.MaterialClient;
+import lit_fits_client.entities.BodyPart;
+import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
+import lit_fits_client.entities.GarmentType;
+import lit_fits_client.entities.Material;
+import lit_fits_client.entities.Mood;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -128,6 +139,10 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * The company that logged in
      */
     private Company company;
+    /**
+     * An ArrayList of the combo boxes in the stage, used to check if they've all been filled
+     */
+    private ArrayList<ComboBox> comboBoxes;
     /**
      * Logger object
      */
@@ -494,6 +509,24 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter for the Arraylist of combo boxes
+     *
+     * @return ArrayList
+     */
+    public ArrayList<ComboBox> getComboBoxes() {
+        return comboBoxes;
+    }
+
+    /**
+     * Setter for the ArrayList of combo boxes
+     *
+     * @param comboBoxes
+     */
+    public void setComboBoxes(ArrayList<ComboBox> comboBoxes) {
+        this.comboBoxes = comboBoxes;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -534,7 +567,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        Image garmentPicture = new Image(garment.getPicture().getAbsolutePath());
+        Image garmentPicture = new Image(garment.getPicture().getAbsolutePath()); // Does this even have an absolute path? doubt it
         imageViewGarmentPicture.setImage(garmentPicture);
     }
 
@@ -542,7 +575,6 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        //Get list of colors and materials to fill those combo boxes with
         //How to choose several colors and materials?
         //Fill the other combo boxes with the enums
         Image image = new Image("/placeholder.jpg");
@@ -559,8 +591,40 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         setFocusTraversable();
         setListeners();
         textFields = new ArrayList<>();
-        fillArray();
+        fillTxtArray();
         undoneStrings = new ArrayList<>();
+        fillComboBoxes();
+        fillComboBoxArray();
+    }
+
+    /**
+     * Fills the combo boxes with their corresponding items
+     *
+     * @throws ClientErrorException
+     */
+    private void fillComboBoxes() throws ClientErrorException {
+        ColorClient colorClient;
+        colorClient = new ClientFactory().getColorClient();
+        comboColors.setItems(colorClient.findAll(List.class));
+        colorClient.close();
+        MaterialClient materialClient;
+        materialClient = new ClientFactory().getMaterialClient();
+        comboColors.setItems(materialClient.findAll(List.class));
+        materialClient.close();
+        comboBodyPart.getItems().setAll(BodyPart.values());
+        comboMood.getItems().setAll(Mood.values());
+        comboGarmentType.getItems().setAll(GarmentType.values());
+    }
+
+    /**
+     * Fills the ArrayList of combo boxes with the combo boxes of the stage
+     */
+    private void fillComboBoxArray() {
+        comboBoxes.add(comboBodyPart);
+        comboBoxes.add(comboColors);
+        comboBoxes.add(comboGarmentType);
+        comboBoxes.add(comboMaterials);
+        comboBoxes.add(comboMood);
     }
 
     /**
@@ -611,15 +675,17 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
         imageViewGarmentPicture.setOnMouseClicked(this::onImageViewPress);
+        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewPress);
     }
 
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
-    private void fillArray() {
+    private void fillTxtArray() {
         textFields.add(txtBarcode);
         textFields.add(txtDesigner);
-        // How to make the combo boxes work with my shotty attempt at a undo and redo?
+        textFields.add(txtPrice);
+        // How to make the combo boxes work with my shitty attempt at a undo and redo?
     }
 
     /**
@@ -628,11 +694,18 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     private void setFocusTraversable() {
         txtBarcode.setFocusTraversable(true);
         txtDesigner.setFocusTraversable(true);
+        txtPrice.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
         btnSubmit.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
-        //Set the comboboxes traversable too
+        imageViewGarmentPicture.setFocusTraversable(true);
+        choiceTheme.setFocusTraversable(true);
+        comboBodyPart.setFocusTraversable(true);
+        comboColors.setFocusTraversable(true);
+        comboGarmentType.setFocusTraversable(true);
+        comboMaterials.setFocusTraversable(true);
+        comboMood.setFocusTraversable(true);
     }
 
     /**
@@ -643,7 +716,40 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtDesigner.textProperty().addListener(this::onFieldFilledListener);
         txtBarcode.lengthProperty().addListener(this::lenghtListener);
         txtDesigner.lengthProperty().addListener(this::lenghtListener);
-        //how to do the same of something similar with the combo boxes?
+        comboBodyPart.onActionProperty().addListener(this::onItemChosen);
+        comboColors.onActionProperty().addListener(this::onItemChosen);
+        comboGarmentType.onActionProperty().addListener(this::onItemChosen);
+        comboMaterials.onActionProperty().addListener(this::onItemChosen);
+        comboMood.onActionProperty().addListener(this::onItemChosen);
+    }
+
+    /**
+     * simply calls the proper method to check if something has been chosen
+     *
+     * @param object
+     */
+    public void onItemChosen(Object object) {
+        checkComboBoxes(btnSubmit);
+    }
+
+    /**
+     * Enables the submit button if there's something chosen in each combo box, it also calls onFieldFilled to check the
+     * rest of the fields
+     *
+     * @param btnSubmit
+     */
+    private void checkComboBoxes(Button btnSubmit) {
+        Boolean disableSubmit = null;
+        for (ComboBox comboBox : comboBoxes) {
+            if (comboBox.getValue() == null) {
+                disableSubmit = true;
+                break;
+            } else {
+                disableSubmit = false;
+            }
+        }
+        btnSubmit.setDisable(disableSubmit);
+        onFieldFilled(btnSubmit);
     }
 
     /**
@@ -666,7 +772,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         previousStage.show();
         stage.hide();
     }
-
+    
     @Override
     public void onRegisterPress(ActionEvent event) {
         GarmentClient garmentClient = new ClientFactory().getGarmentClient();
@@ -697,8 +803,12 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setAvailable(true);
         garment.setPromoted(false);
         garment.setPromotionRequest(false);
+        garment.setBodyPart((BodyPart) comboBodyPart.getValue());
+        garment.setColors((Set<Color>) comboColors.getValue());
+        garment.setGarmentType((GarmentType) comboGarmentType.getValue());
+        garment.setMaterials((Set<Material>) comboMaterials.getValue());
+        garment.setMood((Mood) comboMood.getValue());
         garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
-        //set the combo box values too of course
     }
 
     /**
@@ -720,8 +830,12 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Opens a file chooser to change the Image
      */
     public void onImageViewPress() {
-        // Open File chooser let the user select an image
-        // Set that image for the ImageView
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+        File garmentPictureFile = fileChooser.showOpenDialog(stage);
+        Image garmentPicture = new Image(garmentPictureFile.getAbsolutePath()); //Maybe this will be a problem in Linux
+        imageViewGarmentPicture.setImage(garmentPicture);
     }
 
     /**

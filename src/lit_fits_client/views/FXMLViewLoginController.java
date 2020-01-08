@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.io.IOException;
@@ -18,15 +13,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-//import thebestprogramlogiclibrary.User;
 
 /**
+ * Controller for the Login view
  *
- * @author Ander
+ * @author Ander & Carlos Mendez
  */
 public class FXMLViewLoginController extends FXMLDocumentControllerInput {
+    /**
+     * Button to attempt loggin in
+     */
     @FXML
     protected Button btnLogin;
+    /**
+     * Text field where username must be 
+     */
     @FXML
     protected TextField txtUsername;
     @FXML

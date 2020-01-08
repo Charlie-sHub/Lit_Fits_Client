@@ -27,27 +27,27 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Garment promotion button
      */
     @FXML
-    private Button buttonPromote;
+    private Button btnPromote;
     /**
      * Button to add garments
      */
     @FXML
-    private Button buttonAdd;
+    private Button btnAdd;
     /**
      * Delete garment button
      */
     @FXML
-    private Button buttonDelete;
+    private Button btnDelete;
     /**
      * Modify garment button
      */
     @FXML
-    private Button buttonModify;
+    private Button btnModify;
     /**
      * Cancel button
      */
     @FXML
-    private Button buttonCancel;
+    private Button btnCancel;
     /**
      * Table with the company's garments
      */
@@ -72,17 +72,17 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      *
      * @return Button
      */
-    public Button getButtonPromote() {
-        return buttonPromote;
+    public Button getBtnPromote() {
+        return btnPromote;
     }
 
     /**
      * Setter for the promote button
      *
-     * @param buttonPromote
+     * @param btnPromote
      */
-    public void setButtonPromote(Button buttonPromote) {
-        this.buttonPromote = buttonPromote;
+    public void setBtnPromote(Button btnPromote) {
+        this.btnPromote = btnPromote;
     }
 
     /**
@@ -90,30 +90,30 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      *
      * @return Button
      */
-    public Button getButtonAdd() {
-        return buttonAdd;
+    public Button getBtnAdd() {
+        return btnAdd;
     }
 
     /**
      * Setter for the add button
      *
-     * @param buttonAdd
+     * @param btnAdd
      */
-    public void setButtonAdd(Button buttonAdd) {
-        this.buttonAdd = buttonAdd;
+    public void setBtnAdd(Button btnAdd) {
+        this.btnAdd = btnAdd;
     }
 
-    public Button getButtonDelete() {
-        return buttonDelete;
+    public Button getBtnDelete() {
+        return btnDelete;
     }
 
     /**
      * Setter for the delete button
      *
-     * @param buttonDelete
+     * @param btnDelete
      */
-    public void setButtonDelete(Button buttonDelete) {
-        this.buttonDelete = buttonDelete;
+    public void setBtnDelete(Button btnDelete) {
+        this.btnDelete = btnDelete;
     }
 
     /**
@@ -121,17 +121,17 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      *
      * @return Button
      */
-    public Button getButtonModify() {
-        return buttonModify;
+    public Button getBtnModify() {
+        return btnModify;
     }
 
     /**
      * Setter for the modify button
      *
-     * @param buttonModify
+     * @param btnModify
      */
-    public void setButtonModify(Button buttonModify) {
-        this.buttonModify = buttonModify;
+    public void setBtnModify(Button btnModify) {
+        this.btnModify = btnModify;
     }
 
     /**
@@ -139,17 +139,17 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      *
      * @return Button
      */
-    public Button getButtonCancel() {
-        return buttonCancel;
+    public Button getBtnCancel() {
+        return btnCancel;
     }
 
     /**
      * Setter for the cancel button
      *
-     * @param buttonCancel
+     * @param btnCancel
      */
-    public void setButtonCancel(Button buttonCancel) {
-        this.buttonCancel = buttonCancel;
+    public void setBtnCancel(Button btnCancel) {
+        this.btnCancel = btnCancel;
     }
 
     /**
@@ -262,22 +262,22 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the text used for mnemonic parsing
      */
     private void setMnemonicText() {
-        buttonAdd.setText("_Add");
-        buttonCancel.setText("_Cancel");
-        buttonDelete.setText("_Delete");
-        buttonModify.setText("_Modify");
-        buttonPromote.setText("_Promote");
+        btnAdd.setText("_Add");
+        btnCancel.setText("_Cancel");
+        btnDelete.setText("_Delete");
+        btnModify.setText("_Modify");
+        btnPromote.setText("_Promote");
     }
 
     /**
      * Sets the tooltip text for the elements of the window
      */
     private void setTooltips() {
-        buttonPromote.setTooltip(new Tooltip("Request the promotion of a garment"));
-        buttonAdd.setTooltip(new Tooltip("Add a new garment"));
-        buttonCancel.setTooltip(new Tooltip("Go back to the main menu"));
-        buttonDelete.setTooltip(new Tooltip("Delete the garment chosen"));
-        buttonModify.setTooltip(new Tooltip("Modify the data of a garment"));
+        btnPromote.setTooltip(new Tooltip("Request the promotion of a garment"));
+        btnAdd.setTooltip(new Tooltip("Add a new garment"));
+        btnCancel.setTooltip(new Tooltip("Go back to the main menu"));
+        btnDelete.setTooltip(new Tooltip("Delete the garment chosen"));
+        btnModify.setTooltip(new Tooltip("Modify the data of a garment"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         tableGarments.setTooltip(new Tooltip("List of garments owned by the company"));
     }
@@ -287,11 +287,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void setOnAction() {
         choiceTheme.setOnAction(this::onThemeChosen);
-        buttonAdd.setOnAction(this::onBtnAddPress);
-        buttonCancel.setOnAction(this::onBtnCancelPress);
-        buttonDelete.setOnAction(this::onBtnDeletePress);
-        buttonModify.setOnAction(this::onBtnModifyPress);
-        buttonPromote.setOnAction(this::onBtnPromotePress);
+        btnAdd.setOnAction(this::onBtnAddPress);
+        btnCancel.setOnAction(this::onBtnCancelPress);
+        btnDelete.setOnAction(this::onBtnDeletePress);
+        btnModify.setOnAction(this::onBtnModifyPress);
+        btnPromote.setOnAction(this::onBtnPromotePress);
     }
 
     /**

@@ -22,11 +22,11 @@
       <children>
         <AnchorPane>
           <children>
-            <Button fx:id="buttonPromote" layoutX="645.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
-            <Button fx:id="buttonAdd" layoutX="443.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
-                  <Button fx:id="buttonDelete" layoutX="745.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />
-                  <Button fx:id="buttonModify" layoutX="545.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
-                  <Button fx:id="buttonCancel" layoutX="1187.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
+            <Button fx:id="btnPromote" layoutX="645.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
+            <Button fx:id="btnAdd" layoutX="443.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
+                  <Button fx:id="btnDelete" layoutX="745.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />
+                  <Button fx:id="btnModify" layoutX="545.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
+                  <Button fx:id="btnCancel" layoutX="1187.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
                   <ScrollPane fitToHeight="true" layoutX="12.0" layoutY="12.0">
                      <content>
                         <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">
