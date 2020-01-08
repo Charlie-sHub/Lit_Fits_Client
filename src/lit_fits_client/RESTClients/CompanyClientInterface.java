@@ -1,10 +1,9 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
-import lit_fits_client.entities.Company;
 
 /**
- * Interface for the company client
+ * Interface for the CompanyClient
  *
  * @author Carlos Mendez
  */
@@ -33,10 +32,10 @@ public interface CompanyClientInterface {
     /**
      * Updates the data of a given company
      *
-     * @param company
+     * @param requestEntity
      * @throws ClientErrorException
      */
-    void edit(Company company) throws ClientErrorException;
+    void edit(Object requestEntity) throws ClientErrorException;
 
     /**
      * Finds and returns a company by a given id

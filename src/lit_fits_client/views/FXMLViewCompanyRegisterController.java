@@ -21,7 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
+import lit_fits_client.RESTClients.CompanyClientOld;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 
@@ -579,7 +579,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = new ClientFactory().getCompanyClient();
+        CompanyClientOld companyClient = new ClientFactory().getCompanyClient();
         PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
         try {
             setCompanyData(publicKeyClient.getPublicKey(byte[].class));

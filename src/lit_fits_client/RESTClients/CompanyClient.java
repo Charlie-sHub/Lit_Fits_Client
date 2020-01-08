@@ -3,7 +3,6 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import lit_fits_client.entities.Company;
 
 /**
  * Jersey REST client generated for REST resource:CompanyFacadeREST [litfitsserver.entities.company]<br>
@@ -59,12 +58,12 @@ public class CompanyClient implements CompanyClientInterface {
     /**
      * Updates the data of a given company
      *
-     * @param company
+     * @param requestEntity
      * @throws ClientErrorException
      */
     @Override
-    public void edit(Company company) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(company, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    public void edit(Object requestEntity) throws ClientErrorException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     /**
