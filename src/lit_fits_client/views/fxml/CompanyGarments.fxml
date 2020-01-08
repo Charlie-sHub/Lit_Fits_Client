@@ -31,18 +31,19 @@
                      <content>
                         <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">
                           <columns>
-                            <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Picture" />
-                            <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Barcode" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Designer" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Brand" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Mood" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Type" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Part" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="137.33331298828125" text="Requested Promotion" />
-                              <TableColumn maxWidth="-1.0" minWidth="62.66668701171875" prefWidth="62.66668701171875" text="Promoted" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Available" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Color(s)" />
-                              <TableColumn maxWidth="-1.0" minWidth="100.0" prefWidth="143.7333984375" text="Material(s)" />
+                            <TableColumn fx:id="tableColumnPicture" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Picture" />
+                            <TableColumn fx:id="tableColumnBarcode" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Barcode" />
+                              <TableColumn fx:id="tableColumnDesigner" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Designer" />
+                              <TableColumn fx:id="tableColumnBrand" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Brand" />
+                              <TableColumn fx:id="tableColumnMood" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Mood" />
+                              <TableColumn fx:id="tableColumnType" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Type" />
+                              <TableColumn fx:id="tableColumnPart" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Part" />
+                              <TableColumn fx:id="tableColumnRequested" maxWidth="-1.0" minWidth="100.0" prefWidth="137.33331298828125" text="Requested Promotion" />
+                              <TableColumn fx:id="tableColumnPromoted" maxWidth="-1.0" minWidth="62.66668701171875" prefWidth="62.66668701171875" text="Promoted" />
+                              <TableColumn fx:id="tableColumnAvailable" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Available" />
+                              <TableColumn fx:id="tableColumnColors" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Color(s)" />
+                              <TableColumn fx:id="tableColumnMaterials" maxWidth="-1.0" minWidth="100.0" prefWidth="143.7333984375" text="Material(s)" />
+                              <TableColumn fx:id="tableColumnPrice" prefWidth="75.0" text="Price" />
                           </columns>
                         </TableView>
                      </content>

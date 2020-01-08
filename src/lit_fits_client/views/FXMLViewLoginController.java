@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -26,26 +27,78 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     @FXML
     protected Button btnLogin;
     /**
-     * Text field where username must be 
+     * Button to access the registration view
+     */
+    @FXML
+    protected Button btnSignUp;
+    /**
+     * Button to reestablish the password
+     */
+    @FXML
+    private Button btnReestablishPassword;
+    /**
+     * Radio button to access the company registration view
+     */
+    @FXML
+    private RadioButton rBtnCompany;
+    /**
+     * Radio button to access the fashion expert registration view
+     */
+    @FXML
+    private RadioButton rBtnFashionExpert;
+    /**
+     * Text field where username must be entered to log in
      */
     @FXML
     protected TextField txtUsername;
+    /**
+     *
+     */
     @FXML
     protected PasswordField fieldPassword;
-    @FXML
-    protected Button btnSignUp;
-    // We create here the stage to hide when the register stage will be opened
     private Stage stage;
     private Stage registerStage;
     private Stage mainStage;
+    private static final Logger LOG = Logger.getLogger(FXMLViewLoginController.class.getName());
 
-    // Getters and setters
     public Button getBtnLogin() {
         return btnLogin;
     }
 
     public void setBtnLogin(Button btnLogin) {
         this.btnLogin = btnLogin;
+    }
+
+    public Button getBtnSignUp() {
+        return btnSignUp;
+    }
+
+    public void setBtnSignUp(Button btnSignUp) {
+        this.btnSignUp = btnSignUp;
+    }
+
+    public Button getBtnReestablishPassword() {
+        return btnReestablishPassword;
+    }
+
+    public void setBtnReestablishPassword(Button btnReestablishPassword) {
+        this.btnReestablishPassword = btnReestablishPassword;
+    }
+
+    public RadioButton getrBtnCompany() {
+        return rBtnCompany;
+    }
+
+    public void setrBtnCompany(RadioButton rBtnCompany) {
+        this.rBtnCompany = rBtnCompany;
+    }
+
+    public RadioButton getrBtnFashionExpert() {
+        return rBtnFashionExpert;
+    }
+
+    public void setrBtnFashionExpert(RadioButton rBtnFashionExpert) {
+        this.rBtnFashionExpert = rBtnFashionExpert;
     }
 
     public TextField getTxtUsername() {
@@ -62,14 +115,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     public void setFieldPassword(PasswordField fieldPassword) {
         this.fieldPassword = fieldPassword;
-    }
-
-    public Button getBtnRegister() {
-        return btnSignUp;
-    }
-
-    public void setBtnRegister(Button btnRegister) {
-        this.btnSignUp = btnRegister;
     }
 
     public Stage getStage() {
@@ -95,7 +140,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
-    private static final Logger LOG = Logger.getLogger(FXMLViewLoginController.class.getName());
 
     /**
      * This function will initialised the window
