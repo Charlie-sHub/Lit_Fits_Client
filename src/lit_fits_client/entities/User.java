@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.entities;
 
 import java.io.Serializable;
@@ -14,6 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * The class that will be used to manage all the users data.
+ * 
  * @author Asier 
  */
 
@@ -41,6 +37,7 @@ public class User implements Serializable {
     
     /**
      * Simple user constructor, used for classes that extend user
+     * 
      * @param username The username that will be set.
      * @param fullName The full name that will be set.
      * @param password The password that that will be set.
