@@ -1,5 +1,6 @@
 package lit_fits_client.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,16 +13,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.entities.BodyPart;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
+import lit_fits_client.entities.GarmentType;
+import lit_fits_client.entities.Mood;
 
 /**
  * The "Warehouse" window for companies
@@ -63,67 +69,62 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * The columns for the pictures
      */
     @FXML
-    private TableColumn tableColumnPicture;
+    private TableColumn<Garment, File> tableColumnPicture;
     /**
      * The columns for the barcodes
      */
     @FXML
-    private TableColumn tableColumnBarcode;
+    private TableColumn<Garment, String> tableColumnBarcode;
     /**
      * The columns for the prices
      */
     @FXML
-    private TableColumn tableColumnPrice;
+    private TableColumn<Garment, String> tableColumnPrice;
     /**
      * The columns for the designers
      */
     @FXML
-    private TableColumn tableColumnDesigner;
-    /**
-     * The columns for the brands
-     */
-    @FXML
-    private TableColumn tableColumnBrand;
+    private TableColumn<Garment, String> tableColumnDesigner;
     /**
      * The columns for the moods
      */
     @FXML
-    private TableColumn tableColumnMood;
+    private TableColumn<Garment, Mood> tableColumnMood;
     /**
      * The columns for the types
      */
     @FXML
-    private TableColumn tableColumnType;
+    private TableColumn<Garment, GarmentType> tableColumnType;
     /**
      * The columns for the body part
      */
     @FXML
-    private TableColumn tableColumnPart;
+    private TableColumn<Garment, BodyPart> tableColumnPart;
     /**
      * The columns for the promotion requests
      */
     @FXML
-    private TableColumn tableColumnRequested;
+    private TableColumn<Garment, Boolean> tableColumnRequested;
     /**
      * The columns for the promotions
      */
     @FXML
-    private TableColumn tableColumnPromoted;
+    private TableColumn<Garment, Boolean> tableColumnPromoted;
     /**
      * The columns for the availability
      */
     @FXML
-    private TableColumn tableColumnAvailable;
+    private TableColumn<Garment, Boolean> tableColumnAvailable;
     /**
      * The columns for the colors
      */
     @FXML
-    private TableColumn tableColumnColors;
+    private TableColumn<Garment, ComboBox> tableColumnColors;
     /**
      * The columns for the materials
      */
     @FXML
-    private TableColumn tableColumnMaterials;
+    private TableColumn<Garment, ComboBox> tableColumnMaterials;
     /**
      * The list of garments of the company
      */
@@ -367,14 +368,14 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnPromoted.setCellValueFactory(new PropertyValueFactory("promoted"));
         tableColumnRequested.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
         tableColumnPrice.setCellFactory(new PropertyValueFactory("price"));
+        tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
+        tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
+        tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
+        // Use an ObservableList? but how will i get one?
+        tableColumnMaterials.setCellFactory(ComboBoxTableCell.forTableColumn(new PropertyValueFactory<Mat>));
+        tableColumnColors.setCellFactory(new ComboBoxTableCell(new PropertyValueFactory("colors")));
         //What do?
-        //tableColumnType.setCellValueFactory(new PropertyValueFactory("available"));
         //tableColumnPicture.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnMood.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnPart.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnMaterials.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnColors.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnBrand.setCellValueFactory(new PropertyValueFactory("available"));
     }
 
     /**

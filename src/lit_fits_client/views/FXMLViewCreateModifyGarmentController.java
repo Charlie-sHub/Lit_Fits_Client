@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -611,9 +612,9 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         materialClient = new ClientFactory().getMaterialClient();
         comboColors.setItems(materialClient.findAll(List.class));
         materialClient.close();
-        comboBodyPart.getItems().setAll(BodyPart.values());
-        comboMood.getItems().setAll(Mood.values());
-        comboGarmentType.getItems().setAll(GarmentType.values());
+        comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
+        comboMood.getItems().setAll(Arrays.toString(Mood.values()));
+        comboGarmentType.getItems().setAll(Arrays.toString(GarmentType.values()));
     }
 
     /**
@@ -772,7 +773,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         previousStage.show();
         stage.hide();
     }
-    
+
     @Override
     public void onRegisterPress(ActionEvent event) {
         GarmentClient garmentClient = new ClientFactory().getGarmentClient();
@@ -808,7 +809,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setGarmentType((GarmentType) comboGarmentType.getValue());
         garment.setMaterials((Set<Material>) comboMaterials.getValue());
         garment.setMood((Mood) comboMood.getValue());
-        garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
+        //garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
     }
 
     /**

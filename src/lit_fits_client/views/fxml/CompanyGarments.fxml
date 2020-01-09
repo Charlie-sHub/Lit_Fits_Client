@@ -34,7 +34,6 @@
                             <TableColumn fx:id="tableColumnPicture" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Picture" />
                             <TableColumn fx:id="tableColumnBarcode" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Barcode" />
                               <TableColumn fx:id="tableColumnDesigner" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Designer" />
-                              <TableColumn fx:id="tableColumnBrand" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Brand" />
                               <TableColumn fx:id="tableColumnMood" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Mood" />
                               <TableColumn fx:id="tableColumnType" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Type" />
                               <TableColumn fx:id="tableColumnPart" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Part" />

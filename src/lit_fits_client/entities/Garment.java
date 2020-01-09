@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -36,15 +37,15 @@ public class Garment implements Serializable {
     /**
      * The kind of situation is suited for
      */
-    private Mood mood;
+    private SimpleObjectProperty mood;
     /**
      * Where it is worn
      */
-    private BodyPart bodyPart;
+    private SimpleObjectProperty bodyPart;
     /**
      * What kind of garment it is
      */
-    private GarmentType garmentType;
+    private SimpleObjectProperty garmentType;
     /**
      * Indicates if it can be bought
      */
@@ -68,15 +69,15 @@ public class Garment implements Serializable {
     /**
      * What colors are in the garment
      */
-    private Set<Color> colors;
+    private SimpleObjectProperty colors;
     /**
      * What materials is the garment made out of
      */
-    private Set<Material> materials;
+    private SimpleObjectProperty materials;
     /**
      * The picture of the garment
      */
-    private File picture;
+    private SimpleObjectProperty picture;
 
     /**
      * Empty constructor
@@ -100,21 +101,23 @@ public class Garment implements Serializable {
      * @param company
      * @param colors
      * @param materials
+     * @param picture
      */
-    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials) {
+    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, File picture) {
         this.barcode = new SimpleStringProperty(barcode);
         this.designer = new SimpleStringProperty(designer);
         this.price = new SimpleDoubleProperty(price);
-        this.mood = mood;
-        this.bodyPart = bodyPart;
-        this.garmentType = garmentType;
+        this.mood = new SimpleObjectProperty<Mood>(mood);
+        this.bodyPart = new SimpleObjectProperty<BodyPart>(bodyPart);
+        this.garmentType = new SimpleObjectProperty<GarmentType>(garmentType);
         this.available = new SimpleBooleanProperty(available);
         this.promotionRequest = new SimpleBooleanProperty(promotionRequest);
         this.promoted = new SimpleBooleanProperty(promoted);
         this.imagePath = imagePath;
         this.company = company;
-        this.colors = colors;
-        this.materials = materials;
+        this.colors = new SimpleObjectProperty<Set<Color>>(colors);
+        this.materials = new SimpleObjectProperty<Set<Material>>(materials);
+        this.picture = new SimpleObjectProperty<File>(picture);
     }
 
     public long getId() {
@@ -150,27 +153,27 @@ public class Garment implements Serializable {
     }
 
     public Mood getMood() {
-        return mood;
+        return (Mood) this.mood.get();
     }
 
     public void setMood(Mood mood) {
-        this.mood = mood;
+        this.mood.set(mood);
     }
 
     public BodyPart getBodyPart() {
-        return bodyPart;
+        return (BodyPart) this.bodyPart.get();
     }
 
     public void setBodyPart(BodyPart bodyPart) {
-        this.bodyPart = bodyPart;
+        this.bodyPart.set(bodyPart);
     }
 
     public GarmentType getGarmentType() {
-        return garmentType;
+        return (GarmentType) this.garmentType.get();
     }
 
     public void setGarmentType(GarmentType garmentType) {
-        this.garmentType = garmentType;
+        this.garmentType.set(garmentType);
     }
 
     public boolean isAvailable() {
@@ -214,27 +217,27 @@ public class Garment implements Serializable {
     }
 
     public Set<Color> getColors() {
-        return colors;
+        return (Set<Color>) this.colors.get();
     }
 
     public void setColors(Set<Color> colors) {
-        this.colors = colors;
+        this.colors.set(colors);
     }
 
     public Set<Material> getMaterials() {
-        return materials;
+        return (Set<Material>) this.materials.get();
     }
 
     public void setMaterials(Set<Material> materials) {
-        this.materials = materials;
+        this.materials.set(materials);
     }
 
     public File getPicture() {
-        return picture;
+        return (File) this.picture.get();
     }
 
     public void setPicture(File picture) {
-        this.picture = picture;
+        this.picture.set(picture);
     }
 
     @Override
