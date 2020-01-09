@@ -1,4 +1,5 @@
 package lit_fits_client.views;
+//nif pattern
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClientOld;
+import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 
@@ -442,31 +443,45 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        choiceTheme.setOnAction(this::onThemeChosen);
+        setOnAction();
+        setMnemonicParsing();
         lblPassMismatch.setVisible(false);
         lblLength.setVisible(false);
         btnSubmit.setDisable(true);
         btnRedo.setDisable(true);
-        btnCancel.setOnAction(this::onBtnCancelPress);
-        btnCancel.setMnemonicParsing(true);
-        btnCancel.setText("_Cancel");
-        btnSubmit.setOnAction(this::onRegisterPress);
-        btnSubmit.setMnemonicParsing(true);
-        btnSubmit.setText("_Register");
-        btnUndo.setOnAction(this::onUndoPress);
-        btnUndo.setMnemonicParsing(true);
-        btnUndo.setText("_Undo");
-        btnRedo.setOnAction(this::onRedoPress);
-        btnRedo.setMnemonicParsing(true);
-        btnRedo.setText("_Redo");
-        btnHelp.setOnKeyPressed(this::onF1Pressed);
-        btnHelp.setOnAction(this::onHelpPressed);
         txtNif.requestFocus();
         setFocusTraversable();
         setListeners();
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
+    }
+
+    /**
+     * Sets the mnemonic parsing for different elements
+     */
+    private void setMnemonicParsing() {
+        btnCancel.setText("_Cancel");
+        btnSubmit.setText("_Register");
+        btnUndo.setText("_Undo");
+        btnRedo.setText("_Redo");
+        btnSubmit.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        btnUndo.setMnemonicParsing(true);
+        btnRedo.setMnemonicParsing(true);
+    }
+
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        btnCancel.setOnAction(this::onBtnCancelPress);
+        btnSubmit.setOnAction(this::onRegisterPress);
+        btnUndo.setOnAction(this::onUndoPress);
+        btnRedo.setOnAction(this::onRedoPress);
+        btnHelp.setOnKeyPressed(this::onF1Pressed);
+        btnHelp.setOnAction(this::onHelpPressed);
     }
 
     /**
@@ -479,7 +494,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
             try {
                 openHelpView();
             } catch (IOException e) {
-                createDialog(e);
+                createExceptionDialog(e);
             }
         }
     }
@@ -506,7 +521,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         try {
             openHelpView();
         } catch (IOException e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 
@@ -579,7 +594,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClientOld companyClient = new ClientFactory().getCompanyClient();
+        CompanyClient companyClient = new ClientFactory().getCompanyClient();
         PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
         try {
             setCompanyData(publicKeyClient.getPublicKey(byte[].class));
@@ -595,7 +610,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
                 LOG.severe(e.getMessage());
             }
         } catch (ClientErrorException e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             companyClient.close();

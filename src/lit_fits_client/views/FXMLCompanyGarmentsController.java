@@ -430,7 +430,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.setStage(stage);
             garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root);
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }
@@ -451,7 +451,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.setStage(stage);
             garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root);
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }
@@ -467,7 +467,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         try {
             garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 
@@ -493,7 +493,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);
         } catch (ClientErrorException e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 

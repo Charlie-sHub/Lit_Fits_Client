@@ -785,7 +785,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             }
             stage.hide();
         } catch (ClientErrorException e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             garmentClient.close();
@@ -872,7 +872,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             try {
                 openHelpView();
             } catch (IOException e) {
-                createDialog(e);
+                createExceptionDialog(e);
             }
         }
     }
@@ -899,7 +899,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         try {
             openHelpView();
         } catch (IOException e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 }

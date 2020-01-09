@@ -342,7 +342,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
             try {
                 openHelpView();
             } catch (Exception e) {
-                createDialog(e);
+                createExceptionDialog(e);
             }
         }
     }
@@ -369,7 +369,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
         try {
             openHelpView();
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 
@@ -445,7 +445,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
                 LOG.severe(e.getMessage());
             }
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         }
     }

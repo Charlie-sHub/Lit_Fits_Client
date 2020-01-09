@@ -3,6 +3,7 @@ package lit_fits_client.views;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +14,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.CompanyClient;
+import lit_fits_client.entities.Company;
 
 /**
  * Controller for the Login view
@@ -30,7 +36,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Button to access the registration view
      */
     @FXML
-    protected Button btnSignUp;
+    protected Button btnRegister;
     /**
      * Button to reestablish the password
      */
@@ -69,12 +75,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         this.btnLogin = btnLogin;
     }
 
-    public Button getBtnSignUp() {
-        return btnSignUp;
+    public Button getBtnRegister() {
+        return btnRegister;
     }
 
-    public void setBtnSignUp(Button btnSignUp) {
-        this.btnSignUp = btnSignUp;
+    public void setBtnRegister(Button btnRegister) {
+        this.btnRegister = btnRegister;
     }
 
     public Button getBtnReestablishPassword() {
@@ -149,17 +155,16 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     public void initStage(String theme, Parent root) {
         try {
-            setTheme(theme);
-            setElements();
             Scene scene = new Scene(root);
             setStylesheet(scene, theme);
             stage.setScene(scene);
             stage.setTitle("Log In");
             stage.setMinWidth(700);
             stage.setMinHeight(500);
+            setElements();
             stage.show();
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
     }
@@ -168,8 +173,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * This function set the initial stages of the control
      */
     private void setElements() {
-        btnLogin.setDisable(true);
-        btnSignUp.setDisable(false);
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
@@ -177,21 +180,77 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
-        btnLogin.setOnAction(this::onBtnLoginPress);
-        btnLogin.setMnemonicParsing(true);
-        btnLogin.setText("_Login");
-        btnSignUp.setOnAction(this::onRegisterPress);
-        btnSignUp.setMnemonicParsing(true);
-        btnSignUp.setText("_Sign Up");
-        btnUndo.setOnAction(this::onUndoPress);
-        btnUndo.setMnemonicParsing(true);
-        btnUndo.setText("_Undo");
+        setOnAction();
+        setMnemonicParsing();
         btnRedo.setDisable(true);
-        btnRedo.setOnAction(this::onRedoPress);
-        btnRedo.setMnemonicParsing(true);
-        btnRedo.setText("_Redo");
+        btnLogin.setDisable(true);
+        btnRegister.setDisable(false);
         txtUsername.setEditable(true);
         fieldPassword.setEditable(true);
+        setTooltips();
+    }
+
+    /**
+     * Sets the tooltips of different elements
+     */
+    private void setTooltips() {
+        btnLogin.setTooltip(new Tooltip("Log into the program"));
+        btnReestablishPassword.setTooltip(new Tooltip("Forgot your password?"));
+        btnRegister.setTooltip(new Tooltip("Register a new account"));
+        btnRedo.setTooltip(new Tooltip("Redo what's been erased"));
+        btnUndo.setTooltip(new Tooltip("Erase everything"));
+        rBtnCompany.setTooltip(new Tooltip("Do you represent a company?"));
+        rBtnFashionExpert.setTooltip(new Tooltip("Are you a fashion expert?"));
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
+    }
+
+    /**
+     * Sets the mnemonic parsing for different elements
+     */
+    private void setMnemonicParsing() {
+        btnLogin.setText("_Login");
+        btnRegister.setText("_Sign Up");
+        btnUndo.setText("_Undo");
+        btnRedo.setText("_Redo");
+        btnRegister.setMnemonicParsing(true);
+        btnLogin.setMnemonicParsing(true);
+        btnUndo.setMnemonicParsing(true);
+        btnRedo.setMnemonicParsing(true);
+    }
+
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
+    private void setOnAction() {
+        btnLogin.setOnAction(this::onBtnLoginPress);
+        btnRegister.setOnAction(this::onRegisterPress);
+        btnUndo.setOnAction(this::onUndoPress);
+        btnRedo.setOnAction(this::onRedoPress);
+        btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
+    }
+
+    /**
+     * Checks what kind and what especific of account it is and requests the server to reestablish the corresponding
+     * password
+     *
+     * @param event
+     */
+    private void onReestablishPasswordPress(ActionEvent event) {
+        try {
+            if (txtUsername.getText() != null) {
+                if (nifPatternCheck(txtUsername.getText())) {
+                    CompanyClient companyClient = new ClientFactory().getCompanyClient();
+                    companyClient.reestablishPassword(txtUsername.getText());
+                    companyClient.close(); // is it important to close them?
+                } else {
+                    //fashion expert register
+                }
+            } else {
+                createDialog("Please insert your username/nif");
+            }
+        } catch (ClientErrorException e) {
+            createExceptionDialog(e);
+        }
     }
 
     /**
@@ -209,7 +268,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         txtUsername.setFocusTraversable(true);
         fieldPassword.setFocusTraversable(true);
         btnLogin.setFocusTraversable(true);
-        btnSignUp.setFocusTraversable(true);
+        btnRegister.setFocusTraversable(true);
+        btnUndo.setFocusTraversable(true);
+        btnRedo.setFocusTraversable(true);
+        rBtnCompany.setFocusTraversable(true);
+        rBtnFashionExpert.setFocusTraversable(true);
+        btnReestablishPassword.setFocusTraversable(true);
     }
 
     /**
@@ -239,27 +303,26 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @param event
      */
     private void onBtnLoginPress(ActionEvent event) {
-        // Gotta adapt it so it opens the right main menu , company's main menu for example
-        user = new User();
         try {
-            user.setLogin(txtUsername.getText());
-            user.setPassword(fieldPassword.getText());
-            user.setUserStatus(true);
-            user.setUserPrivilege(false);
-            user = appLogic.logIn(user);
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewProgramMain.fxml"));
-            Stage stageProgramMain = new Stage();
-            Parent root = (Parent) fxmlLoader.load();
-            FXMLViewProgramController mainView = ((FXMLViewProgramController) fxmlLoader.getController());
-            //no applogic anymore?
-            mainView.setAppLogic(appLogic);
-            mainView.setUser(user);
-            mainView.setLogin(stage);
-            //adapt it so it takes the theme chosen from the choice box
-            mainView.initStage(happyMode, stageProgramMain, root);
+            if (nifPatternCheck(txtUsername.getText())) {
+                Company company = new Company();
+                CompanyClient companyClient = new ClientFactory().getCompanyClient();
+                company.setNif(txtUsername.getText());
+                company.setPassword(fieldPassword.getText());
+                company = companyClient.login(company, Company.class);
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyMainMenuController.fxml"));
+                Stage stageCompanyMainMenu = new Stage();
+                Parent root = (Parent) fxmlLoader.load();
+                FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+                mainView.setCompany(company);
+                mainView.setLoginStage(this.stage);
+                mainView.initStage(theme, stageCompanyMainMenu, root);
+            } else {
+                //fashion expert
+            }
             stage.hide();
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
     }
@@ -272,19 +335,31 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     @Override
     public void onRegisterPress(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewSignUp.fxml"));
-            Parent root = (Parent) fxmlLoader.load();
-            FXMLViewRegisterController registerView = ((FXMLViewRegisterController) fxmlLoader.getController());
-            registerStage = new Stage();
-            //no applogic anymore?
-            registerView.setAppLogic(appLogic);
-            registerView.setLogin(stage);
-            //adapt it so it takes the theme chosen from the choice box
-            registerView.initStage(happyMode, registerStage, root);
+            if (rBtnCompany.isSelected()) {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyRegisterController.fxml"));
+                Parent root = (Parent) fxmlLoader.load();
+                FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
+                registerStage = new Stage();
+                registerView.setLogin(stage);
+                registerView.initStage(theme, registerStage, root);
+            } else {
+                // fashion expert registration
+            }
             stage.hide();
         } catch (IOException e) {
             LOG.severe(e.getMessage());
         }
         stage.hide();
+    }
+
+    /**
+     * Checks that a given String follows the nif pattern
+     *
+     * @return boolean true if the nif matches the pattern
+     */
+    private boolean nifPatternCheck(String nif) {
+        boolean isNif;
+        isNif = Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
+        return isNif;
     }
 }

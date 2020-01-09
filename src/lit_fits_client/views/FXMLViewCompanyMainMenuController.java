@@ -188,16 +188,30 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
-        choiceTheme.setOnAction(this::onThemeChosen);
-        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         // Fill the ChoiceBox
-        btnLogout.setOnAction(this::onBtnLogoutPress);
-        btnLogout.setTooltip(new Tooltip("Log out of the program"));
-        btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
-        btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
-        btnWarehouse.setOnAction(this::onBtnWarehousePress);
-        btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
+        setOnAction();
+        setTooltips();
         setFocusTraversable();
+    }
+
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        btnLogout.setOnAction(this::onBtnLogoutPress);
+        btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
+        btnWarehouse.setOnAction(this::onBtnWarehousePress);
+    }
+
+    /**
+     * Sets the tooltips of different elements
+     */
+    private void setTooltips() {
+        btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
+        btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
+        btnLogout.setTooltip(new Tooltip("Log out of the program"));
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
     }
 
     /**
@@ -236,7 +250,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root);
             stage.hide();
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }
@@ -257,7 +271,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root);
             stage.hide();
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }

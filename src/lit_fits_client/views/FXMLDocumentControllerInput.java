@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.util.ArrayList;
@@ -13,18 +8,66 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
+ * Document Controller with methods to validate input fields common to all views with inputs
  *
- * @author Ander Rodriguez
+ * @author Ander Rodriguez & Carlos Mendez
  */
 public abstract class FXMLDocumentControllerInput extends FXMLDocumentController {
+    /**
+     * Label that warns the user about the lenght of a text
+     */
     @FXML
     protected Label lblLength;
+    /**
+     * Button to "undo"
+     */
     @FXML
     protected Button btnUndo;
+    /**
+     * Button to "redo"
+     */
     @FXML
     protected Button btnRedo;
+    /**
+     * ArrayList that saves the text that was undone
+     */
     protected ArrayList<String> undoneStrings;
+    /**
+     * ArrayList of all the TextFields of the view
+     */
     protected ArrayList<TextField> textFields;
+
+    public Label getLblLength() {
+        return lblLength;
+    }
+
+    public void setLblLength(Label lblLength) {
+        this.lblLength = lblLength;
+    }
+
+    public Button getBtnUndo() {
+        return btnUndo;
+    }
+
+    public void setBtnUndo(Button btnUndo) {
+        this.btnUndo = btnUndo;
+    }
+
+    public Button getBtnRedo() {
+        return btnRedo;
+    }
+
+    public void setBtnRedo(Button btnRedo) {
+        this.btnRedo = btnRedo;
+    }
+
+    public ArrayList<String> getUndoneStrings() {
+        return undoneStrings;
+    }
+
+    public void setUndoneStrings(ArrayList<String> undoneStrings) {
+        this.undoneStrings = undoneStrings;
+    }
 
     public ArrayList<TextField> getTextFields() {
         return textFields;
@@ -41,17 +84,8 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param btn
      */
     public void onFieldFilled(Button btn) {
-        Boolean disable = null;
-        for (TextField textField : textFields) {
-            if (textField.getText().trim().isEmpty()) {
-                disable = true;
-                break;
-            } else {
-                disable = false;
-            }
-        }
-        if (disable) {
-            btn.setDisable(disable);
+        if (textFields.stream().filter(textField -> textField.getText().trim().isEmpty()).count() > 0) {
+            btn.setDisable(true);
         } else {
             lengthCheck(btn);
         }
@@ -65,17 +99,12 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param btn The login or register button to be disabled or enabled
      */
     public void lengthCheck(Button btn) {
-        Boolean disable = null;
-        for (TextField textField : textFields) {
-            if (textField.getText().trim().length() > 30) {
-                disable = true;
-                break;
-            } else {
-                disable = false;
-            }
+        if (textFields.stream().filter(textField -> textField.getText().trim().length() > 30).count() > 0) {
+            lblLength.setVisible(true);
+            btn.setDisable(true);
+        } else {
+            btn.setDisable(false);
         }
-        lblLength.setVisible(disable);
-        btn.setDisable(disable);
     }
 
     /**
@@ -85,10 +114,7 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param event
      */
     public void onUndoPress(ActionEvent event) {
-        for (TextField textField : textFields) {
-            undoneStrings.add(textField.getText());
-            textField.setText("");
-        }
+        textFields.stream().forEach(textField -> undoneStrings.add(textField.getText()), textField.setText(""));
         btnRedo.setDisable(false);
     }
 
@@ -100,10 +126,7 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      */
     public void onRedoPress(ActionEvent event) {
         int aux = 0;
-        for (TextField textField : textFields) {
-            textField.setText(undoneStrings.get(aux));
-            aux++;
-        }
+        textFields.stream().forEach(textField -> textField.setText(undoneStrings.get(aux)), aux++);
         btnRedo.setDisable(true);
         undoneStrings.removeAll(undoneStrings);
     }

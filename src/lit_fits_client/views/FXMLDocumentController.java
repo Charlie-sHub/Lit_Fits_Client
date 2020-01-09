@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.io.FileOutputStream;
@@ -32,24 +27,14 @@ import thebestprogramlogiclibrary.logic.ApplicationLogicImplementation;
 /**
  * Core of the document controllers
  *
- * @author Ander Rodriguez
+ * @author Ander Rodriguez & Carlos Mendez
  */
 public class FXMLDocumentController {
     @FXML
     protected ChoiceBox<String> choiceTheme;
-    //protected User user;
     protected String theme;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
-    /*
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-     */
     public String getTheme() {
         return theme;
     }
@@ -105,7 +90,7 @@ public class FXMLDocumentController {
      * @author Carlos Rafael Mendez Gonzalez
      * @param e exception to be handled
      */
-    public void createDialog(Exception e) {
+    public void createExceptionDialog(Exception e) {
         String errorString = null;
         if (e instanceof IOException) {
             errorString = "IOException ocurred \n" + e.getMessage();
@@ -130,6 +115,18 @@ public class FXMLDocumentController {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText(errorString);
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates a dialog with information for the user
+     *
+     * @param text
+     */
+    public void createDialog(String text) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Attention");
+        alert.setContentText(text);
         alert.showAndWait();
     }
 
