@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.util.logging.Logger;
@@ -17,18 +12,21 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import lit_fits_client.entities.User;
 
 /**
- * The controller for the view in wich the admin can check 
- * the promotion requests for a garment and the garments 
- * that are already promoted.
+ * The view controller in wich the admin can check 
+ * the promotion requests for a garment and the 
+ * garments that are already promoted.
+ * 
  * @author Asier
  */
 public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     
     private static final Logger LOG = Logger.getLogger(FXMLAdminCheckRequestsController.class.getName());
     
-    //private Admin admin;
+    private User admin;
+    
     private boolean saved;
     
     private Stage stage;
@@ -66,28 +64,45 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     @FXML
     private ChoiceBox choiceBoxFilterBy;
     
+    /**
+     * The method that initiates the view.
+     * 
+     * @param theme
+     * @param stage
+     * @param root 
+     */
     public void initStage(String theme, Stage stage, Parent root) {
         
         this.stage = stage;
         this.theme = theme;
+        
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Check promotion requests");
         stage.show();
+        
         this.setStylesheet(scene, theme);
         this.setElements();
+        this.choiceTheme.setValue(theme);
+        
         stage.setOnCloseRequest(this::onClosing);
     }
     
+    /**
+     * This method was created to group another 3 different methods. 
+     * That makes reading the code easier.
+     */
     private void setElements() {
         
         this.setMnemonicText();
         this.setTooltips();
         this.setOnAction();
-        
-        this.choiceTheme.setValue(theme);
     }
     
+    /**
+     * This method sets the texts of the controllers so the user can press 
+     * <i>Alt + the first letter of the word</i> as a shortcut.
+     */
     private void setMnemonicText() {
         
         menuFile.setText("_File");
@@ -102,12 +117,18 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         btnBack.setText("_Back");
     }
     
+    /**
+     * Sets the tooltips for the buttons on the view.
+     */
     private void setTooltips() {
         
         btnSave.setTooltip(new Tooltip("Save the changes"));
         btnBack.setTooltip(new Tooltip("Go to the previous window"));
     }
     
+    /**
+     * Sets the actions for all the controllers on the view.
+     */
     private void setOnAction() {
         
         choiceTheme.setOnAction(this::onThemeChosen);
@@ -122,22 +143,47 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         btnBack.setText(this::onBtnBackPress);
     }
     
+    /**
+     * The event that will happen when the <i>Save</i> button is pressed.
+     * 
+     * @param event The action event of the view.
+     */
     private void onBtnSavePress(ActionEvent event) {
         
     }
     
+    /**
+     * The event that will happen when the <i>Back</i> button is pressed.
+     * 
+     * @param event The action event of the view.
+     */
     private void onBtnBackPress(ActionEvent event){
         
     }
     
+    /**
+     * The event that will happen when the <i>Promote</i> menu item is pressed.
+     * 
+     * @param event The action event of the view.
+     */
     private void onMenuItemPromotePress(ActionEvent event) {
         
     }
     
+    /**
+     * The event that will happen when the <i>Delete promotion</i> menu item is pressed.
+     * 
+     * @param event The action event of the view.
+     */
     private void onMenuItemDeletePromotionPress(ActionEvent event) {
         
     }
     
+    /**
+     * The event that will happen when the <i>Cancel request</i> menu item is pressed.
+     * 
+     * @param event The action event of the view.
+     */
     private void onMenuItemCancelRequestPress(ActionEvent event) {
         
     }
