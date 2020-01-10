@@ -3,6 +3,8 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import lit_fits_client.RESTClients.GarmentClientInterface;
 
 /**
  * Jersey REST client generated for REST resource:GarmentFacadeREST [litfitsserver.entities.garment]<br>
@@ -163,16 +165,15 @@ public class GarmentClient implements GarmentClientInterface {
      * Gets the picture of the garment
      *
      * @param <T>
-     * @param responseType
      * @param id
      * @return Image
      * @throws ClientErrorException
      */
     @Override
-    public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T getImage(String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("picture/{0}", new Object[]{id}));
-        return resource.get(responseType);
+        return (T) resource.request(MediaType.APPLICATION_OCTET_STREAM).get();
     }
 
     /**

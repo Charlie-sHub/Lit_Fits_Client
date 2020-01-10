@@ -106,12 +106,11 @@ public interface GarmentClientInterface {
      * Gets the picture of the garment
      *
      * @param <T>
-     * @param responseType
      * @param id
      * @return
      * @throws ClientErrorException
      */
-    <T> T getImage(Class<T> responseType, String id) throws ClientErrorException;
+    <T> T getImage(String id) throws ClientErrorException;
 
     /**
      * Deletes the garment associated with the given id
@@ -120,4 +119,6 @@ public interface GarmentClientInterface {
      * @throws ClientErrorException
      */
     void remove(String id) throws ClientErrorException;
+    
+    
 }

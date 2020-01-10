@@ -741,13 +741,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void checkComboBoxes(Button btnSubmit) {
         Boolean disableSubmit = null;
-        for (ComboBox comboBox : comboBoxes) {
-            if (comboBox.getValue() == null) {
-                disableSubmit = true;
-                break;
-            } else {
-                disableSubmit = false;
-            }
+        long nullCount = comboBoxes.stream().filter(comboBox -> comboBox.getValue().equals(null)).count();
+        if (nullCount > 0) {
+            disableSubmit = true;
+        } else {
+            disableSubmit = false;
         }
         btnSubmit.setDisable(disableSubmit);
         onFieldFilled(btnSubmit);

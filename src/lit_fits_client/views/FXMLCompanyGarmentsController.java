@@ -371,8 +371,8 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
         tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
-        // Use an ObservableList? but how will i get one?
-        tableColumnMaterials.setCellFactory(ComboBoxTableCell.forTableColumn(new PropertyValueFactory<Mat>));
+        // Use an ObservableList? but how will i get one for the set of materials and colors of the garment of that cell?
+        tableColumnMaterials.setCellFactory(new ComboBoxTableCell(garmentList.));
         tableColumnColors.setCellFactory(new ComboBoxTableCell(new PropertyValueFactory("colors")));
         //What do?
         //tableColumnPicture.setCellValueFactory(new PropertyValueFactory("available"));
