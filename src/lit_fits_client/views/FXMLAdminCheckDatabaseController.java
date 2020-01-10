@@ -42,7 +42,13 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private Button btnBack;
     
-    // initStage
+    /**
+     * The method that initiates the view.
+     * 
+     * @param theme
+     * @param stage
+     * @param root 
+     */
     private void initStage (String theme, Stage stage, Parent root) {
         
         this.stage = stage;
@@ -61,7 +67,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
     }
     
-    // setElements
+    /**
+     * This method was created to group another 3 different methods. 
+     * That makes reading the code easier.
+     */
     private void setElements() {
         
         this.setMnemonicText();
@@ -69,7 +78,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         this.setOnAction();
     }
     
-    // setMnemonicText
+    /**
+     * This method sets the texts of the controllers so the user can press 
+     * <i>Alt + the first letter of the word</i> as a shortcut.
+     */
     private void setMnemonicText() {
         
         menuFile.setText("_File");
@@ -80,14 +92,12 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         btnBack.setText("_Back");
     }
 
-    // setTooltips
     private void setTooltips() {
         
         btnDeleteItem.setTooltip(new Tooltip(""));
         btnBack.setTooltip(new Tooltip(""));
     }
 
-    // setOnAction
     private void setOnAction() {
         menuItemDeleteItem.setOnAction(this::onBtnDeleteItemPress);
         menuItemBack.setOnAction(this::onBtnBackPress);
@@ -96,13 +106,20 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         btnBack.setOnAction(this::onBtnBackPress);
     }
     
-    // onBtnBackPress
-    // onBtnDeleteItemPress
-    
+    /**
+     * 
+     * 
+     * @param event 
+     */
     private void onBtnBackPress(ActionEvent event) {
         
     }
     
+    /**
+     * The event that will happen when the <i>Delete item</i> button is pressed.
+     * 
+     * @param event 
+     */
     private void onBtnDeleteItemPress (ActionEvent event) {
         
     }
