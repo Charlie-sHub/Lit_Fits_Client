@@ -66,9 +66,9 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         this.theme = theme;
         
         Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Administrator - Main menu");
-        stage.show();
+        this.stage.setScene(scene);
+        this.stage.setTitle("Administrator - Main menu");
+        this.stage.show();
         
         this.setStylesheet(scene, theme);
         this.setElements();
@@ -99,7 +99,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         
         btnClose.setText("_Close");
         btnCheckPromotions.setText("Check _promotions");
-        btnCheckDatabase.setText("");
+        btnCheckDatabase.setText("Check _database");
     }
     
     /**
