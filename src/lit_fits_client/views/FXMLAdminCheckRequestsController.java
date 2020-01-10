@@ -78,7 +78,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Check promotion requests");
+        stage.setTitle("Administrator - Check promotion requests");
         stage.show();
         
         this.setStylesheet(scene, theme);
@@ -153,12 +153,19 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
     
     /**
-     * The event that will happen when the <i>Back</i> button is pressed.
+     * The event that will happen when the <i>Back</i> button is pressed. 
+     * If the data is not saved before exiting, a confirmation dialog appears to 
+     * confirm the operation.
      * 
      * @param event The action event of the view.
      */
     private void onBtnBackPress(ActionEvent event){
         
+        //if (saved) {
+            // Close the window
+        //} else
+            // Open confirmation dialog
+        //}
     }
     
     /**

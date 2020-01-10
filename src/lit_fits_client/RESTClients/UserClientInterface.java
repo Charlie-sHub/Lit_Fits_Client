@@ -1,72 +1,83 @@
 package lit_fits_client.RESTClients;
 
-import lit_fits_client.entities.User;
+import javax.ws.rs.ClientErrorException;
 
 /**
- *
+ * The interface for the user in the client.
+ * 
  * @author Asier
  */
 public interface UserClientInterface {
-    
+ 
     /**
-     * 
-     */
-    public void close();
-    
-    /**
-     * 
-     * @return 
-     */
-    public String countREST();
-    
-    /**
-     * 
-     * @param requestEntity 
-     */
-    public void create(Object requestEntity);
-    
-    /**
-     * 
-     * @param user 
-     */
-    public void edit(User user);
-    
-    /**
+     * Gets the user with the received username.
      * 
      * @param <T>
      * @param responseType
-     * @param id
-     * @return 
+     * @param id The username for the user that will be selected.
+     * @return The user with all the data.
+     * @throws ClientErrorException 
      */
-    public <T> T find(Class<T> responseType, String id);
+    public <T> T findUser (Class<T> responseType, String id) throws ClientErrorException;
     
     /**
+     * Removes a user from the database.
+     * 
+     * @param id The username for the user that will be removed.
+     * @throws ClientErrorException 
+     */
+    public void removeUser (String id) throws ClientErrorException;
+    
+    /**
+     * Returns the user that contains the received email.
      * 
      * @param <T>
      * @param responseType
-     * @return 
+     * @param email The email that will be used to filter.
+     * @return The user with all the data.
+     * @throws ClientErrorException 
      */
-    public <T> T findAll(Class<T> responseType);
+    public <T> T findUserByEmail (Class<T> responseType, String email) throws ClientErrorException;
     
     /**
+     * Returns all the users on the database.
      * 
      * @param <T>
+     * @param responseType
+     * @return All the users with their data.
+     * @throws ClientErrorException 
+     */
+    public <T> T findAllUser (Class<T> responseType) throws ClientErrorException;
+    
+    /**
+     * Updates the data for the received user.
+     * 
      * @param requestEntity
+     * @param id The user that will be modified, with the new data.
+     * @throws ClientErrorException 
+     */
+    public void editUser (Object requestEntity, String id) throws ClientErrorException;
+    
+    /**
+     * Inserts a new user on the database.
+     * 
+     * @param requestEntity
+     * @throws ClientErrorException 
+     */
+    public void createUser (Object requestEntity) throws ClientErrorException;
+    
+    /**
+     * Counts the number of users in the database.
+     * 
+     * @param <T>
      * @param responseType
-     * @return 
+     * @return
+     * @throws ClientErrorException 
      */
-    public <T> T login(Object requestEntity, Class<T> responseType);
+    public <T> T countRESTUser (Class<T> responseType) throws ClientErrorException;
     
     /**
-     * 
-     * @param username 
+     * This method closes the client.
      */
-    public void reestablishPassword(String username);
-    
-    /**
-     * 
-     * @param username 
-     */
-    public void remove(String username);
-    
+    public void close ();
 }
