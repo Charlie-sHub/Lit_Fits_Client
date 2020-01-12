@@ -17,7 +17,7 @@ public interface ExpertClientInterface {
      */
     void close();
     
-        /**
+    /**
      * Sends a request to save a new fashion expert in the database
      *
      * @param requestEntity
@@ -40,8 +40,36 @@ public interface ExpertClientInterface {
      * @param <T>
      * @param responseType
      * @param id
-     * @return Company
+     * @return FashionExpert
      * @throws ClientErrorException
      */
     <T> T find(Class<T> responseType, String id) throws ClientErrorException;
+    
+        /**
+     * Reestablishes the password of associated Expert with the given username, sending an email with the new password
+     *
+     * @param username
+     * @throws ClientErrorException
+     */
+    void reestablishPassword(String username) throws ClientErrorException;
+    
+    /**
+     * Deletes the Expert with the given id
+     *
+     * @param id
+     * @throws ClientErrorException
+     */
+    void remove(String id) throws ClientErrorException;
+    
+        /**
+     * Takes an username and password ,encapsulated in a FashionExpert object,
+     * and returns the full expert
+     *
+     * @param <T>
+     * @param requestEntity
+     * @param responseType
+     * @return FashionExpert
+     * @throws ClientErrorException
+     */
+    <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException;
 }
