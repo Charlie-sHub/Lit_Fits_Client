@@ -308,18 +308,25 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param root The Parent used in previous windows
      *
      * @param stage
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Warehouse");
-        stage.setMinWidth(1280);
-        stage.setMinHeight(720);
-        stage.show();
-        setStylesheet(scene, theme);
-        setElements();
-        stage.setOnCloseRequest(this::onClosing);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Warehouse");
+            stage.setMinWidth(1280);
+            stage.setMinHeight(720);
+            stage.show();
+            setStylesheet(scene, theme);
+            setElements();
+            stage.setOnCloseRequest(this::onClosing);
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
+        }
     }
 
     /**
@@ -353,7 +360,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = new ClientFactory().getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(List.class, company.getNif()));
         tableGarments.setItems(garmentList);
     }
@@ -429,7 +436,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
@@ -450,7 +457,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
@@ -464,7 +471,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnDeletePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient= new ClientFactory().getGarmentClient(uri);
         try {
             garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
@@ -489,7 +496,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = new ClientFactory().getGarmentClient(uri);
         try {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);

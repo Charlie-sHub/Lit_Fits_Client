@@ -19,31 +19,36 @@ import javax.ws.rs.client.WebTarget;
 public class ColorClient implements ColorClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
+
     /**
      * Constructor of the color client
+     *
+     * @param baseUri
      */
-    public ColorClient() {
+    public ColorClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.color");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.color");
     }
+
     /**
      * Edits a given color
+     *
      * @param requestEntity
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public void edit(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
+
     /**
      * Finds all the colors
+     *
      * @param <T>
      * @param responseType
      * @param name
      * @return
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public <T> T find(Class<T> responseType, String name) throws ClientErrorException {
@@ -51,10 +56,12 @@ public class ColorClient implements ColorClientInterface {
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{name}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
+
     /**
      * Counts the amount of colors
+     *
      * @return
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public String count() throws ClientErrorException {
@@ -62,36 +69,43 @@ public class ColorClient implements ColorClientInterface {
         resource = resource.path("count");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
+
     /**
      * Creates a new color
+     *
      * @param requestEntity
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public void create(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
+
     /**
      * Finds all the colors
+     *
      * @param <T>
      * @param responseType
      * @return
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public <T> T findAll(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
+
     /**
      * Deletes a color given its name
+     *
      * @param name
-     * @throws ClientErrorException 
+     * @throws ClientErrorException
      */
     @Override
     public void remove(String name) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{name})).request().delete();
     }
+
     /**
      * Closes the client
      */
@@ -99,5 +113,4 @@ public class ColorClient implements ColorClientInterface {
     public void close() {
         client.close();
     }
-    
 }

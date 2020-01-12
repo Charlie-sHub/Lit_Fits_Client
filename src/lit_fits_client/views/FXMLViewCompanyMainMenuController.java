@@ -167,21 +167,27 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      *
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
-     *
      * @param stage
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Home");
-        stage.setMinWidth(1400);
-        stage.setMinHeight(800);
-        stage.show();
-        setStylesheet(scene, theme);
-        setElements();
-        btnLogout.setDisable(false);
-        stage.setOnCloseRequest(this::onClosing);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Home");
+            stage.setMinWidth(1400);
+            stage.setMinHeight(800);
+            stage.show();
+            setStylesheet(scene, theme);
+            setElements();
+            btnLogout.setDisable(false);
+            stage.setOnCloseRequest(this::onClosing);
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
+        }
     }
 
     /**
@@ -247,7 +253,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLViewCompanyRegisterController modifyAccountView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
-            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root);
+            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -268,7 +274,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             warehouseView.setCompany(company);
             warehouseView.setStageMainMenu(stage);
-            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root);
+            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);

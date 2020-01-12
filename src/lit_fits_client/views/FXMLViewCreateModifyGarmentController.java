@@ -533,26 +533,33 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(root);
-        setStylesheet(scene, theme);
-        stage.setScene(scene);
-        setElements();
-        if (null != garment) {
-            stage.setTitle("Modification");
-            fillFields();
-        } else {
-            stage.setTitle("Creation");
-            garment = new Garment();
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            stage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(root);
+            setStylesheet(scene, theme);
+            stage.setScene(scene);
+            setElements();
+            if (null != garment) {
+                stage.setTitle("Modification");
+                fillFields();
+            } else {
+                stage.setTitle("Creation");
+                garment = new Garment();
+            }
+            stage.setOnCloseRequest(this::onClosing);
+            //pretty sure these dimensions will have to change
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
         }
-        stage.setOnCloseRequest(this::onClosing);
-        //pretty sure these dimensions will have to change
-        stage.setMinWidth(850);
-        stage.setMinHeight(650);
-        stage.show();
     }
 
     /**
@@ -605,11 +612,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClient colorClient;
-        colorClient = new ClientFactory().getColorClient();
+        colorClient = new ClientFactory().getColorClient(uri);
         comboColors.setItems(colorClient.findAll(List.class));
         colorClient.close();
         MaterialClient materialClient;
-        materialClient = new ClientFactory().getMaterialClient();
+        materialClient = new ClientFactory().getMaterialClient(uri);
         comboColors.setItems(materialClient.findAll(List.class));
         materialClient.close();
         comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
@@ -741,12 +748,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void checkComboBoxes(Button btnSubmit) {
         Boolean disableSubmit = null;
-        long nullCount = comboBoxes.stream().filter(comboBox -> comboBox.getValue().equals(null)).count();
-        if (nullCount > 0) {
-            disableSubmit = true;
-        } else {
-            disableSubmit = false;
-        }
+        disableSubmit = comboBoxes.stream().filter(comboBox -> comboBox.getValue() == null).count() > 0;
         btnSubmit.setDisable(disableSubmit);
         onFieldFilled(btnSubmit);
     }
@@ -774,7 +776,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient;
+        garmentClient = new ClientFactory().getGarmentClient(uri);
         try {
             setGarmentData();
             if (garment.getId() == 0) {

@@ -19,15 +19,14 @@ import javax.ws.rs.client.WebTarget;
 public class CompanyClient implements CompanyClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
      * Constructor of the Company client
+     * @param baseUri
      */
-    public CompanyClient() {
+    public CompanyClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.company");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.company");
     }
 
     /**

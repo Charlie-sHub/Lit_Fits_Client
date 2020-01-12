@@ -19,12 +19,14 @@ import javax.ws.rs.client.WebTarget;
 public class PublicKeyClient implements PublicKeyClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
-    public PublicKeyClient() {
+    /**
+     *
+     * @param baseUri
+     */
+    public PublicKeyClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.encryption.publicKey");
+        webTarget = client.target(baseUri).path("litfitsserver.encryption.publicKey");
     }
 
     @Override

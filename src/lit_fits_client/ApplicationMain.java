@@ -28,10 +28,11 @@ public class ApplicationMain extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         String theme = ResourceBundle.getBundle("lit_fits_client.views.theme").getString("theme");
+        String uri = ResourceBundle.getBundle("connection").getString("hostUrl");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/fxml/ViewLogin.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         FXMLViewLoginController loginView = ((FXMLViewLoginController) fxmlLoader.getController());
         loginView.setStage(stage);
-        loginView.initStage(theme, root);
+        loginView.initStage(theme, root, uri);
     }
 }

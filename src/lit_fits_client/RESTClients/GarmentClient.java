@@ -21,15 +21,14 @@ import lit_fits_client.RESTClients.GarmentClientInterface;
 public class GarmentClient implements GarmentClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
      * Constructor of the Garment client
+     * @param baseUri
      */
-    public GarmentClient() {
+    public GarmentClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.garment");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.garment");
     }
 
     /**
