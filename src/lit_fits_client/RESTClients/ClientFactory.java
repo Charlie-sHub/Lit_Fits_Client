@@ -65,15 +65,12 @@ public class ClientFactory {
     public static UserClient getUserClient(String uri) {
         return new UserClient(uri);
     }
-    ////////////////////////////////////////////
     /**
      * Returns a new ExpertClient object
      *
      * @return ExpertClient
      */
-    /*
-    public static ExpertClient getExpertClient() {
-        return new ExpertClient();
+    public static ExpertClient getExpertClient(String uri) {
+        return new ExpertClient(uri);
     }
-     */
 }
