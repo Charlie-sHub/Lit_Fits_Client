@@ -164,15 +164,16 @@ public class GarmentClient implements GarmentClientInterface {
      * Gets the picture of the garment
      *
      * @param <T>
+     * @param responseType
      * @param id
      * @return Image
      * @throws ClientErrorException
      */
     @Override
-    public <T> T getImage(String id) throws ClientErrorException {
+    public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("picture/{0}", new Object[]{id}));
-        return (T) resource.request(MediaType.APPLICATION_OCTET_STREAM).get();
+        return resource.request(MediaType.APPLICATION_OCTET_STREAM).get(responseType);
     }
 
     /**
