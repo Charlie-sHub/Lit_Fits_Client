@@ -148,13 +148,15 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * This function will initialised the window
+     * This function will initialize the window
      *
      * @param theme the path to the theme chosen
      * @param root
+     * @param uri
      */
-    public void initStage(String theme, Parent root) {
+    public void initStage(String theme, Parent root, String uri) {
         try {
+            this.uri = uri;
             Scene scene = new Scene(root);
             setStylesheet(scene, theme);
             stage.setScene(scene);
@@ -230,7 +232,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Checks what kind and what especific of account it is and requests the server to reestablish the corresponding
+     * Checks what kind and what specific of account it is and requests the server to reestablish the corresponding
      * password
      *
      * @param event
@@ -243,7 +245,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close(); // is it important to close them?
                 } else {
-                    //fashion expert register
+                    //fashion expert and admin register
                 }
             } else {
                 createDialog("Please insert your username/nif");
@@ -285,7 +287,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * This function controlls that all fields are filled
+     * This function controls that all fields are filled
      *
      * @param observable
      * @param oldValue
@@ -316,12 +318,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
                 mainView.setCompany(company);
                 mainView.setLoginStage(this.stage);
-                mainView.initStage(theme, stageCompanyMainMenu, root);
+                mainView.initStage(theme, stageCompanyMainMenu, root, uri);
             } else {
                 //fashion expert
             }
             stage.hide();
-        } catch (Exception e) {
+        } catch (IOException | ClientErrorException e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
@@ -341,7 +343,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
-                registerView.initStage(theme, registerStage, root);
+                registerView.initStage(theme, registerStage, root, uri);
             } else {
                 // fashion expert registration
             }

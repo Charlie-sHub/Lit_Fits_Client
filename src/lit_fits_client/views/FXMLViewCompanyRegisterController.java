@@ -404,27 +404,34 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene;
-        scene = new Scene(root);
-        setStylesheet(scene, theme);
-        stage.setScene(scene);
-        setElements();
-        if (null != company) {
-            stage.setTitle("Modification");
-            fillFields();
-        } else {
-            stage.setTitle("Registration");
-            company = new Company();
-            company.setId(0);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene;
+            scene = new Scene(root);
+            setStylesheet(scene, theme);
+            stage.setScene(scene);
+            setElements();
+            if (null != company) {
+                stage.setTitle("Modification");
+                fillFields();
+            } else {
+                stage.setTitle("Registration");
+                company = new Company();
+                company.setId(0);
+            }
+            stage.setOnCloseRequest(this::onClosing);
+            //pretty sure these dimensions will have to change
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
         }
-        stage.setOnCloseRequest(this::onClosing);
-        //pretty sure these dimensions will have to change
-        stage.setMinWidth(850);
-        stage.setMinHeight(650);
-        stage.show();
     }
 
     /**
@@ -594,8 +601,8 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = ClientFactory.getCompanyClient();
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient();
+        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
             setCompanyData(publicKeyClient.getPublicKey(byte[].class));
             if (company.getId() == 0) {
@@ -642,7 +649,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
-        mainView.initStage(theme, stageProgramMain, root);
+        mainView.initStage(theme, stageProgramMain, root, uri);
         stage.hide();
     }
 

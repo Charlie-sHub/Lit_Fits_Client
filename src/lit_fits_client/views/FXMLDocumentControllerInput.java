@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
  */
 public abstract class FXMLDocumentControllerInput extends FXMLDocumentController {
     /**
-     * Label that warns the user about the lenght of a text
+     * Label that warns the user about the length of a text
      */
     @FXML
     protected Label lblLength;
