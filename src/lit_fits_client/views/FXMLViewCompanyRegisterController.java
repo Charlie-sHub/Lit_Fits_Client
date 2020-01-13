@@ -594,8 +594,8 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = new ClientFactory().getCompanyClient();
-        PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
+        CompanyClient companyClient = ClientFactory.getCompanyClient();
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient();
         try {
             setCompanyData(publicKeyClient.getPublicKey(byte[].class));
             if (company.getId() == 0) {

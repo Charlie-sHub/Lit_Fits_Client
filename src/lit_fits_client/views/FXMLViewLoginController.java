@@ -239,7 +239,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = new ClientFactory().getCompanyClient();
+                    CompanyClient companyClient = ClientFactory.getCompanyClient();
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close(); // is it important to close them?
                 } else {
@@ -306,7 +306,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
                 Company company = new Company();
-                CompanyClient companyClient = new ClientFactory().getCompanyClient();
+                CompanyClient companyClient = ClientFactory.getCompanyClient();
                 company.setNif(txtUsername.getText());
                 company.setPassword(fieldPassword.getText());
                 company = companyClient.login(company, Company.class);

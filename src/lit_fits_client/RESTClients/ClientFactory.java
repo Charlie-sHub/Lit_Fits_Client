@@ -11,7 +11,7 @@ public class ClientFactory {
      *
      * @return ColorClient
      */
-    public ColorClient getColorClient() {
+    public static ColorClient getColorClient() {
         return new ColorClient();
     }
 
@@ -20,7 +20,7 @@ public class ClientFactory {
      *
      * @return MaterialClient
      */
-    public MaterialClient getMaterialClient() {
+    public static MaterialClient getMaterialClient() {
         return new MaterialClient();
     }
 
@@ -29,7 +29,7 @@ public class ClientFactory {
      *
      * @return CompanyClient
      */
-    public CompanyClient getCompanyClient() {
+    public static CompanyClient getCompanyClient() {
         return new CompanyClient();
     }
 
@@ -38,7 +38,7 @@ public class ClientFactory {
      *
      * @return GarmentClient
      */
-    public GarmentClient getGarmentClient() {
+    public static GarmentClient getGarmentClient() {
         return new GarmentClient();
     }
 
@@ -47,7 +47,7 @@ public class ClientFactory {
      *
      * @return PublicKeyClient
      */
-    public PublicKeyClient getPublicKeyClient() {
+    public static PublicKeyClient getPublicKeyClient() {
         return new PublicKeyClient();
     }
 
@@ -57,7 +57,7 @@ public class ClientFactory {
      * @return UserClient
      */
 
-    public UserClient getUserClient() {
+    public static UserClient getUserClient() {
         return new UserClient();
     }
     ////////////////////////////////////////////
@@ -67,7 +67,7 @@ public class ClientFactory {
      * @return ExpertClient
      */
     /*
-    public ExpertClient getExpertClient() {
+    public static ExpertClient getExpertClient() {
         return new ExpertClient();
     }
      */

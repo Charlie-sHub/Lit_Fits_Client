@@ -605,11 +605,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClient colorClient;
-        colorClient = new ClientFactory().getColorClient();
+        colorClient = ClientFactory.getColorClient();
         comboColors.setItems(colorClient.findAll(List.class));
         colorClient.close();
         MaterialClient materialClient;
-        materialClient = new ClientFactory().getMaterialClient();
+        materialClient = ClientFactory.getMaterialClient();
         comboColors.setItems(materialClient.findAll(List.class));
         materialClient.close();
         comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
@@ -774,7 +774,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient();
         try {
             setGarmentData();
             if (garment.getId() == 0) {

@@ -353,7 +353,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient();
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(List.class, company.getNif()));
         tableGarments.setItems(garmentList);
     }
@@ -464,7 +464,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnDeletePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient();
         try {
             garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
@@ -489,7 +489,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient();
         try {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);
