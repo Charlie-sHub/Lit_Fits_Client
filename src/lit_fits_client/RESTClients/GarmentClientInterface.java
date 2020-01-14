@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Interface for the garment client
@@ -56,7 +57,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentAll(Class<T> responseType) throws ClientErrorException;
+    <T> T findGarmentAll(GenericType<T> responseType) throws ClientErrorException;
 
     /**
      * Finds the garment with the given barcode
@@ -78,7 +79,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsByCompany(Class<T> responseType, String nif) throws ClientErrorException;
+    <T> T findGarmentGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException;
 
     /**
      * Finds all the garments with or without requested promotions
@@ -89,7 +90,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsByRequest(Class<T> responseType, String requested) throws ClientErrorException;
+    <T> T findGarmentGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException;
 
     /**
      * Finds all promoted garments
@@ -100,7 +101,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsPromoted(Class<T> responseType, String promoted) throws ClientErrorException;
+    <T> T findGarmentGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException;
 
     /**
      * Gets the picture of the garment

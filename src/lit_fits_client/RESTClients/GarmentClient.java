@@ -3,6 +3,7 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import lit_fits_client.RESTClients.GarmentClientInterface;
 
@@ -57,7 +58,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByRequest(Class<T> responseType, String requested) throws ClientErrorException {
+    public <T> T findGarmentGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("request/{0}", new Object[]{requested}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -123,7 +124,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentAll(Class<T> responseType) throws ClientErrorException {
+    public <T> T findGarmentAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
@@ -138,7 +139,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsPromoted(Class<T> responseType, String promoted) throws ClientErrorException {
+    public <T> T findGarmentGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("promotion/{0}", new Object[]{promoted}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -154,7 +155,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByCompany(Class<T> responseType, String nif) throws ClientErrorException {
+    public <T> T findGarmentGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

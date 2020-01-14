@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Interface for the public key client
@@ -21,5 +22,5 @@ public interface PublicKeyClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T getPublicKey(Class<T> responseType) throws ClientErrorException;
+    <T> T getPublicKey(GenericType<T> responseType) throws ClientErrorException;
 }

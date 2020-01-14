@@ -32,6 +32,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ColorClient;
 import lit_fits_client.RESTClients.GarmentClient;
@@ -562,7 +563,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             stage.setMinWidth(850);
             stage.setMinHeight(650);
             stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
@@ -576,13 +577,12 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtBarcode.setText(garment.getBarcode());
         txtDesigner.setText(garment.getDesigner());
         txtPrice.setText(garment.getPrice().toString());
-        //Fill the values for the combo boxes
-        //Set value or set CHOSEN value or what?
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
-        garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
+        // This should be unneccessary if the File is already embbeded in the Garment
+        // GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        // garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
         byte[] pictureBytes;
         pictureBytes = Files.readAllBytes(garment.getPicture().toPath());
         imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
@@ -619,10 +619,12 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClient colorClient = ClientFactory.getColorClient(uri);
-        comboColors.setItems(colorClient.findAll(List.class));
+        comboColors.setItems(colorClient.findAll(new GenericType<List<Color>>() {
+        }));
         colorClient.close();
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
-        comboColors.setItems(materialClient.findAll(List.class));
+        comboMaterials.setItems(materialClient.findAll(new GenericType<List<Material>>() {
+        }));
         materialClient.close();
         comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
         comboMood.getItems().setAll(Arrays.toString(Mood.values()));

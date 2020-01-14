@@ -7,7 +7,9 @@ import java.util.Set;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableSet;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -69,11 +71,11 @@ public class Garment implements Serializable {
     /**
      * What colors are in the garment
      */
-    private SimpleObjectProperty colors;
+    private SimpleSetProperty colors;
     /**
      * What materials is the garment made out of
      */
-    private SimpleObjectProperty materials;
+    private SimpleSetProperty materials;
     /**
      * The picture of the garment
      */
@@ -115,8 +117,8 @@ public class Garment implements Serializable {
         this.promoted = new SimpleBooleanProperty(promoted);
         this.imagePath = imagePath;
         this.company = company;
-        this.colors = new SimpleObjectProperty<Set<Color>>(colors);
-        this.materials = new SimpleObjectProperty<Set<Material>>(materials);
+        this.colors = new SimpleSetProperty<Color>((ObservableSet<Color>) colors);
+        this.materials = new SimpleSetProperty<Material>((ObservableSet<Material>) materials);
         this.picture = new SimpleObjectProperty<File>(picture);
     }
 

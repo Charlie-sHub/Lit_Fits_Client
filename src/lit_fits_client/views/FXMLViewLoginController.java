@@ -2,6 +2,7 @@ package lit_fits_client.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -17,11 +18,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.ExpertClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.entities.Material;
 
 /**
  * Controller for the Login view
@@ -310,11 +314,15 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
                 Company company = new Company();
+                byte[] publicKey;
                 CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+                PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+                publicKey = publicKeyClient.getPublicKey(new GenericType<byte[]>(){}));
                 company.setNif(txtUsername.getText());
-                company.setPassword(fieldPassword.getText());
+                company.setPassword(fieldPassword.getText()); // encrypt this
                 company = companyClient.login(company, Company.class);
                 companyClient.close();
+                publicKeyClient.close();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenuController.fxml"));
                 Stage stageCompanyMainMenu = new Stage();
                 Parent root = (Parent) fxmlLoader.load();
@@ -324,11 +332,15 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 mainView.initStage(theme, stageCompanyMainMenu, root, uri);
             } else {
                 FashionExpert fashionExpert = new FashionExpert();
+                byte[] publicKey;
                 ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);                
+                publicKey = publicKeyClient.getPublicKey(new GenericType<byte[]>(){}));
                 fashionExpert.setUsername(txtUsername.getText()); // Ander must change the Getters and setter of the expert
-                fashionExpert.setPassword(fieldPassword.getText());
+                fashionExpert.setPassword(fieldPassword.getText()); // encrypt this
                 fashionExpert = expertClient.login(fashionExpert, FashionExpert.class);
                 expertClient.close();
+                publicKeyClient.close();
                 // Whatever the fashion expert has for main menu
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
                 Stage stageExpertMainMenu = new Stage();

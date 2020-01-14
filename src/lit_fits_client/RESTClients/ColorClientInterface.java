@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Interface for the color client
@@ -56,7 +57,7 @@ public interface ColorClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findAll(Class<T> responseType) throws ClientErrorException;
+    <T> T findAll(GenericType<T> responseType) throws ClientErrorException;
 
     /**
      * Deletes a color given its name

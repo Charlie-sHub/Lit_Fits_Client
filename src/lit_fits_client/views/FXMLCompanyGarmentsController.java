@@ -3,7 +3,9 @@ package lit_fits_client.views;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,19 +16,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.entities.BodyPart;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
+import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
 
 /**
@@ -34,7 +41,7 @@ import lit_fits_client.entities.Mood;
  *
  * @author Carlos Mendez
  */
-public class FXMLCompanyGarmentsController extends FXMLDocumentController {
+public class FXMLCompanyGarmentsController extends FXMLDocumentController implements Callback {
     /**
      * Garment promotion button
      */
@@ -64,7 +71,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Table with the company's garments
      */
     @FXML
-    private TableView tableGarments;
+    private TableView<Garment> tableGarments;
     /**
      * The columns for the pictures
      */
@@ -361,7 +368,8 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void fillTable() throws ClientErrorException {
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
-        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(List.class, company.getNif()));
+        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(new GenericType<List<Garment>>() {
+        }, company.getNif()));
         tableGarments.setItems(garmentList);
     }
 
@@ -380,11 +388,14 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
         tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
-        // Use an ObservableList? but how will i get one for the set of materials and colors of the garment of that cell?
-        tableColumnMaterials.setCellFactory(new ComboBoxTableCell(garmentList.));
+        tableColumnMaterials.setCellFactory((TableColumn<Garment, ComboBox> tableColumnParam) -> new ComboBoxTableCell<>());
+        tableColumnMaterials.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Garment, Set<Material>>, ObservableValue<Set<Material>>() {
+            @Override
+            public ObservableValue<Set<Material>> call(CellDataFeatures<Garment, Set<Material>> p) {
+                return (ObservableValue<Set<Material>>) p.getValue().getMaterials();
+            }
+        });
         tableColumnColors.setCellFactory(new ComboBoxTableCell(new PropertyValueFactory("colors")));
-        //What do?
-        
     }
 
     /**
