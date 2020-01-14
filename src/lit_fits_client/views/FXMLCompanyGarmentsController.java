@@ -369,6 +369,8 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the cell value factories for the table columns
      */
     private void setColumnFactories() {
+        // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
+        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         tableColumnDesigner.setCellValueFactory(new PropertyValueFactory("designer"));
@@ -382,7 +384,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMaterials.setCellFactory(new ComboBoxTableCell(garmentList.));
         tableColumnColors.setCellFactory(new ComboBoxTableCell(new PropertyValueFactory("colors")));
         //What do?
-        //tableColumnPicture.setCellValueFactory(new PropertyValueFactory("available"));
+        
     }
 
     /**
