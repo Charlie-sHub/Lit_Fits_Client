@@ -19,7 +19,9 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
+import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.entities.Company;
+import lit_fits_client.entities.FashionExpert;
 
 /**
  * Controller for the Login view
@@ -28,7 +30,7 @@ import lit_fits_client.entities.Company;
  */
 public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
-     * Button to attempt loggin in
+     * Button to attempt login
      */
     @FXML
     protected Button btnLogin;
@@ -241,7 +243,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = ClientFactory.getCompanyClient();
+                    CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close(); // is it important to close them?
                 } else {
@@ -308,11 +310,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
                 Company company = new Company();
-                CompanyClient companyClient = ClientFactory.getCompanyClient();
+                CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
                 company.setNif(txtUsername.getText());
                 company.setPassword(fieldPassword.getText());
                 company = companyClient.login(company, Company.class);
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyMainMenuController.fxml"));
+                companyClient.close();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenuController.fxml"));
                 Stage stageCompanyMainMenu = new Stage();
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
@@ -320,7 +323,20 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 mainView.setLoginStage(this.stage);
                 mainView.initStage(theme, stageCompanyMainMenu, root, uri);
             } else {
-                //fashion expert
+                FashionExpert fashionExpert = new FashionExpert();
+                ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                fashionExpert.setUsername(txtUsername.getText()); // Ander must change the Getters and setter of the expert
+                fashionExpert.setPassword(fieldPassword.getText());
+                fashionExpert = expertClient.login(fashionExpert, FashionExpert.class);
+                expertClient.close();
+                // Whatever the fashion expert has for main menu
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
+                Stage stageExpertMainMenu = new Stage();
+                Parent root = (Parent) fxmlLoader.load();
+                FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+                mainView.setExpert(fashionExpert);
+                mainView.setLoginStage(this.stage);
+                mainView.initStage(theme, stageExpertMainMenu, root, uri);
             }
             stage.hide();
         } catch (IOException | ClientErrorException e) {
@@ -338,7 +354,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     public void onRegisterPress(ActionEvent event) {
         try {
             if (rBtnCompany.isSelected()) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyRegisterController.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterController.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
@@ -360,8 +376,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @return boolean true if the nif matches the pattern
      */
     private boolean nifPatternCheck(String nif) {
-        boolean isNif;
-        isNif = Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-        return isNif;
+        return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
     }
 }

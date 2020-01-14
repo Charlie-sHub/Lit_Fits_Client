@@ -110,7 +110,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T getImage(String id) throws ClientErrorException;
+    <T> T getImage(Class<T> responseType, String id) throws ClientErrorException;
 
     /**
      * Deletes the garment associated with the given id
