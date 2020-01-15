@@ -43,7 +43,7 @@ public interface ExpertClientInterface {
      * @return FashionExpert
      * @throws ClientErrorException
      */
-    <T> T find(Class<T> responseType, String id) throws ClientErrorException;
+    <T> T findExpertByUsername(Class<T> responseType, String username) throws ClientErrorException;
     
         /**
      * Reestablishes the password of associated Expert with the given username, sending an email with the new password

@@ -59,14 +59,14 @@ public class ExpertClient implements ExpertClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @param id
+     * @param username
      * @return FashionExpert
      * @throws ClientErrorException
      */
     @Override
-    public <T> T find(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findExpertByUsername(Class<T> responseType, String username) throws ClientErrorException {
        WebTarget resource = webTarget;
-       resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
+       resource = resource.path(java.text.MessageFormat.format("expert/{0}", new Object[]{username}));
        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
     /**
@@ -105,7 +105,5 @@ public class ExpertClient implements ExpertClientInterface {
     @Override
     public <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException {
         return webTarget.path("login").request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), responseType);
-    }
-
-    
+    } 
 }
