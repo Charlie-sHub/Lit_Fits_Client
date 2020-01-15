@@ -110,31 +110,9 @@ public class FXMLDocumentController {
      * @param e exception to be handled
      */
     public void createExceptionDialog(Exception e) {
-        // Change it so it takes http response codes
-        String errorString = null;
-        if (e instanceof IOException) {
-            errorString = "IOException ocurred \n" + e.getMessage();
-        } else if (e instanceof SocketTimeoutException) {
-            errorString = "Server did not respond on time \n" + e.getMessage();
-        }
-        /*else if (e instanceof DisabledAccountException) {
-            errorString = "The account you're trying to log in with is currently disabled \n" + e.getMessage();
-        } else if (e instanceof PasswordMismatchException) {
-            errorString = "Wrong password \n" + e.getMessage();
-        } else if (e instanceof ThreadLimitException) {
-            errorString = "Server refused connection due to the connection limit \n" + e.getMessage();
-        } else if (e instanceof UnreachableDatabaseException) {
-            errorString = "Server couldn't access the database \n" + e.getMessage();
-        } else if (e instanceof UsedUsernameException) {
-            errorString = "That username is already in use \n" + e.getMessage();
-        } else if (e instanceof UsernameNotFoundException) {
-            errorString = "Couldn't find the username \n";
-        } else {
-            errorString = "Unkown error ocurred";
-        }*/
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText(errorString);
+        alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
 

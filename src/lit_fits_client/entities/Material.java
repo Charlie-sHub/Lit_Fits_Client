@@ -35,7 +35,7 @@ public class Material implements Serializable {
 
     @Override
     public String toString() {
-        return "Material{" + "name=" + name + '}';
+        return this.name.get();
     }
 
     @Override

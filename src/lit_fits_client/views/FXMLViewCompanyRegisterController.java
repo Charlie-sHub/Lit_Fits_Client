@@ -2,6 +2,7 @@ package lit_fits_client.views;
 //nif pattern
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import lit_fits_client.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
@@ -604,7 +606,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
-            setCompanyData(publicKeyClient.getPublicKey(byte[].class));
+            setCompanyData(publicKeyClient.getPublicKey(String.class));
             if (company.getId() == 0) {
                 companyClient.edit(company);
             } else {
@@ -619,6 +621,9 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        } catch (Exception ex) {
+            createExceptionDialog(ex);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -628,12 +633,11 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     /**
      * Sets the data of the company to be sent to the server
      */
-    private void setCompanyData(byte[] publicKey) {
+    private void setCompanyData(String publicKey) throws Exception {
         company.setEmail(txtEmail.getText());
         company.setFullName(txtFullName.getText());
         company.setNif(txtNif.getText());
-        //Gotta encrypt the password
-        company.setPassword(txtPassword.getText());
+        company.setPassword(Encryptor.cifrarTexto(txtPassword.getText(), publicKey.getBytes()));
         company.setPhoneNumber(txtPhone.getText());
     }
 

@@ -3,7 +3,6 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:PublicKeyFacadeREST [litfitsserver.encryption.publicKey]<br>
@@ -31,9 +30,9 @@ public class PublicKeyClient implements PublicKeyClientInterface {
     }
 
     @Override
-    public <T> T getPublicKey(GenericType<T> responseType) throws ClientErrorException {
+    public <T> T getPublicKey(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        return (T) resource.request(javax.ws.rs.core.MediaType.APPLICATION_OCTET_STREAM).get(responseType);
     }
 
     @Override

@@ -22,5 +22,5 @@ public interface PublicKeyClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T getPublicKey(GenericType<T> responseType) throws ClientErrorException;
+    <T> T getPublicKey(Class<T> responseType) throws ClientErrorException;
 }

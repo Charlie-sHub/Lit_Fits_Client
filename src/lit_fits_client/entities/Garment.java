@@ -223,7 +223,7 @@ public class Garment implements Serializable {
     }
 
     public void setColors(Set<Color> colors) {
-        this.colors.set(colors);
+        this.colors.addAll(colors);
     }
 
     public Set<Material> getMaterials() {
@@ -231,7 +231,7 @@ public class Garment implements Serializable {
     }
 
     public void setMaterials(Set<Material> materials) {
-        this.materials.set(materials);
+        this.materials.addAll(materials);
     }
 
     public File getPicture() {

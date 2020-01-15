@@ -30,6 +30,7 @@ import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.entities.BodyPart;
+import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
@@ -41,7 +42,7 @@ import lit_fits_client.entities.Mood;
  *
  * @author Carlos Mendez
  */
-public class FXMLCompanyGarmentsController extends FXMLDocumentController implements Callback {
+public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     /**
      * Garment promotion button
      */
@@ -126,12 +127,12 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController implem
      * The columns for the colors
      */
     @FXML
-    private TableColumn<Garment, ComboBox> tableColumnColors;
+    private TableColumn<Garment, Set<Color>> tableColumnColors;
     /**
      * The columns for the materials
      */
     @FXML
-    private TableColumn<Garment, ComboBox> tableColumnMaterials;
+    private TableColumn<Garment, Set<Material>> tableColumnMaterials;
     /**
      * The list of garments of the company
      */
@@ -388,14 +389,10 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController implem
         tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
         tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
-        tableColumnMaterials.setCellFactory((TableColumn<Garment, ComboBox> tableColumnParam) -> new ComboBoxTableCell<>());
-        tableColumnMaterials.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Garment, Set<Material>>, ObservableValue<Set<Material>>() {
-            @Override
-            public ObservableValue<Set<Material>> call(CellDataFeatures<Garment, Set<Material>> p) {
-                return (ObservableValue<Set<Material>>) p.getValue().getMaterials();
-            }
-        });
-        tableColumnColors.setCellFactory(new ComboBoxTableCell(new PropertyValueFactory("colors")));
+        tableColumnMaterials.setCellFactory((TableColumn<Garment, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
+        tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
+        tableColumnColors.setCellFactory((TableColumn<Garment, Set<Color>> tableColumnParam) -> new ComboBoxTableCell());
+        // Yet to implement the value factory fot eh colors
     }
 
     /**
