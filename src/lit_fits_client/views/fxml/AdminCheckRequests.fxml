@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane minWidth="850.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="menuItemSave" mnemonicParsing="false" text="Save" />
+                  <MenuItem fx:id="menuItemBack" mnemonicParsing="false" text="Back" />
+            </items>
+          </Menu>
+          <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem fx:id="menuItemPromote" mnemonicParsing="false" text="Promote" />
+                  <MenuItem fx:id="menuItemDeletePromotion" mnemonicParsing="false" text="Delete promotion" />
+                  <MenuItem fx:id="menuItemCancelRequest" mnemonicParsing="false" text="Cancel request" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <HBox alignment="CENTER" minWidth="850.0" prefHeight="32.0" prefWidth="1280.0" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
+               <children>
+                  <ChoiceBox fx:id="choiceTheme" minWidth="-Infinity" prefWidth="150.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
+               <children>
+                  <Label fx:id="lblFile" minWidth="-Infinity" text="Alt + F = File" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
+               <children>
+                  <Label fx:id="lblEdit" minWidth="-Infinity" text="Alt + E = Edit" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
+               <children>
+                  <Label fx:id="lblSave" minWidth="-Infinity" text="Alt + S = Save" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
+               <children>
+                  <Label fx:id="lblBack" minWidth="-Infinity" text="Alt + B = Back" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <center>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="BOTTOM_LEFT" prefHeight="623.0" prefWidth="188.0" spacing="15.0">
+               <children>
+                  <Label fx:id="lblFilterBy" prefHeight="17.0" prefWidth="94.0" text="Filter by:" />
+                  <ChoiceBox fx:id="choiceBoxFilterBy" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="171.0" />
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="500.0" prefWidth="150.0" spacing="15.0">
+                     <children>
+                        <Button fx:id="btnSave" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Save" />
+                        <Button fx:id="btnBack" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="57.0" text="Back" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <ScrollPane fitToHeight="true">
+               <content>
+                  <TableView fx:id="tableViewGarment" prefHeight="536.0" prefWidth="985.0">
+                    <columns>
+                      <TableColumn fx:id="columnBarcode" maxWidth="-1.0" minWidth="168.0" prefWidth="168.0" text="Barcode" />
+                        <TableColumn fx:id="columnDesigner" maxWidth="-1.0" minWidth="208.0" prefWidth="208.0" text="Designer" />
+                      <TableColumn fx:id="columnGarmentType" maxWidth="-1.0" minWidth="126.0" prefWidth="126.0" text="Garment Type" />
+                        <TableColumn fx:id="columnBodyPart" maxWidth="-1.0" minWidth="139.0" prefWidth="139.0" text="Body part" />
+                        <TableColumn fx:id="columnMood" maxWidth="-1.0" minWidth="59.0" prefWidth="59.0" text="Mood" />
+                        <TableColumn fx:id="columnAvailable" maxWidth="-1.0" minWidth="78.0" prefWidth="78.0" text="Available" />
+                        <TableColumn fx:id="columnPromoted" maxWidth="-1.0" minWidth="82.0" prefWidth="82.0" text="Promoted" />
+                        <TableColumn fx:id="columnRequest" maxWidth="-1.0" minWidth="124.0" prefWidth="124.0" text="Promotion request" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
+         </BorderPane.margin>
+      </HBox>
+   </center>
+</BorderPane>
