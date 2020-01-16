@@ -105,7 +105,7 @@ public class FXMLViewGarmentModificationControllerIT extends ApplicationTest {
         garment.setColors(colors);
         garment.setDesigner("Some guy");
         garment.setGarmentType(GarmentType.PANTS);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);
@@ -140,7 +140,7 @@ public class FXMLViewGarmentModificationControllerIT extends ApplicationTest {
         garment.setColors(colors);
         garment.setDesigner("Some guy");
         garment.setGarmentType(GarmentType.PANTS);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);
@@ -175,7 +175,7 @@ public class FXMLViewGarmentModificationControllerIT extends ApplicationTest {
         garment.setColors(colors);
         garment.setDesigner("Some guy");
         garment.setGarmentType(GarmentType.PANTS);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);

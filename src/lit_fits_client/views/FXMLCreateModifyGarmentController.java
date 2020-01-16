@@ -683,10 +683,12 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClient colorClient = ClientFactory.getColorClient(uri);
-        comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>(){})));
+        comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
+        })));
         colorClient.close();
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
-        comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>(){})));
+        comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
+        })));
         materialClient.close();
         comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
         comboMood.getItems().setAll(Arrays.toString(Mood.values()));
@@ -882,7 +884,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         garment.setBodyPart((BodyPart) comboBodyPart.getValue());
         garment.setGarmentType((GarmentType) comboGarmentType.getValue());
         garment.setMood((Mood) comboMood.getValue());
-        garment.setPicture(garmentPictureFile);
+        garment.setPicture(new Image(garmentPictureFile.getPath()));
+        garment.setPictureName(garmentPictureFile.getName());
     }
 
     /**
@@ -904,17 +907,11 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * Opens a file chooser to change the Image
      */
     public void onImageViewPress() {
-        try {
-            byte[] pictureBytes;
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Choose a picture for the Garment");
-            fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-            garmentPictureFile = fileChooser.showOpenDialog(stage);
-            pictureBytes = Files.readAllBytes(garmentPictureFile.toPath());
-            imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
-        } catch (IOException ex) {
-            createExceptionDialog(ex);
-        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose a picture for the Garment");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.jpg"));
+        garmentPictureFile = fileChooser.showOpenDialog(stage);
+        imageViewGarmentPicture.setImage(new Image(garmentPictureFile.getPath()));
     }
 
     /**
