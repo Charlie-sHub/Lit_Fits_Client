@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import javafx.event.ActionEvent;
@@ -19,6 +14,7 @@ import lit_fits_client.entities.User;
 /**
  * The controller for the view in wich the admin can check all the 
  * entities in the database.
+ * 
  * @author Asier
  */
 public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
@@ -26,6 +22,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private User admin;
     
     private Stage stage;
+    
+    private Stage previousStage;
     
     @FXML
     private Menu menuFile;
@@ -42,6 +40,43 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private Button btnBack;
     
+    
+        /**
+     * @return the admin
+     */
+    public User getAdmin () {
+        return admin;
+    }
+
+    /**
+     * @param admin the admin to set
+     */
+    public void setAdmin (User admin) {
+        this.admin = admin;
+    }
+
+    /**
+     * @return the stage
+     */
+    public Stage getStage () {
+        return stage;
+    }
+
+    /**
+     * @param stage the stage to set
+     */
+    public void setStage (Stage stage) {
+        this.stage = stage;
+    }
+    
+    public void setPreviousStage(Stage previousStage) {
+        this.previousStage = previousStage;
+    }
+    
+    public Stage getPreviousStage() {
+        return this.previousStage;
+    }
+    
     /**
      * The method that initiates the view.
      * 
@@ -49,7 +84,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      * @param stage
      * @param root 
      */
-    private void initStage (String theme, Stage stage, Parent root) {
+    private void initStage (String theme, Stage stage, Parent root, String uri) {
         
         this.stage = stage;
         this.theme = theme;
@@ -85,17 +120,17 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private void setMnemonicText() {
         
         menuFile.setText("_File");
-        menuItemDeleteItem.setText("_File");
-        menuItemBack.setText("_File");
+        menuItemDeleteItem.setText("_Delete item");
+        menuItemBack.setText("_Back");
         
-        btnDeleteItem.setText("_File");
+        btnDeleteItem.setText("_Delete item");
         btnBack.setText("_Back");
     }
 
     private void setTooltips() {
         
-        btnDeleteItem.setTooltip(new Tooltip(""));
-        btnBack.setTooltip(new Tooltip(""));
+        btnDeleteItem.setTooltip(new Tooltip("Delete the selected item"));
+        btnBack.setTooltip(new Tooltip("Go back"));
     }
 
     private void setOnAction() {
@@ -107,7 +142,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * 
+     * The event that will happen when the <i>Back</i> button is pressed.
      * 
      * @param event 
      */
