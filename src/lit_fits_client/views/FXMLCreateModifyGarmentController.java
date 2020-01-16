@@ -7,12 +7,12 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,7 +50,7 @@ import lit_fits_client.entities.Mood;
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
-public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControllerInput {
+public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInput {
     /**
      * Cancel button
      */
@@ -127,6 +127,16 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     @FXML
     private ImageView imageViewGarmentPicture;
     /**
+     * Button to add or remove the selected Color
+     */
+    @FXML
+    private Button btnAddRemoveColor;
+    /**
+     * Button to add or remove the selected Material
+     */
+    @FXML
+    private Button btnAddRemoveMaterial;
+    /**
      * Stage to be used by the current controller
      */
     private Stage stage;
@@ -154,7 +164,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     /**
      * Logger object
      */
-    private static final Logger LOG = Logger.getLogger(FXMLViewCreateModifyGarmentController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCreateModifyGarmentController.class.getName());
 
     /**
      * Getter for btnCancel
@@ -535,6 +545,60 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter of the add/remove colors button
+     *
+     * @return Button
+     */
+    public Button getBtnAddRemoveColor() {
+        return btnAddRemoveColor;
+    }
+
+    /**
+     * Setter of the add/remove colors button
+     *
+     * @param btnAddRemoveColor
+     */
+    public void setBtnAddRemoveColor(Button btnAddRemoveColor) {
+        this.btnAddRemoveColor = btnAddRemoveColor;
+    }
+
+    /**
+     * Getter of the add/remove materials button
+     *
+     * @return Button
+     */
+    public Button getBtnAddRemoveMaterial() {
+        return btnAddRemoveMaterial;
+    }
+
+    /**
+     * Setter of the add/remove materials button
+     *
+     * @param btnAddRemoveMaterial
+     */
+    public void setBtnAddRemoveMaterial(Button btnAddRemoveMaterial) {
+        this.btnAddRemoveMaterial = btnAddRemoveMaterial;
+    }
+
+    /**
+     * Getter of the file of the picture of the garment
+     *
+     * @return File
+     */
+    public File getGarmentPictureFile() {
+        return garmentPictureFile;
+    }
+
+    /**
+     * Setter of the picture file
+     *
+     * @param garmentPictureFile
+     */
+    public void setGarmentPictureFile(File garmentPictureFile) {
+        this.garmentPictureFile = garmentPictureFile;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
@@ -619,12 +683,10 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClient colorClient = ClientFactory.getColorClient(uri);
-        comboColors.setItems(colorClient.findAll(new GenericType<List<Color>>() {
-        }));
+        comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>(){})));
         colorClient.close();
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
-        comboMaterials.setItems(materialClient.findAll(new GenericType<List<Material>>() {
-        }));
+        comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>(){})));
         materialClient.close();
         comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
         comboMood.getItems().setAll(Arrays.toString(Mood.values()));
@@ -657,6 +719,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         comboMood.setTooltip(new Tooltip("Erases everything"));
         comboColors.setTooltip(new Tooltip("Choose the colors of the garment"));
         comboMaterials.setTooltip(new Tooltip("Choose the materials of the garment"));
+        btnAddRemoveColor.setTooltip(new Tooltip("Add the selected Color or remove it if it was already added"));
+        btnAddRemoveMaterial.setTooltip(new Tooltip("Add the selected Material or remove it if it was already added"));
     }
 
     /**
@@ -686,6 +750,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         choiceTheme.setOnAction(this::onThemeChosen);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
+        btnAddRemoveColor.setOnAction(this::onAddRemoveColorPress);
+        btnAddRemoveMaterial.setOnAction(this::onAddRemoveMaterialPress);
         btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
@@ -712,6 +778,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtPrice.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
         btnSubmit.setFocusTraversable(true);
+        btnAddRemoveColor.setFocusTraversable(true);
+        btnAddRemoveMaterial.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
         imageViewGarmentPicture.setFocusTraversable(true);
@@ -812,9 +880,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setPromoted(false);
         garment.setPromotionRequest(false);
         garment.setBodyPart((BodyPart) comboBodyPart.getValue());
-        garment.setColors((Set<Color>) comboColors.getValue());
         garment.setGarmentType((GarmentType) comboGarmentType.getValue());
-        garment.setMaterials((Set<Material>) comboMaterials.getValue());
         garment.setMood((Mood) comboMood.getValue());
         garment.setPicture(garmentPictureFile);
     }
@@ -913,6 +979,32 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             openHelpView();
         } catch (IOException e) {
             createExceptionDialog(e);
+        }
+    }
+
+    /**
+     * Adds or Removes the selected Color
+     *
+     * @param event
+     */
+    private void onAddRemoveColorPress(ActionEvent event) {
+        if (garment.getColors().contains(comboColors.getValue())) {
+            garment.getColors().remove((Color) comboColors.getValue());
+        } else {
+            garment.getColors().add((Color) comboColors.getValue());
+        }
+    }
+
+    /**
+     * Adds or Removes the selected Material
+     *
+     * @param event
+     */
+    private void onAddRemoveMaterialPress(ActionEvent event) {
+        if (garment.getMaterials().contains(comboMaterials.getValue())) {
+            garment.getMaterials().remove((Material) comboMaterials.getValue());
+        } else {
+            garment.getMaterials().add((Material) comboMaterials.getValue());
         }
     }
 }

@@ -338,7 +338,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
         Stage stageExpertMainMenu = new Stage();
         Parent root = (Parent) fxmlLoader.load();
-        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        FXMLExpertMainMenuController mainView = ((FXMLExpertMainMenuController) fxmlLoader.getController());
         mainView.setExpert(fashionExpert);
         mainView.setLoginStage(this.stage);
         mainView.initStage(theme, stageExpertMainMenu, root, uri);
@@ -375,7 +375,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenuController.fxml"));
         Stage stageCompanyMainMenu = new Stage();
         Parent root = (Parent) fxmlLoader.load();
-        FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLoginStage(this.stage);
         mainView.initStage(theme, stageCompanyMainMenu, root, uri);
@@ -413,7 +413,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             if (rBtnCompany.isSelected()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterController.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
-                FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
+                FXMLCompanyRegisterController registerView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
                 registerView.initStage(theme, registerStage, root, uri);

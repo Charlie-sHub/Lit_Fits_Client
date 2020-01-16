@@ -1,8 +1,6 @@
 package lit_fits_client.views;
-//nif pattern
 
 import java.io.IOException;
-import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -33,7 +31,7 @@ import lit_fits_client.entities.Company;
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
-public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInput {
+public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Invalid email label
      */
@@ -110,7 +108,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     /**
      * Logger object
      */
-    private static final Logger LOG = Logger.getLogger(FXMLViewCompanyRegisterController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCompanyRegisterController.class.getName());
 
     /**
      * Getter for btnCancel
@@ -650,7 +648,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageProgramMain = new Stage();
-        FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
         mainView.initStage(theme, stageProgramMain, root, uri);

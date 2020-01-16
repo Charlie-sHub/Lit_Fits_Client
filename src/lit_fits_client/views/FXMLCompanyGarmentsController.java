@@ -174,7 +174,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Company logged in
      */
     private Company company;
-    private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
      * Getter of the promote button
@@ -480,9 +480,10 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
             Stage stageCreate = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
+            FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
+            garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
             garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
@@ -502,8 +503,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
             Stage stageModify = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
+            FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
+            garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
             garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
