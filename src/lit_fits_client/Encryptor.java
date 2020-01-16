@@ -20,7 +20,7 @@ public class Encryptor {
      * @return String the secret message
      * @throws java.lang.Exception
      */
-    public static String cifrarTexto(String message, byte[] publicKeyBytes) throws Exception {
+    public static String encryptText(String message, byte[] publicKeyBytes) throws Exception {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKeyBytes);
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);

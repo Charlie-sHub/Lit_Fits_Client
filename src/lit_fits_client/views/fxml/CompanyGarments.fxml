@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -44,6 +45,16 @@
                               <TableColumn fx:id="tableColumnMaterials" maxWidth="-1.0" minWidth="100.0" prefWidth="143.7333984375" text="Material(s)" />
                               <TableColumn fx:id="tableColumnPrice" prefWidth="75.0" text="Price" />
                           </columns>
+                           <contextMenu>
+                              <ContextMenu fx:id="contextMenuTable">
+                                <items>
+                                    <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                    <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                    <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
                         </TableView>
                      </content>
                   </ScrollPane>

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,16 +14,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -124,15 +124,40 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     @FXML
     private TableColumn<Garment, Boolean> tableColumnAvailable;
     /**
-     * The columns for the colors
+     * The columns for the Colors
      */
     @FXML
     private TableColumn<Garment, Set<Color>> tableColumnColors;
     /**
-     * The columns for the materials
+     * The columns for the Materials
      */
     @FXML
     private TableColumn<Garment, Set<Material>> tableColumnMaterials;
+    /**
+     * Context menu of the table of Garments
+     */
+    @FXML
+    private ContextMenu contextMenuTable;
+    /**
+     * MenuItem to add, does the same as the btnAdd
+     */
+    @FXML
+    private MenuItem menuItemAdd;
+    /**
+     * MenuItem to modify, does the same as the btnModify
+     */
+    @FXML
+    private MenuItem menuItemModify;
+    /**
+     * MenuItem to promote, does the same as the btnPromote
+     */
+    @FXML
+    private MenuItem menuItemPromote;
+    /**
+     * MenuItem to delete, does the same as the btnDelete
+     */
+    @FXML
+    private MenuItem menuItemDelete;
     /**
      * The list of garments of the company
      */
@@ -343,6 +368,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setElements() {
         // Fill the ChoiceBox of themes or take an alredy filled box?
         // Set the chosen choice of theme
+        contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
         fillTable();
@@ -360,6 +386,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnDelete.setDisable(disable);
         btnModify.setDisable(disable);
         btnPromote.setDisable(disable);
+        menuItemDelete.setDisable(disable);
+        menuItemModify.setDisable(disable);
+        menuItemPromote.setDisable(disable);
     }
 
     /**
@@ -430,6 +459,15 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnModify.setOnAction(this::onBtnModifyPress);
         btnPromote.setOnAction(this::onBtnPromotePress);
         tableGarments.getSelectionModel().selectedItemProperty().addListener(this::onSelectingAGarment);
+        tableGarments.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+            if (event.getButton() == MouseButton.SECONDARY){
+                contextMenuTable.show(tableGarments, event.getScreenX(), event.getScreenY());
+            }
+        });
+        menuItemAdd.setOnAction(this::onBtnAddPress);
+        menuItemDelete.setOnAction(this::onBtnDeletePress);
+        menuItemModify.setOnAction(this::onBtnModifyPress);
+        menuItemPromote.setOnAction(this::onBtnPromotePress);
     }
 
     /**

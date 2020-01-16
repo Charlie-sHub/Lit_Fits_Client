@@ -637,7 +637,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         company.setEmail(txtEmail.getText());
         company.setFullName(txtFullName.getText());
         company.setNif(txtNif.getText());
-        company.setPassword(Encryptor.cifrarTexto(txtPassword.getText(), publicKey.getBytes()));
+        company.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
         company.setPhoneNumber(txtPhone.getText());
     }
 
