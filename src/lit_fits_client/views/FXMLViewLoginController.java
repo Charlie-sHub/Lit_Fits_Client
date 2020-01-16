@@ -2,6 +2,8 @@ package lit_fits_client.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -17,9 +19,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
+import lit_fits_client.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
+import lit_fits_client.RESTClients.ExpertClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
+import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.entities.Material;
 
 /**
  * Controller for the Login view
@@ -28,7 +36,7 @@ import lit_fits_client.entities.Company;
  */
 public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
-     * Button to attempt loggin in
+     * Button to attempt login
      */
     @FXML
     protected Button btnLogin;
@@ -58,7 +66,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     @FXML
     protected TextField txtUsername;
     /**
-     *
+     * Field of the password
      */
     @FXML
     protected PasswordField fieldPassword;
@@ -148,13 +156,15 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * This function will initialised the window
+     * This function will initialize the window
      *
      * @param theme the path to the theme chosen
      * @param root
+     * @param uri
      */
-    public void initStage(String theme, Parent root) {
+    public void initStage(String theme, Parent root, String uri) {
         try {
+            this.uri = uri;
             Scene scene = new Scene(root);
             setStylesheet(scene, theme);
             stage.setScene(scene);
@@ -230,7 +240,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Checks what kind and what especific of account it is and requests the server to reestablish the corresponding
+     * Checks what kind and what specific of account it is and requests the server to reestablish the corresponding
      * password
      *
      * @param event
@@ -239,11 +249,11 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = new ClientFactory().getCompanyClient();
+                    CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close(); // is it important to close them?
                 } else {
-                    //fashion expert register
+                    //fashion expert and admin register
                 }
             } else {
                 createDialog("Please insert your username/nif");
@@ -285,7 +295,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * This function controlls that all fields are filled
+     * This function controls that all fields are filled
      *
      * @param observable
      * @param oldValue
@@ -305,26 +315,95 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void onBtnLoginPress(ActionEvent event) {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
-                Company company = new Company();
-                CompanyClient companyClient = new ClientFactory().getCompanyClient();
-                company.setNif(txtUsername.getText());
-                company.setPassword(fieldPassword.getText());
-                company = companyClient.login(company, Company.class);
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyMainMenuController.fxml"));
-                Stage stageCompanyMainMenu = new Stage();
-                Parent root = (Parent) fxmlLoader.load();
-                FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
-                mainView.setCompany(company);
-                mainView.setLoginStage(this.stage);
-                mainView.initStage(theme, stageCompanyMainMenu, root);
+                Company company = loginCompany();
+                openCompanyMainMenu(company);
             } else {
-                //fashion expert
+                FashionExpert fashionExpert = expertLogin();
+                openExpertMainMenu(fashionExpert);
             }
             stage.hide();
-        } catch (Exception e) {
-            createExceptionDialog(e);
-            LOG.severe(e.getMessage());
+        } catch (IOException | ClientErrorException ex) {
+            createExceptionDialog(ex);
+            LOG.severe(ex.getMessage());
+        } catch (Exception ex) {
+            createExceptionDialog(ex);
+            LOG.severe(ex.getMessage());
         }
+    }
+
+    /**
+     * Opens the main menu of the expert
+     *
+     * @param fashionExpert
+     * @throws IOException
+     */
+    private void openExpertMainMenu(FashionExpert fashionExpert) throws IOException {
+        // Whatever the fashion expert has for main menu
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
+        Stage stageExpertMainMenu = new Stage();
+        Parent root = (Parent) fxmlLoader.load();
+        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        mainView.setExpert(fashionExpert);
+        mainView.setLoginStage(this.stage);
+        mainView.initStage(theme, stageExpertMainMenu, root, uri);
+    }
+
+    /**
+     * Login of the Expert
+     *
+     * @return FashionExpert
+     * @throws ClientErrorException
+     * @throws Exception
+     */
+    private FashionExpert expertLogin() throws ClientErrorException, Exception {
+        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        FashionExpert fashionExpert = new FashionExpert();
+        String publicKey;
+        publicKey = publicKeyClient.getPublicKey(String.class);
+        fashionExpert.setUsername(txtUsername.getText()); // Ander must change the Getters and setter of the expert
+        fashionExpert.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        fashionExpert = expertClient.login(fashionExpert, FashionExpert.class);
+        expertClient.close();
+        publicKeyClient.close();
+        return fashionExpert;
+    }
+
+    /**
+     * Opens the Company main menu
+     *
+     * @param company
+     * @throws IOException
+     */
+    private void openCompanyMainMenu(Company company) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenuController.fxml"));
+        Stage stageCompanyMainMenu = new Stage();
+        Parent root = (Parent) fxmlLoader.load();
+        FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+        mainView.setCompany(company);
+        mainView.setLoginStage(this.stage);
+        mainView.initStage(theme, stageCompanyMainMenu, root, uri);
+    }
+
+    /**
+     * Login of the company
+     *
+     * @return Company
+     * @throws ClientErrorException
+     * @throws Exception
+     */
+    private Company loginCompany() throws ClientErrorException, Exception {
+        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        Company company = new Company();
+        String publicKey;
+        publicKey = publicKeyClient.getPublicKey(String.class);
+        company.setNif(txtUsername.getText());
+        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        company = companyClient.login(company, Company.class);
+        companyClient.close();
+        publicKeyClient.close();
+        return company;
     }
 
     /**
@@ -336,12 +415,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     public void onRegisterPress(ActionEvent event) {
         try {
             if (rBtnCompany.isSelected()) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewCompanyRegisterController.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterController.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
-                registerView.initStage(theme, registerStage, root);
+                registerView.initStage(theme, registerStage, root, uri);
             } else {
                 // fashion expert registration
             }
@@ -353,13 +432,11 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Checks that a given String follows the nif pattern
+     * Checks that a given String follows the nif pattern, if it does it means the user is a Company
      *
      * @return boolean true if the nif matches the pattern
      */
     private boolean nifPatternCheck(String nif) {
-        boolean isNif;
-        isNif = Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-        return isNif;
+        return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
     }
 }

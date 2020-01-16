@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Interface for the CompanyClient
@@ -56,7 +57,7 @@ public interface CompanyClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findAll(Class<T> responseType) throws ClientErrorException;
+    <T> T findAll(GenericType<T> responseType) throws ClientErrorException;
 
     /**
      * Finds and returns a company by a given nif

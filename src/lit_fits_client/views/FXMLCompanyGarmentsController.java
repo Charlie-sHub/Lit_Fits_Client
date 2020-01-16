@@ -1,7 +1,9 @@
 package lit_fits_client.views;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,16 +14,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.entities.BodyPart;
+import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
+import lit_fits_client.entities.GarmentType;
+import lit_fits_client.entities.Material;
+import lit_fits_client.entities.Mood;
 
 /**
  * The "Warehouse" window for companies
@@ -58,72 +72,92 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Table with the company's garments
      */
     @FXML
-    private TableView tableGarments;
+    private TableView<Garment> tableGarments;
     /**
      * The columns for the pictures
      */
     @FXML
-    private TableColumn tableColumnPicture;
+    private TableColumn<Garment, File> tableColumnPicture;
     /**
      * The columns for the barcodes
      */
     @FXML
-    private TableColumn tableColumnBarcode;
+    private TableColumn<Garment, String> tableColumnBarcode;
     /**
      * The columns for the prices
      */
     @FXML
-    private TableColumn tableColumnPrice;
+    private TableColumn<Garment, String> tableColumnPrice;
     /**
      * The columns for the designers
      */
     @FXML
-    private TableColumn tableColumnDesigner;
-    /**
-     * The columns for the brands
-     */
-    @FXML
-    private TableColumn tableColumnBrand;
+    private TableColumn<Garment, String> tableColumnDesigner;
     /**
      * The columns for the moods
      */
     @FXML
-    private TableColumn tableColumnMood;
+    private TableColumn<Garment, Mood> tableColumnMood;
     /**
      * The columns for the types
      */
     @FXML
-    private TableColumn tableColumnType;
+    private TableColumn<Garment, GarmentType> tableColumnType;
     /**
      * The columns for the body part
      */
     @FXML
-    private TableColumn tableColumnPart;
+    private TableColumn<Garment, BodyPart> tableColumnPart;
     /**
      * The columns for the promotion requests
      */
     @FXML
-    private TableColumn tableColumnRequested;
+    private TableColumn<Garment, Boolean> tableColumnRequested;
     /**
      * The columns for the promotions
      */
     @FXML
-    private TableColumn tableColumnPromoted;
+    private TableColumn<Garment, Boolean> tableColumnPromoted;
     /**
      * The columns for the availability
      */
     @FXML
-    private TableColumn tableColumnAvailable;
+    private TableColumn<Garment, Boolean> tableColumnAvailable;
     /**
-     * The columns for the colors
+     * The columns for the Colors
      */
     @FXML
-    private TableColumn tableColumnColors;
+    private TableColumn<Garment, Set<Color>> tableColumnColors;
     /**
-     * The columns for the materials
+     * The columns for the Materials
      */
     @FXML
-    private TableColumn tableColumnMaterials;
+    private TableColumn<Garment, Set<Material>> tableColumnMaterials;
+    /**
+     * Context menu of the table of Garments
+     */
+    @FXML
+    private ContextMenu contextMenuTable;
+    /**
+     * MenuItem to add, does the same as the btnAdd
+     */
+    @FXML
+    private MenuItem menuItemAdd;
+    /**
+     * MenuItem to modify, does the same as the btnModify
+     */
+    @FXML
+    private MenuItem menuItemModify;
+    /**
+     * MenuItem to promote, does the same as the btnPromote
+     */
+    @FXML
+    private MenuItem menuItemPromote;
+    /**
+     * MenuItem to delete, does the same as the btnDelete
+     */
+    @FXML
+    private MenuItem menuItemDelete;
     /**
      * The list of garments of the company
      */
@@ -307,18 +341,25 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param root The Parent used in previous windows
      *
      * @param stage
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Warehouse");
-        stage.setMinWidth(1280);
-        stage.setMinHeight(720);
-        stage.show();
-        setStylesheet(scene, theme);
-        setElements();
-        stage.setOnCloseRequest(this::onClosing);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Warehouse");
+            stage.setMinWidth(1280);
+            stage.setMinHeight(720);
+            stage.show();
+            setStylesheet(scene, theme);
+            setElements();
+            stage.setOnCloseRequest(this::onClosing);
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
+        }
     }
 
     /**
@@ -327,6 +368,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setElements() {
         // Fill the ChoiceBox of themes or take an alredy filled box?
         // Set the chosen choice of theme
+        contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
         fillTable();
@@ -344,6 +386,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnDelete.setDisable(disable);
         btnModify.setDisable(disable);
         btnPromote.setDisable(disable);
+        menuItemDelete.setDisable(disable);
+        menuItemModify.setDisable(disable);
+        menuItemPromote.setDisable(disable);
     }
 
     /**
@@ -352,8 +397,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
-        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(List.class, company.getNif()));
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentGarmentsByCompany(new GenericType<List<Garment>>() {
+        }, company.getNif()));
         tableGarments.setItems(garmentList);
     }
 
@@ -361,20 +407,21 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the cell value factories for the table columns
      */
     private void setColumnFactories() {
+        // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
+        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         tableColumnDesigner.setCellValueFactory(new PropertyValueFactory("designer"));
         tableColumnPromoted.setCellValueFactory(new PropertyValueFactory("promoted"));
         tableColumnRequested.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
         tableColumnPrice.setCellFactory(new PropertyValueFactory("price"));
-        //What do?
-        //tableColumnType.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnPicture.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnMood.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnPart.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnMaterials.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnColors.setCellValueFactory(new PropertyValueFactory("available"));
-        //tableColumnBrand.setCellValueFactory(new PropertyValueFactory("available"));
+        tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
+        tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
+        tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
+        tableColumnMaterials.setCellFactory((TableColumn<Garment, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
+        tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
+        tableColumnColors.setCellFactory((TableColumn<Garment, Set<Color>> tableColumnParam) -> new ComboBoxTableCell());
+        // Yet to implement the value factory fot eh colors
     }
 
     /**
@@ -412,6 +459,15 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnModify.setOnAction(this::onBtnModifyPress);
         btnPromote.setOnAction(this::onBtnPromotePress);
         tableGarments.getSelectionModel().selectedItemProperty().addListener(this::onSelectingAGarment);
+        tableGarments.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+            if (event.getButton() == MouseButton.SECONDARY){
+                contextMenuTable.show(tableGarments, event.getScreenX(), event.getScreenY());
+            }
+        });
+        menuItemAdd.setOnAction(this::onBtnAddPress);
+        menuItemDelete.setOnAction(this::onBtnDeletePress);
+        menuItemModify.setOnAction(this::onBtnModifyPress);
+        menuItemPromote.setOnAction(this::onBtnPromotePress);
     }
 
     /**
@@ -428,7 +484,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
@@ -449,7 +505,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             FXMLViewCreateModifyGarmentController garmentCreationView = ((FXMLViewCreateModifyGarmentController) fxmlLoader.getController());
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root);
+            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
@@ -463,7 +519,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnDeletePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             garmentClient.remove(Long.toString(garment.getId()));
         } catch (ClientErrorException e) {
@@ -488,7 +544,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);

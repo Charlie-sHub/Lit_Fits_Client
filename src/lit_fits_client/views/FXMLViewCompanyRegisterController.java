@@ -2,6 +2,7 @@ package lit_fits_client.views;
 //nif pattern
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import lit_fits_client.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
@@ -404,27 +406,34 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene;
-        scene = new Scene(root);
-        setStylesheet(scene, theme);
-        stage.setScene(scene);
-        setElements();
-        if (null != company) {
-            stage.setTitle("Modification");
-            fillFields();
-        } else {
-            stage.setTitle("Registration");
-            company = new Company();
-            company.setId(0);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene;
+            scene = new Scene(root);
+            setStylesheet(scene, theme);
+            stage.setScene(scene);
+            setElements();
+            if (null != company) {
+                stage.setTitle("Modification");
+                fillFields();
+            } else {
+                stage.setTitle("Registration");
+                company = new Company();
+                company.setId(0);
+            }
+            stage.setOnCloseRequest(this::onClosing);
+            //pretty sure these dimensions will have to change
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
         }
-        stage.setOnCloseRequest(this::onClosing);
-        //pretty sure these dimensions will have to change
-        stage.setMinWidth(850);
-        stage.setMinHeight(650);
-        stage.show();
     }
 
     /**
@@ -594,10 +603,10 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = new ClientFactory().getCompanyClient();
-        PublicKeyClient publicKeyClient = new ClientFactory().getPublicKeyClient();
+        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
-            setCompanyData(publicKeyClient.getPublicKey(byte[].class));
+            setCompanyData(publicKeyClient.getPublicKey(String.class));
             if (company.getId() == 0) {
                 companyClient.edit(company);
             } else {
@@ -612,6 +621,9 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        } catch (Exception ex) {
+            createExceptionDialog(ex);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -621,12 +633,11 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
     /**
      * Sets the data of the company to be sent to the server
      */
-    private void setCompanyData(byte[] publicKey) {
+    private void setCompanyData(String publicKey) throws Exception {
         company.setEmail(txtEmail.getText());
         company.setFullName(txtFullName.getText());
         company.setNif(txtNif.getText());
-        //Gotta encrypt the password
-        company.setPassword(txtPassword.getText());
+        company.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
         company.setPhoneNumber(txtPhone.getText());
     }
 
@@ -642,7 +653,7 @@ public class FXMLViewCompanyRegisterController extends FXMLDocumentControllerInp
         FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
-        mainView.initStage(theme, stageProgramMain, root);
+        mainView.initStage(theme, stageProgramMain, root, uri);
         stage.hide();
     }
 

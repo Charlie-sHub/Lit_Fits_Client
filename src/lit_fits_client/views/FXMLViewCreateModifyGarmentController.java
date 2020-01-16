@@ -1,9 +1,12 @@
 package lit_fits_client.views;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -29,6 +32,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ColorClient;
 import lit_fits_client.RESTClients.GarmentClient;
@@ -143,6 +147,10 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * An ArrayList of the combo boxes in the stage, used to check if they've all been filled
      */
     private ArrayList<ComboBox> comboBoxes;
+    /**
+     * The File of the picture chosen for the Garment
+     */
+    private File garmentPictureFile;
     /**
      * Logger object
      */
@@ -532,51 +540,58 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(root);
-        setStylesheet(scene, theme);
-        stage.setScene(scene);
-        setElements();
-        if (null != garment) {
-            stage.setTitle("Modification");
-            fillFields();
-        } else {
-            stage.setTitle("Creation");
-            garment = new Garment();
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            stage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(root);
+            setStylesheet(scene, theme);
+            stage.setScene(scene);
+            setElements();
+            if (null != garment) {
+                stage.setTitle("Modification");
+                fillFields();
+            } else {
+                stage.setTitle("Creation");
+                garment = new Garment();
+            }
+            stage.setOnCloseRequest(this::onClosing);
+            //pretty sure these dimensions will have to change
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
+        } catch (IOException e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
         }
-        stage.setOnCloseRequest(this::onClosing);
-        //pretty sure these dimensions will have to change
-        stage.setMinWidth(850);
-        stage.setMinHeight(650);
-        stage.show();
     }
 
     /**
      * Fills the fields with the data of a given garment
      */
-    private void fillFields() {
+    private void fillFields() throws IOException {
         txtBarcode.requestFocus();
         txtBarcode.setText(garment.getBarcode());
         txtDesigner.setText(garment.getDesigner());
         txtPrice.setText(garment.getPrice().toString());
-        //Fill the values for the combo boxes
-        //Set value or set CHOSEN value or what?
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        Image garmentPicture = new Image(garment.getPicture().getAbsolutePath()); // Does this even have an absolute path? doubt it
-        imageViewGarmentPicture.setImage(garmentPicture);
+        // This should be unneccessary if the File is already embbeded in the Garment
+        // GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        // garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
+        byte[] pictureBytes;
+        pictureBytes = Files.readAllBytes(garment.getPicture().toPath());
+        imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
     }
 
     /**
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        //How to choose several colors and materials?
-        //Fill the other combo boxes with the enums
         Image image = new Image("/placeholder.jpg");
         imageViewGarmentPicture.setImage(image);
         setTooltips();
@@ -603,17 +618,17 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @throws ClientErrorException
      */
     private void fillComboBoxes() throws ClientErrorException {
-        ColorClient colorClient;
-        colorClient = new ClientFactory().getColorClient();
-        comboColors.setItems(colorClient.findAll(List.class));
+        ColorClient colorClient = ClientFactory.getColorClient(uri);
+        comboColors.setItems(colorClient.findAll(new GenericType<List<Color>>() {
+        }));
         colorClient.close();
-        MaterialClient materialClient;
-        materialClient = new ClientFactory().getMaterialClient();
-        comboColors.setItems(materialClient.findAll(List.class));
+        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        comboMaterials.setItems(materialClient.findAll(new GenericType<List<Material>>() {
+        }));
         materialClient.close();
-        comboBodyPart.getItems().setAll(BodyPart.values());
-        comboMood.getItems().setAll(Mood.values());
-        comboGarmentType.getItems().setAll(GarmentType.values());
+        comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
+        comboMood.getItems().setAll(Arrays.toString(Mood.values()));
+        comboGarmentType.getItems().setAll(Arrays.toString(GarmentType.values()));
     }
 
     /**
@@ -739,15 +754,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * @param btnSubmit
      */
     private void checkComboBoxes(Button btnSubmit) {
-        Boolean disableSubmit = null;
-        for (ComboBox comboBox : comboBoxes) {
-            if (comboBox.getValue() == null) {
-                disableSubmit = true;
-                break;
-            } else {
-                disableSubmit = false;
-            }
-        }
+        Boolean disableSubmit;
+        disableSubmit = comboBoxes.stream().filter(comboBox -> comboBox.getValue() == null).count() > 0;
         btnSubmit.setDisable(disableSubmit);
         onFieldFilled(btnSubmit);
     }
@@ -772,10 +780,10 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         previousStage.show();
         stage.hide();
     }
-    
+
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             setGarmentData();
             if (garment.getId() == 0) {
@@ -808,7 +816,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setGarmentType((GarmentType) comboGarmentType.getValue());
         garment.setMaterials((Set<Material>) comboMaterials.getValue());
         garment.setMood((Mood) comboMood.getValue());
-        garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
+        garment.setPicture(garmentPictureFile);
     }
 
     /**
@@ -830,12 +838,17 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Opens a file chooser to change the Image
      */
     public void onImageViewPress() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-        File garmentPictureFile = fileChooser.showOpenDialog(stage);
-        Image garmentPicture = new Image(garmentPictureFile.getAbsolutePath()); //Maybe this will be a problem in Linux
-        imageViewGarmentPicture.setImage(garmentPicture);
+        try {
+            byte[] pictureBytes;
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Choose a picture for the Garment");
+            fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+            garmentPictureFile = fileChooser.showOpenDialog(stage);
+            pictureBytes = Files.readAllBytes(garmentPictureFile.toPath());
+            imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
+        } catch (IOException ex) {
+            createExceptionDialog(ex);
+        }
     }
 
     /**

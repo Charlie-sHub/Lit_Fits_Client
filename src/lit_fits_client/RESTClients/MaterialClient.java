@@ -3,6 +3,7 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:MaterialFacadeREST [litfitsserver.entities.material]<br>
@@ -19,15 +20,14 @@ import javax.ws.rs.client.WebTarget;
 public class MaterialClient implements MaterialClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
      * Constructor of the material client
+     * @param baseUri
      */
-    public MaterialClient() {
+    public MaterialClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.material");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.material");
     }
 
     /**
@@ -90,7 +90,7 @@ public class MaterialClient implements MaterialClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findAll(Class<T> responseType) throws ClientErrorException {
+    public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }

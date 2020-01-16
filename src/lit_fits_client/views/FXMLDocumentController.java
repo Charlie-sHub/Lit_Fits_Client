@@ -15,24 +15,25 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.WindowEvent;
 
-/*import thebestprogramlogiclibrary.User;
-import thebestprogramlogiclibrary.exceptions.DisabledAccountException;
-import thebestprogramlogiclibrary.exceptions.PasswordMismatchException;
-import thebestprogramlogiclibrary.exceptions.ThreadLimitException;
-import thebestprogramlogiclibrary.exceptions.UnreachableDatabaseException;
-import thebestprogramlogiclibrary.exceptions.UsedUsernameException;
-import thebestprogramlogiclibrary.exceptions.UsernameNotFoundException;
-import thebestprogramlogiclibrary.logic.ApplicationLogicImplementation;
- */
 /**
  * Core of the document controllers
  *
  * @author Ander Rodriguez & Carlos Mendez
  */
 public class FXMLDocumentController {
+    /**
+     * The Choice box with the different themes
+     */
     @FXML
     protected ChoiceBox<String> choiceTheme;
+    /**
+     * The theme used
+     */
     protected String theme;
+    /**
+     * The address of the server
+     */
+    protected String uri;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
     public String getTheme() {
@@ -59,6 +60,24 @@ public class FXMLDocumentController {
      */
     public void setChoiceTheme(ChoiceBox choiceBox) {
         this.choiceTheme = choiceBox;
+    }
+
+    /**
+     * Gets the address of the server used by the controller
+     *
+     * @return
+     */
+    public String getUri() {
+        return uri;
+    }
+
+    /**
+     * Sets the address of the server used by the controller
+     *
+     * @param uri
+     */
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     /**
@@ -91,30 +110,9 @@ public class FXMLDocumentController {
      * @param e exception to be handled
      */
     public void createExceptionDialog(Exception e) {
-        String errorString = null;
-        if (e instanceof IOException) {
-            errorString = "IOException ocurred \n" + e.getMessage();
-        } else if (e instanceof SocketTimeoutException) {
-            errorString = "Server did not respond on time \n" + e.getMessage();
-        }
-        /*else if (e instanceof DisabledAccountException) {
-            errorString = "The account you're trying to log in with is currently disabled \n" + e.getMessage();
-        } else if (e instanceof PasswordMismatchException) {
-            errorString = "Wrong password \n" + e.getMessage();
-        } else if (e instanceof ThreadLimitException) {
-            errorString = "Server refused connection due to the connection limit \n" + e.getMessage();
-        } else if (e instanceof UnreachableDatabaseException) {
-            errorString = "Server couldn't access the database \n" + e.getMessage();
-        } else if (e instanceof UsedUsernameException) {
-            errorString = "That username is already in use \n" + e.getMessage();
-        } else if (e instanceof UsernameNotFoundException) {
-            errorString = "Couldn't find the username \n";
-        } else {
-            errorString = "Unkown error ocurred";
-        }*/
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText(errorString);
+        alert.setContentText(e.getMessage());
         alert.showAndWait();
     }
 

@@ -14,7 +14,7 @@ import javafx.scene.control.TextField;
  */
 public abstract class FXMLDocumentControllerInput extends FXMLDocumentController {
     /**
-     * Label that warns the user about the lenght of a text
+     * Label that warns the user about the length of a text
      */
     @FXML
     protected Label lblLength;
@@ -36,43 +36,43 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * ArrayList of all the TextFields of the view
      */
     protected ArrayList<TextField> textFields;
-
+    
     public Label getLblLength() {
         return lblLength;
     }
-
+    
     public void setLblLength(Label lblLength) {
         this.lblLength = lblLength;
     }
-
+    
     public Button getBtnUndo() {
         return btnUndo;
     }
-
+    
     public void setBtnUndo(Button btnUndo) {
         this.btnUndo = btnUndo;
     }
-
+    
     public Button getBtnRedo() {
         return btnRedo;
     }
-
+    
     public void setBtnRedo(Button btnRedo) {
         this.btnRedo = btnRedo;
     }
-
+    
     public ArrayList<String> getUndoneStrings() {
         return undoneStrings;
     }
-
+    
     public void setUndoneStrings(ArrayList<String> undoneStrings) {
         this.undoneStrings = undoneStrings;
     }
-
+    
     public ArrayList<TextField> getTextFields() {
         return textFields;
     }
-
+    
     public void setTextFields(ArrayList<TextField> textFields) {
         this.textFields = textFields;
     }
@@ -114,7 +114,11 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param event
      */
     public void onUndoPress(ActionEvent event) {
-        textFields.stream().forEach(textField -> undoneStrings.add(textField.getText()), textField.setText(""));
+        textFields.stream().forEach(textField -> {
+            undoneStrings.add(textField.getText());
+            textField.setText("");
+        });
+        
         btnRedo.setDisable(false);
     }
 
@@ -126,7 +130,10 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      */
     public void onRedoPress(ActionEvent event) {
         int aux = 0;
-        textFields.stream().forEach(textField -> textField.setText(undoneStrings.get(aux)), aux++);
+        //textFields.stream().forEach(textField -> {
+        //    textField.setText(undoneStrings.get(aux));
+        //    aux++;
+        //});
         btnRedo.setDisable(true);
         undoneStrings.removeAll(undoneStrings);
     }

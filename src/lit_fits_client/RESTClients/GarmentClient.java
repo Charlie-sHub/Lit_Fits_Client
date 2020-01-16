@@ -3,6 +3,9 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import lit_fits_client.RESTClients.GarmentClientInterface;
 
 /**
  * Jersey REST client generated for REST resource:GarmentFacadeREST [litfitsserver.entities.garment]<br>
@@ -19,15 +22,14 @@ import javax.ws.rs.client.WebTarget;
 public class GarmentClient implements GarmentClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
      * Constructor of the Garment client
+     * @param baseUri
      */
-    public GarmentClient() {
+    public GarmentClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.garment");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.garment");
     }
 
     /**
@@ -56,7 +58,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByRequest(Class<T> responseType, String requested) throws ClientErrorException {
+    public <T> T findGarmentGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("request/{0}", new Object[]{requested}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -122,7 +124,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentAll(Class<T> responseType) throws ClientErrorException {
+    public <T> T findGarmentAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
@@ -137,7 +139,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsPromoted(Class<T> responseType, String promoted) throws ClientErrorException {
+    public <T> T findGarmentGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("promotion/{0}", new Object[]{promoted}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -153,7 +155,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByCompany(Class<T> responseType, String nif) throws ClientErrorException {
+    public <T> T findGarmentGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -165,14 +167,14 @@ public class GarmentClient implements GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param id
-     * @return
+     * @return Image
      * @throws ClientErrorException
      */
     @Override
     public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("picture/{0}", new Object[]{id}));
-        return resource.get(responseType);
+        return resource.request(MediaType.APPLICATION_OCTET_STREAM).get(responseType);
     }
 
     /**

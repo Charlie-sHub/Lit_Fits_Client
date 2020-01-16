@@ -9,66 +9,68 @@ public class ClientFactory {
     /**
      * Returns a new ColorClient object
      *
+     * @param uri address of the server to be used by the client
      * @return ColorClient
      */
-    public ColorClient getColorClient() {
-        return new ColorClient();
+    public static ColorClient getColorClient(String uri) {
+        return new ColorClient(uri);
     }
 
     /**
      * Returns a new MaterialClient object
      *
+     * @param uri address of the server to be used by the client
      * @return MaterialClient
      */
-    public MaterialClient getMaterialClient() {
-        return new MaterialClient();
+    public static MaterialClient getMaterialClient(String uri) {
+        return new MaterialClient(uri);
     }
 
     /**
      * Returns a new CompanyClient object
      *
+     * @param uri address of the server to be used by the client
      * @return CompanyClient
      */
-    public CompanyClient getCompanyClient() {
-        return new CompanyClient();
+    public static CompanyClient getCompanyClient(String uri) {
+        return new CompanyClient(uri);
     }
 
     /**
      * Returns a new GarmentClient object
      *
+     * @param uri address of the server to be used by the client
      * @return GarmentClient
      */
-    public GarmentClient getGarmentClient() {
-        return new GarmentClient();
+    public static GarmentClient getGarmentClient(String uri) {
+        return new GarmentClient(uri);
     }
 
     /**
      * Returns a new PublicKeyClient object
      *
+     * @param uri address of the server to be used by the client
      * @return PublicKeyClient
      */
-    public PublicKeyClient getPublicKeyClient() {
-        return new PublicKeyClient();
+    public static PublicKeyClient getPublicKeyClient(String uri) {
+        return new PublicKeyClient(uri);
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Returns a new UserClient object
      *
+     * @param uri address of the server to be used by the client
      * @return UserClient
      */
-    /*
-    public UserClient getUserClient() {
-        return new UserClient();
+    public static UserClient getUserClient(String uri) {
+        return new UserClient(uri);
     }
-     */
     /**
      * Returns a new ExpertClient object
      *
      * @return ExpertClient
      */
-    /*
-    public ExpertClient getExpertClient() {
-        return new ExpertClient();
+    public static ExpertClient getExpertClient(String uri) {
+        return new ExpertClient(uri);
     }
-     */
 }
