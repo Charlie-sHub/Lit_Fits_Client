@@ -42,7 +42,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException {
+    public <T> T findGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("barcode/{0}", new Object[]{barcode}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -58,7 +58,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException {
+    public <T> T findGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("request/{0}", new Object[]{requested}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -139,7 +139,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException {
+    public <T> T findGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("promotion/{0}", new Object[]{promoted}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -155,7 +155,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findGarmentGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException {
+    public <T> T findGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("company/{0}", new Object[]{nif}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

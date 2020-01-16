@@ -786,7 +786,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             setGarmentData();
-            if (garment.getId() == 0) {
+            if (garment.getId() != 0) {
                 garmentClient.editGarment(garment);
             } else {
                 garmentClient.createGarment(garment);
