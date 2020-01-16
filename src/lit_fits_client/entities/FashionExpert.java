@@ -117,52 +117,52 @@ public class FashionExpert implements Serializable {
         return true;
     }
 
-    public SimpleStringProperty getUsername() {
-        return username;
+    public String getUsername() {
+        return this.username.get();
     }
 
-    public void setUsername(SimpleStringProperty username) {
-        this.username = username;
+    public void setUsername(String username) {
+        this.username.set(username);
     }
 
-    public SimpleStringProperty getPassword() {
-        return password;
+    public String getPassword() {
+        return this.password.get();
     }
 
-    public void setPassword(SimpleStringProperty password) {
-        this.password = password;
+    public void setPassword(String password) {
+        this.password.set(password);
     }
 
-    public SimpleStringProperty getPhoneNumber() {
-        return phoneNumber;
+    public String getPhoneNumber() {
+        return this.phoneNumber.get();
     }
 
-    public void setPhoneNumber(SimpleStringProperty phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber.set(phoneNumber); 
     }
 
-    public SimpleStringProperty getFullName() {
-        return fullName;
+    public String getFullName() {
+        return this.fullName.get();
     }
 
-    public void setFullName(SimpleStringProperty fullName) {
-        this.fullName = fullName;
+    public void setFullName(String fullName) {
+        this.fullName.set(fullName);
     }
 
-    public SimpleStringProperty getEmail() {
-        return email;
+    public String getEmail() {
+        return this.email.get();
     }
 
-    public void setEmail(SimpleStringProperty email) {
-        this.email = email;
+    public void setEmail(String email) {
+        this.email.set(email);
     }
 
-    public SimpleStringProperty getPublication() {
-        return publication;
+    public String getPublication() {
+        return this.publication.get();
     }
 
-    public void setPublication(SimpleStringProperty publication) {
-        this.publication = publication;
+    public void setPublication(String publication) {
+        this.publication.set(publication);
     }
 
 

@@ -72,4 +72,22 @@ public interface ExpertClientInterface {
      * @throws ClientErrorException
      */
     <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException;
+    
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @return
+     * @throws ClientErrorException
+     */
+    public <T> T getRecommendedColors(Class<T> responseType) throws ClientErrorException;
+
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @return
+     * @throws ClientErrorException
+     */
+    public <T> T getRecommendedMaterials(Class<T> responseType) throws ClientErrorException;
 }
