@@ -6,10 +6,9 @@
 package lit_fits_client.views;
 
 /**
- * The controller for the view in wich the admin can check all the 
- * entities in the database.
- * @author Asier
+ *
+ * @author 2dam
  */
-public class FXMLAdminCheckEntitiesController {
+public class FXMLExpertEditRecommendationController {
     
 }

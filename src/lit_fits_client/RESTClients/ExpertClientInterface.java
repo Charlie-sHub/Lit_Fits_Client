@@ -43,7 +43,7 @@ public interface ExpertClientInterface {
      * @return FashionExpert
      * @throws ClientErrorException
      */
-    <T> T find(Class<T> responseType, String id) throws ClientErrorException;
+    <T> T findExpertByUsername(Class<T> responseType, String username) throws ClientErrorException;
     
         /**
      * Reestablishes the password of associated Expert with the given username, sending an email with the new password
@@ -72,4 +72,22 @@ public interface ExpertClientInterface {
      * @throws ClientErrorException
      */
     <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException;
+    
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @return
+     * @throws ClientErrorException
+     */
+    public <T> T getRecommendedColors(Class<T> responseType) throws ClientErrorException;
+
+    /**
+     *
+     * @param <T>
+     * @param responseType
+     * @return
+     * @throws ClientErrorException
+     */
+    public <T> T getRecommendedMaterials(Class<T> responseType) throws ClientErrorException;
 }

@@ -77,9 +77,9 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.theme = theme;
         
         Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Administrator - Check promotion requests");
-        stage.show();
+        this.stage.setScene(scene);
+        this.stage.setTitle("Administrator - Check promotion requests");
+        this.stage.show();
         
         this.setStylesheet(scene, theme);
         this.setElements();
