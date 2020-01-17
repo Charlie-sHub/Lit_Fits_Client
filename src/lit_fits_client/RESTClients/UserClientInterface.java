@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * The interface for the user in the client.
@@ -37,7 +38,7 @@ public interface UserClientInterface {
      * @return The user with all the data.
      * @throws ClientErrorException 
      */
-    public <T> T findUserByEmail (Class<T> responseType, String email) throws ClientErrorException;
+    public <T> T findUserByEmail (GenericType<T> responseType, String email) throws ClientErrorException;
     
     /**
      * Returns all the users on the database.
@@ -47,7 +48,7 @@ public interface UserClientInterface {
      * @return All the users with their data.
      * @throws ClientErrorException 
      */
-    public <T> T findAllUser (Class<T> responseType) throws ClientErrorException;
+    public <T> T findAllUser (GenericType<T> responseType) throws ClientErrorException;
     
     /**
      * Updates the data for the received user.

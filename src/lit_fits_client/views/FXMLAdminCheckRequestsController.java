@@ -139,6 +139,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      * @param theme
      * @param stage
      * @param root 
+     * @param uri 
      */
     public void initStage(String theme, Stage stage, Parent root, String uri) {
         
@@ -169,22 +170,17 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private void setColumnFactories() {
         
         barcodeColumn.setCellValueFactory(new PropertyValueFactory("barcode"));
-        
         designerColumn.setCellValueFactory(new PropertyValueFactory("designer"));
-    
         garmentTypeColumn.setCellValueFactory(new PropertyValueFactory("garmentType"));
-    
         bodyPartColumn.setCellValueFactory(new PropertyValueFactory("bodyPart"));
-    
         moodColumn.setCellValueFactory(new PropertyValueFactory("mood"));
-    
         priceColumn.setCellValueFactory(new PropertyValueFactory("price"));
-    
         availableColumn.setCellValueFactory(new PropertyValueFactory("available"));
-        
         promotedColumn.setCellValueFactory(new PropertyValueFactory("promoted"));
-    
         promotionRequestColumn.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
+        
+        // Materials
+        // Colors
     }
     
     /**
@@ -238,8 +234,8 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         menuItemDeletePromotion.setOnAction(this::onMenuItemDeletePromotionPress);
         menuItemCancelRequest.setOnAction(this::onMenuItemCancelRequestPress);
         
-        //btnSave.setText(this::onBtnSavePress);
-        btnBack.setText(this::onBtnBackPress);
+        //btnSave.setOnAction(this::onBtnSavePress);
+        btnBack.setOnAction(this::onBtnBackPress);
     }
     
     /**
@@ -252,17 +248,11 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
 //    }
     
     /**
-     * The event that will happen when the <i>Back</i> button is pressed. 
-     * A confirmation dialog appears to confirm the operation.
+     * The event that will happen when the <i>Back</i> button is pressed.
      * 
      * @param event The action event of the view.
      */
     private void onBtnBackPress(ActionEvent event){
-        
-        this.closeWindow();
-    }
-
-    private void closeWindow() {
         this.previousStage.show();
         this.stage.hide();
     }
@@ -273,7 +263,14 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      * @param event The action event of the view.
      */
     private void onMenuItemPromotePress(ActionEvent event) {
+        Garment promoteGarment = garmentsTable.getSelectionModel().getSelectedItem();
         
+        promoteGarment.setPromoted(true);
+        promoteGarment.setPromotionRequest(false);
+        
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        garmentClient.editGarment(promoteGarment);
+        garmentClient.close();
     }
     
     /**
@@ -282,7 +279,13 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      * @param event The action event of the view.
      */
     private void onMenuItemDeletePromotionPress(ActionEvent event) {
+        Garment deletePromoteGarment = garmentsTable.getSelectionModel().getSelectedItem();
         
+        deletePromoteGarment.setPromoted(false);
+        
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        garmentClient.editGarment(deletePromoteGarment);
+        garmentClient.close();
     }
     
     /**
@@ -291,6 +294,12 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      * @param event The action event of the view.
      */
     private void onMenuItemCancelRequestPress(ActionEvent event) {
+        Garment cancelPromoteGarment = garmentsTable.getSelectionModel().getSelectedItem();
         
+        cancelPromoteGarment.setPromotionRequest(false);
+        
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        garmentClient.editGarment(cancelPromoteGarment);
+        garmentClient.close();
     }
 }

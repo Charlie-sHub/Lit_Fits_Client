@@ -2,24 +2,34 @@ package lit_fits_client.views;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.RESTClients.UserClient;
 import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.Material;
@@ -50,6 +60,13 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private Button btnBack;
     
+    @FXML
+    private TreeView treeViewEntities;
+    @FXML
+    private TreeItem treeItemGarments;
+    @FXML
+    private TreeItem treeItemUsers;
+    
     // ------------------ Garment table ----------------------
     @FXML
     private TableView<Garment> garmentsTable;
@@ -76,23 +93,23 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     
     // ------------------ User table ----------------------
     @FXML
-    private TableView<Garment> usersTable;
+    private TableView<User> usersTable;
     @FXML
-    private TableColumn<Garment, String> usernameColumn;
+    private TableColumn<User, String> usernameColumn;
     @FXML
-    private TableColumn<Garment, String> passwordColumn;
+    private TableColumn<User, String> passwordColumn;
     @FXML
-    private TableColumn<Garment, String> fullnameColumn;
+    private TableColumn<User, String> fullnameColumn;
     @FXML
-    private TableColumn<Garment, String> phoneNumberColumn;
+    private TableColumn<User, String> phoneNumberColumn;
     @FXML
-    private TableColumn<Garment, String> emailColumn;
+    private TableColumn<User, String> emailColumn;
     @FXML
-    private TableColumn<Garment, Object> userTypeColumn;
+    private TableColumn<User, Object> userTypeColumn;
     @FXML
-    private TableColumn<Garment, Set<Material>> likedMaterialsColumn;
+    private TableColumn<User, Set<Material>> likedMaterialsColumn;
     @FXML
-    private TableColumn<Garment, Set<Color>> likedColorsColumn;
+    private TableColumn<User, Set<Color>> likedColorsColumn;
     
     private ObservableList<User> userList;
     
@@ -152,6 +169,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         Scene scene = new Scene(root);
         this.stage.setScene(scene);
         this.stage.setTitle("Administrator - Check promotion requests");
+        
+        this.usersTable.setVisible(false);
+        this.garmentsTable.setVisible(false);
+        
         this.stage.show();
         
         this.setStylesheet(scene, theme);
@@ -159,7 +180,6 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         this.choiceTheme.setValue(theme);
         
         stage.setOnCloseRequest(this::onClosing);
-        
     }
     
     /**
@@ -171,6 +191,74 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         this.setMnemonicText();
         this.setTooltips();
         this.setOnAction();
+         
+        this.setGarmentTableFactories();
+        this.fillTableGarment();
+        
+        this.setUserTableFactories();
+        this.fillTableUser();
+    }
+    
+    /**
+     * 
+     */
+    private void setGarmentTableFactories() {
+        
+        barcodeColumn.setCellValueFactory(new PropertyValueFactory("barcode"));
+        designerColumn.setCellValueFactory(new PropertyValueFactory("designer"));
+        garmentTypeColumn.setCellValueFactory(new PropertyValueFactory("garmentType"));
+        bodyPartColumn.setCellValueFactory(new PropertyValueFactory("bodyPart"));
+        moodColumn.setCellValueFactory(new PropertyValueFactory("mood"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory("price"));
+        availableColumn.setCellValueFactory(new PropertyValueFactory("available"));
+        promotedColumn.setCellValueFactory(new PropertyValueFactory("promoted"));
+        promotionRequestColumn.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
+        // Materials
+        // Colors
+    }
+    
+    /**
+     * 
+     * @throws ClientErrorException 
+     */
+    private void fillTableGarment() throws ClientErrorException {
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        
+        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentAll(new GenericType<List<Garment>>(){}));
+        
+        garmentClient.close();
+        
+        garmentsTable.setItems(garmentList);
+    }
+    
+    /**
+     * 
+     */
+    private void setUserTableFactories() {
+        
+        usernameColumn.setCellValueFactory(new PropertyValueFactory("username"));
+        passwordColumn.setCellValueFactory(new PropertyValueFactory("password"));
+        fullnameColumn.setCellValueFactory(new PropertyValueFactory("fullName"));
+        phoneNumberColumn.setCellValueFactory(new PropertyValueFactory("phoneNumber"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
+        userTypeColumn.setCellValueFactory(new PropertyValueFactory("userType"));
+        //likedMaterialsColumn.setCellFactory((TableColumn<User, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
+        //likedMaterialsColumn.setCellValueFactory((TableColumn.CellDataFeatures<User, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getLikedMaterials());
+        //likedColorsColumn.setCellValueFactory(new PropertyValueFactory("likedColors"));
+    }
+    
+    /**
+     * 
+     * @throws ClientErrorException 
+     */
+    private void fillTableUser() throws ClientErrorException {
+        UserClient userClient = ClientFactory.getUserClient(uri);
+        
+        userList = FXCollections.observableArrayList(userClient.findAllUser(new GenericType<List<User>>(){}));
+        
+        userClient.close();
+                
+        usersTable.setItems(userList);
     }
     
     /**
@@ -207,7 +295,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      * @param event 
      */
     private void onBtnBackPress(ActionEvent event) {
-        
+        this.previousStage.show();
+        this.stage.hide();
     }
     
     /**
@@ -217,22 +306,71 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      */
     private void onBtnDeleteItemPress (ActionEvent event) {
         
+        if (usersTable.isVisible()) {
+            User deleteUser = usersTable.getSelectionModel().getSelectedItem();
+            
+            if (deleteUser != null) {
+                
+                if (this.deleteConfirmation()){
+                    
+                    UserClient userClient = ClientFactory.getUserClient(uri);
+                    userClient.removeUser(deleteUser.getUsername());
+                    userClient.close();
+                }
+            } else {
+                this.nothingToDelete();
+            }
+            
+        } else if (garmentsTable.isVisible()) {
+            Garment deleteGarment = garmentsTable.getSelectionModel().getSelectedItem();
+            
+            if (deleteGarment != null) {
+                
+                if (this.deleteConfirmation()) {
+                    
+                    GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+                    garmentClient.remove(String.valueOf(deleteGarment.getId()));
+                    garmentClient.close();
+                }
+            } else {
+                this.nothingToDelete();
+            }
+            
+        // In case that there is no visible tables
+        } else {
+            this.nothingToDelete();
+        }
     }
     
-    private void fillTableGarment() throws ClientErrorException {
-        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+    private Boolean deleteConfirmation() {
+        boolean delete;
         
-        garmentList = FXCollections.observableArrayList(garmentClient.findGarmentAll(new GenericType<List<Garment>>(){}));
+        Alert deleteConfirmation = new Alert(AlertType.CONFIRMATION);
+        deleteConfirmation.setTitle("Delete selected item");
+        deleteConfirmation.setHeaderText("The selected item will be deleted from the database.");
+        deleteConfirmation.setContentText("Confirm operation?");
 
-        garmentsTable.setItems(garmentList);
+        Optional<ButtonType> result = deleteConfirmation.showAndWait();
+        
+        if (result.get() == ButtonType.OK){
+            delete = true;
+            
+        } else {
+            
+            delete = false;
+        }
+        
+        return delete;
     }
     
-    private void fillTableUser() throws ClientErrorException {
-        UserClient userClient = ClientFactory.getUserClient(uri);
+    private void nothingToDelete() {
         
-        userList = FXCollections.observableArrayList(userClient.findAllUsers(new GenericType<List<User>>(){}));
-        
-        usersTable.setItems(userList);
+        Alert nothingToDelete = new Alert(AlertType.ERROR);
+            
+        nothingToDelete.setTitle("Error deleting");
+        nothingToDelete.setHeaderText("Nothing to delete");
+        nothingToDelete.setContentText("You have to select at least one item before pressing \"Delete item\". ");
+
+        nothingToDelete.showAndWait();
     }
-    
 }
