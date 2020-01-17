@@ -5,7 +5,9 @@
  */
 package lit_fits_client.views;
 
+import java.util.List;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -13,9 +15,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javax.ws.rs.core.GenericType;
+import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.ColorClient;
+import lit_fits_client.RESTClients.MaterialClient;
 import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.Material;
 
 /**
@@ -32,13 +40,13 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private TableColumn<Color, String> columnNameColor;
     @FXML
-    private TableColumn<Color, Boolean> columnSelectMaterial;
+    private TableColumn<Color, Boolean> columnSelectColor;
     @FXML
     private TableView<Material> tableMaterial;
     @FXML
     private TableColumn<Material, String> columnNameMaterial;
     @FXML
-    private TableColumn<Material, Boolean> columnSelectMMaterial;
+    private TableColumn<Material, Boolean> columnSelectMaterial;
 
     private ObservableList<Color> colorList;
     private ObservableList<Material> materialList;
@@ -109,14 +117,14 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * @return the columnSelectMaterial
      */
     public TableColumn<Color, Boolean> getColumnSelectMaterial() {
-        return columnSelectMaterial;
+        return columnSelectColor;
     }
 
     /**
      * @param columnSelectMaterial the columnSelectMaterial to set
      */
     public void setColumnSelectMaterial(TableColumn<Color, Boolean> columnSelectMaterial) {
-        this.columnSelectMaterial = columnSelectMaterial;
+        this.columnSelectColor = columnSelectMaterial;
     }
 
     /**
@@ -148,17 +156,17 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
 
     /**
-     * @return the columnSelectMMaterial
+     * @return the columnSelectMaterial
      */
     public TableColumn<Material, Boolean> getColumnSelectMMaterial() {
-        return columnSelectMMaterial;
+        return columnSelectMaterial;
     }
 
     /**
-     * @param columnSelectMMaterial the columnSelectMMaterial to set
+     * @param columnSelectMMaterial the columnSelectMaterial to set
      */
     public void setColumnSelectMMaterial(TableColumn<Material, Boolean> columnSelectMMaterial) {
-        this.columnSelectMMaterial = columnSelectMMaterial;
+        this.columnSelectMaterial = columnSelectMMaterial;
     }
 
     /**
@@ -249,9 +257,31 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
+        setColumnFactories();
+        fillTable();
         
+    }
+
+    private void setColumnFactories() {
+        columnNameColor.setCellFactory(new PropertyValueFactory("color name"));
+        columnSelectColor.setCellFactory(new PropertyValueFactory("color select"));
+        columnNameMaterial.setCellFactory(new PropertyValueFactory("material name"));
+        columnSelectMaterial.setCellFactory(new PropertyValueFactory("material select"));
+    }
+
+    private void fillTable() {
+        /*
+        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType(<List<Material>>)));
+        tableMaterial.setItems(materialList);
+        ColorClient colorClient = ClientFactory.getColorClient(uri);
+        colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType(<List<Color>>)));
+        tableColor.setItems(colorList);        
+    */
     }
 
     
