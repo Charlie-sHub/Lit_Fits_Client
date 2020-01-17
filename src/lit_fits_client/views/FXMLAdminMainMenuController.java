@@ -26,11 +26,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     private static final Logger LOG = Logger.getLogger(FXMLAdminMainMenuController.class.getName());
     
     private User admin;
-    
     private Stage stage;
-    
     private Stage previousStage;
-    
     private String uri;
     
     @FXML
@@ -38,16 +35,12 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     
     @FXML
     private Menu menuFile;
-    
     @FXML
     private MenuItem menuItemClose;
-    
     @FXML
     private Menu menuEdit;
-    
     @FXML
     private MenuItem menuItemCheckEntities;
-    
     @FXML
     private MenuItem menuItemCheckPromotions;
     
@@ -56,10 +49,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     
     @FXML
     private Button btnClose;
-    
     @FXML
     private Button btnCheckDatabase;
-    
     @FXML
     private Button btnCheckPromotions;
     
@@ -139,8 +130,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
     
     /**
-     * This method is created to execute another 3, so the code is easier
-     * to read.
+     * This method is created to group anothers, so the code is easier
+     * to read. Here are the methods that should execute in <i>initStage</i>.
      */
     private void setElements() {
         
@@ -212,10 +203,11 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/AdminCheckDatabase.fxml"));
             Stage databaseStage = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLAdminCheckRequestsController databaseView = ((FXMLAdminCheckRequestsController) fxmlLoader.getController());
+            FXMLAdminCheckDatabaseController databaseView = ((FXMLAdminCheckDatabaseController) fxmlLoader.getController());
             databaseView.setAdmin(admin);
-            databaseView.setStage(stage);
+            databaseView.setPreviousStage(stage);
             databaseView.initStage(choiceTheme.getValue(), databaseStage, root, uri);
+            databaseView.getStage().show();
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -230,6 +222,19 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
      * @param event 
      */
     private void onBtnCheckPromotionsPress(ActionEvent event) {
-        
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/AdminCheckRequests.fxml"));
+            Stage requestsStage = new Stage();
+            Parent root = (Parent) fxmlLoader.load();
+            FXMLAdminCheckRequestsController requestView = ((FXMLAdminCheckRequestsController) fxmlLoader.getController());
+            requestView.setAdmin(admin);
+            requestView.setPreviousStage(stage);
+            requestView.initStage(choiceTheme.getValue(), requestsStage, root, uri);
+            requestView.getStage().show();
+            stage.hide();
+        } catch (IOException ex) {
+            createExceptionDialog(ex);
+            LOG.severe(ex.getMessage());
+        }
     }
 }

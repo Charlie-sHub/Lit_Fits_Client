@@ -36,76 +36,58 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private static final Logger LOG = Logger.getLogger(FXMLAdminCheckRequestsController.class.getName());
     
     private User admin;
-    
     private boolean saved;
-    
     private Stage stage;
-    
     private Stage previousStage;
-    
     private String uri;
     
 //    @FXML
 //    private Button btnSave;
-    
     @FXML
     private Button btnBack;
     
-    private ObservableList<Garment> garmentList;
-    
     @FXML
     private Menu menuFile;
-    
 //    @FXML
 //    private MenuItem menuItemSave;
-    
     @FXML
     private MenuItem menuItemBack;
-    
     @FXML
     private Menu menuEdit;
-    
     @FXML
     private MenuItem menuItemPromote;
-    
     @FXML
     private MenuItem menuItemDeletePromotion;
-    
     @FXML
     private MenuItem menuItemCancelRequest;
     
     @FXML
     private ChoiceBox choiceBoxFilterBy;
     
+    // ----------------- Garments Table ----------------------
+    
     @FXML
     private TableView<Garment> garmentsTable;
-    
     @FXML
     private TableColumn<Garment, String> barcodeColumn;
-    
     @FXML
     private TableColumn<Garment, String> designerColumn;
-    
     @FXML
     private TableColumn<Garment, Object> garmentTypeColumn;
-    
     @FXML
     private TableColumn<Garment, Object> bodyPartColumn;
-    
     @FXML
     private TableColumn<Garment, Object> moodColumn;
-    
     @FXML
     private TableColumn<Garment, Double> priceColumn;
-    
     @FXML
     private TableColumn<Garment, Boolean> availableColumn;
-    
     @FXML
     private TableColumn<Garment, Boolean> promotedColumn;
-    
     @FXML
     private TableColumn<Garment, Boolean> promotionRequestColumn;
+    
+    private ObservableList<Garment> garmentList;
     
     /**
      * @return The admin that is using the view (the admin that should be logged).

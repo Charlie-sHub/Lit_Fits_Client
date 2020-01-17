@@ -31,6 +31,10 @@ public class UserClient implements UserClientInterface {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(baseUri).path("litfitsserver.entities.user");
     }
+    
+    public UserClient() {
+        
+    }
 
     @Override
     public <T> T findUser (Class<T> responseType, String username) throws ClientErrorException {
@@ -40,8 +44,8 @@ public class UserClient implements UserClientInterface {
     }
 
     @Override
-    public void removeUser (String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+    public void removeUser (String username) throws ClientErrorException {
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{username})).request().delete();
     }
 
     @Override
@@ -58,8 +62,8 @@ public class UserClient implements UserClientInterface {
     }
 
     @Override
-    public void editUser (Object requestEntity, String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    public void editUser (Object requestEntity, String username) throws ClientErrorException {
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{username})).request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     @Override

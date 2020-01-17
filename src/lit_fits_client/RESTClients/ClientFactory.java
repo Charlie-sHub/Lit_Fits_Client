@@ -50,17 +50,17 @@ public class ClientFactory {
     public PublicKeyClient getPublicKeyClient() {
         return new PublicKeyClient();
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * Returns a new UserClient object
      *
      * @return UserClient
      */
-    /*
     public UserClient getUserClient() {
         return new UserClient();
     }
-     */
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Returns a new ExpertClient object
      *
