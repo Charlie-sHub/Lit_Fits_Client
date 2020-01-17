@@ -65,6 +65,8 @@ public class ClientFactory {
     public static UserClient getUserClient(String uri) {
         return new UserClient(uri);
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Returns a new ExpertClient object
      *
