@@ -3,7 +3,7 @@ package lit_fits_client.RESTClients;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import lit_fits_client.entities.Company;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:CompanyFacadeREST [litfitsserver.entities.company]<br>
@@ -20,15 +20,14 @@ import lit_fits_client.entities.Company;
 public class CompanyClient implements CompanyClientInterface {
     private WebTarget webTarget;
     private Client client;
-    // Gotta change the URL, probably read it once at the start of the program and then pass it the REST client
-    private static final String BASE_URI = "http://localhost:8080/Lit_Fits_Server/webresources";
 
     /**
      * Constructor of the Company client
+     * @param baseUri
      */
-    public CompanyClient() {
+    public CompanyClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("litfitsserver.entities.company");
+        webTarget = client.target(baseUri).path("litfitsserver.entities.company");
     }
 
     /**
@@ -59,12 +58,12 @@ public class CompanyClient implements CompanyClientInterface {
     /**
      * Updates the data of a given company
      *
-     * @param company
+     * @param requestEntity
      * @throws ClientErrorException
      */
     @Override
-    public void edit(Company company) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(company, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    public void edit(Object requestEntity) throws ClientErrorException {
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
     /**
@@ -133,7 +132,7 @@ public class CompanyClient implements CompanyClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public <T> T findAll(Class<T> responseType) throws ClientErrorException {
+    public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }

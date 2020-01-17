@@ -1,13 +1,18 @@
 package lit_fits_client.views;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,20 +27,30 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.ColorClient;
 import lit_fits_client.RESTClients.GarmentClient;
+import lit_fits_client.RESTClients.MaterialClient;
+import lit_fits_client.entities.BodyPart;
+import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.Garment;
+import lit_fits_client.entities.GarmentType;
+import lit_fits_client.entities.Material;
+import lit_fits_client.entities.Mood;
 
 /**
  * This is the Document Controller class for the registration view of the program.
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
-public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControllerInput {
+public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInput {
     /**
      * Cancel button
      */
@@ -112,6 +127,16 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     @FXML
     private ImageView imageViewGarmentPicture;
     /**
+     * Button to add or remove the selected Color
+     */
+    @FXML
+    private Button btnAddRemoveColor;
+    /**
+     * Button to add or remove the selected Material
+     */
+    @FXML
+    private Button btnAddRemoveMaterial;
+    /**
      * Stage to be used by the current controller
      */
     private Stage stage;
@@ -129,9 +154,17 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      */
     private Company company;
     /**
+     * An ArrayList of the combo boxes in the stage, used to check if they've all been filled
+     */
+    private ArrayList<ComboBox> comboBoxes;
+    /**
+     * The File of the picture chosen for the Garment
+     */
+    private File garmentPictureFile;
+    /**
      * Logger object
      */
-    private static final Logger LOG = Logger.getLogger(FXMLViewCreateModifyGarmentController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCreateModifyGarmentController.class.getName());
 
     /**
      * Getter for btnCancel
@@ -494,57 +527,135 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     }
 
     /**
+     * Getter for the Arraylist of combo boxes
+     *
+     * @return ArrayList
+     */
+    public ArrayList<ComboBox> getComboBoxes() {
+        return comboBoxes;
+    }
+
+    /**
+     * Setter for the ArrayList of combo boxes
+     *
+     * @param comboBoxes
+     */
+    public void setComboBoxes(ArrayList<ComboBox> comboBoxes) {
+        this.comboBoxes = comboBoxes;
+    }
+
+    /**
+     * Getter of the add/remove colors button
+     *
+     * @return Button
+     */
+    public Button getBtnAddRemoveColor() {
+        return btnAddRemoveColor;
+    }
+
+    /**
+     * Setter of the add/remove colors button
+     *
+     * @param btnAddRemoveColor
+     */
+    public void setBtnAddRemoveColor(Button btnAddRemoveColor) {
+        this.btnAddRemoveColor = btnAddRemoveColor;
+    }
+
+    /**
+     * Getter of the add/remove materials button
+     *
+     * @return Button
+     */
+    public Button getBtnAddRemoveMaterial() {
+        return btnAddRemoveMaterial;
+    }
+
+    /**
+     * Setter of the add/remove materials button
+     *
+     * @param btnAddRemoveMaterial
+     */
+    public void setBtnAddRemoveMaterial(Button btnAddRemoveMaterial) {
+        this.btnAddRemoveMaterial = btnAddRemoveMaterial;
+    }
+
+    /**
+     * Getter of the file of the picture of the garment
+     *
+     * @return File
+     */
+    public File getGarmentPictureFile() {
+        return garmentPictureFile;
+    }
+
+    /**
+     * Setter of the picture file
+     *
+     * @param garmentPictureFile
+     */
+    public void setGarmentPictureFile(File garmentPictureFile) {
+        this.garmentPictureFile = garmentPictureFile;
+    }
+
+    /**
      * Initializes the register window
      *
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(root);
-        setStylesheet(scene, theme);
-        stage.setScene(scene);
-        setElements();
-        if (null != garment) {
-            stage.setTitle("Modification");
-            fillFields();
-        } else {
-            stage.setTitle("Creation");
-            garment = new Garment();
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            stage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(root);
+            setStylesheet(scene, theme);
+            stage.setScene(scene);
+            setElements();
+            if (null != garment) {
+                stage.setTitle("Modification");
+                fillFields();
+            } else {
+                stage.setTitle("Creation");
+                garment = new Garment();
+            }
+            stage.setOnCloseRequest(this::onClosing);
+            //pretty sure these dimensions will have to change
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
+        } catch (IOException e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
         }
-        stage.setOnCloseRequest(this::onClosing);
-        //pretty sure these dimensions will have to change
-        stage.setMinWidth(850);
-        stage.setMinHeight(650);
-        stage.show();
     }
 
     /**
      * Fills the fields with the data of a given garment
      */
-    private void fillFields() {
+    private void fillFields() throws IOException {
         txtBarcode.requestFocus();
         txtBarcode.setText(garment.getBarcode());
         txtDesigner.setText(garment.getDesigner());
         txtPrice.setText(garment.getPrice().toString());
-        //Fill the values for the combo boxes
-        //Set value or set CHOSEN value or what?
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        Image garmentPicture = new Image(garment.getPicture().getAbsolutePath());
-        imageViewGarmentPicture.setImage(garmentPicture);
+        // This should be unneccessary if the File is already embbeded in the Garment
+        // GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        // garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
+        byte[] pictureBytes;
+        pictureBytes = Files.readAllBytes(garment.getPicture().toPath());
+        imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
     }
 
     /**
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        //Get list of colors and materials to fill those combo boxes with
-        //How to choose several colors and materials?
-        //Fill the other combo boxes with the enums
         Image image = new Image("/placeholder.jpg");
         imageViewGarmentPicture.setImage(image);
         setTooltips();
@@ -559,8 +670,40 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         setFocusTraversable();
         setListeners();
         textFields = new ArrayList<>();
-        fillArray();
+        fillTxtArray();
         undoneStrings = new ArrayList<>();
+        fillComboBoxes();
+        fillComboBoxArray();
+    }
+
+    /**
+     * Fills the combo boxes with their corresponding items
+     *
+     * @throws ClientErrorException
+     */
+    private void fillComboBoxes() throws ClientErrorException {
+        ColorClient colorClient = ClientFactory.getColorClient(uri);
+        comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
+        })));
+        colorClient.close();
+        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
+        })));
+        materialClient.close();
+        comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
+        comboMood.getItems().setAll(Arrays.toString(Mood.values()));
+        comboGarmentType.getItems().setAll(Arrays.toString(GarmentType.values()));
+    }
+
+    /**
+     * Fills the ArrayList of combo boxes with the combo boxes of the stage
+     */
+    private void fillComboBoxArray() {
+        comboBoxes.add(comboBodyPart);
+        comboBoxes.add(comboColors);
+        comboBoxes.add(comboGarmentType);
+        comboBoxes.add(comboMaterials);
+        comboBoxes.add(comboMood);
     }
 
     /**
@@ -578,6 +721,8 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         comboMood.setTooltip(new Tooltip("Erases everything"));
         comboColors.setTooltip(new Tooltip("Choose the colors of the garment"));
         comboMaterials.setTooltip(new Tooltip("Choose the materials of the garment"));
+        btnAddRemoveColor.setTooltip(new Tooltip("Add the selected Color or remove it if it was already added"));
+        btnAddRemoveMaterial.setTooltip(new Tooltip("Add the selected Material or remove it if it was already added"));
     }
 
     /**
@@ -607,19 +752,23 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         choiceTheme.setOnAction(this::onThemeChosen);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
+        btnAddRemoveColor.setOnAction(this::onAddRemoveColorPress);
+        btnAddRemoveMaterial.setOnAction(this::onAddRemoveMaterialPress);
         btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
         imageViewGarmentPicture.setOnMouseClicked(this::onImageViewPress);
+        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewPress);
     }
 
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
-    private void fillArray() {
+    private void fillTxtArray() {
         textFields.add(txtBarcode);
         textFields.add(txtDesigner);
-        // How to make the combo boxes work with my shotty attempt at a undo and redo?
+        textFields.add(txtPrice);
+        // How to make the combo boxes work with my shitty attempt at a undo and redo?
     }
 
     /**
@@ -628,11 +777,20 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
     private void setFocusTraversable() {
         txtBarcode.setFocusTraversable(true);
         txtDesigner.setFocusTraversable(true);
+        txtPrice.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
         btnSubmit.setFocusTraversable(true);
+        btnAddRemoveColor.setFocusTraversable(true);
+        btnAddRemoveMaterial.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
-        //Set the comboboxes traversable too
+        imageViewGarmentPicture.setFocusTraversable(true);
+        choiceTheme.setFocusTraversable(true);
+        comboBodyPart.setFocusTraversable(true);
+        comboColors.setFocusTraversable(true);
+        comboGarmentType.setFocusTraversable(true);
+        comboMaterials.setFocusTraversable(true);
+        comboMood.setFocusTraversable(true);
     }
 
     /**
@@ -643,7 +801,33 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         txtDesigner.textProperty().addListener(this::onFieldFilledListener);
         txtBarcode.lengthProperty().addListener(this::lenghtListener);
         txtDesigner.lengthProperty().addListener(this::lenghtListener);
-        //how to do the same of something similar with the combo boxes?
+        comboBodyPart.onActionProperty().addListener(this::onItemChosen);
+        comboColors.onActionProperty().addListener(this::onItemChosen);
+        comboGarmentType.onActionProperty().addListener(this::onItemChosen);
+        comboMaterials.onActionProperty().addListener(this::onItemChosen);
+        comboMood.onActionProperty().addListener(this::onItemChosen);
+    }
+
+    /**
+     * simply calls the proper method to check if something has been chosen
+     *
+     * @param object
+     */
+    public void onItemChosen(Object object) {
+        checkComboBoxes(btnSubmit);
+    }
+
+    /**
+     * Enables the submit button if there's something chosen in each combo box, it also calls onFieldFilled to check the
+     * rest of the fields
+     *
+     * @param btnSubmit
+     */
+    private void checkComboBoxes(Button btnSubmit) {
+        Boolean disableSubmit;
+        disableSubmit = comboBoxes.stream().filter(comboBox -> comboBox.getValue() == null).count() > 0;
+        btnSubmit.setDisable(disableSubmit);
+        onFieldFilled(btnSubmit);
     }
 
     /**
@@ -669,17 +853,17 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = new ClientFactory().getGarmentClient();
+        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             setGarmentData();
-            if (garment.getId() == 0) {
+            if (garment.getId() != 0) {
                 garmentClient.editGarment(garment);
             } else {
                 garmentClient.createGarment(garment);
             }
             stage.hide();
         } catch (ClientErrorException e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             garmentClient.close();
@@ -697,8 +881,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         garment.setAvailable(true);
         garment.setPromoted(false);
         garment.setPromotionRequest(false);
-        garment.setPicture(imageViewGarmentPicture.getImage()); // How to do that?
-        //set the combo box values too of course
+        garment.setBodyPart((BodyPart) comboBodyPart.getValue());
+        garment.setGarmentType((GarmentType) comboGarmentType.getValue());
+        garment.setMood((Mood) comboMood.getValue());
+        garment.setPicture(new Image(garmentPictureFile.getPath()));
+        garment.setPictureName(garmentPictureFile.getName());
     }
 
     /**
@@ -720,8 +907,11 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
      * Opens a file chooser to change the Image
      */
     public void onImageViewPress() {
-        // Open File chooser let the user select an image
-        // Set that image for the ImageView
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose a picture for the Garment");
+        fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.jpg"));
+        garmentPictureFile = fileChooser.showOpenDialog(stage);
+        imageViewGarmentPicture.setImage(new Image(garmentPictureFile.getPath()));
     }
 
     /**
@@ -758,7 +948,7 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
             try {
                 openHelpView();
             } catch (IOException e) {
-                createDialog(e);
+                createExceptionDialog(e);
             }
         }
     }
@@ -785,7 +975,33 @@ public class FXMLViewCreateModifyGarmentController extends FXMLDocumentControlle
         try {
             openHelpView();
         } catch (IOException e) {
-            createDialog(e);
+            createExceptionDialog(e);
+        }
+    }
+
+    /**
+     * Adds or Removes the selected Color
+     *
+     * @param event
+     */
+    private void onAddRemoveColorPress(ActionEvent event) {
+        if (garment.getColors().contains(comboColors.getValue())) {
+            garment.getColors().remove((Color) comboColors.getValue());
+        } else {
+            garment.getColors().add((Color) comboColors.getValue());
+        }
+    }
+
+    /**
+     * Adds or Removes the selected Material
+     *
+     * @param event
+     */
+    private void onAddRemoveMaterialPress(ActionEvent event) {
+        if (garment.getMaterials().contains(comboMaterials.getValue())) {
+            garment.getMaterials().remove((Material) comboMaterials.getValue());
+        } else {
+            garment.getMaterials().add((Material) comboMaterials.getValue());
         }
     }
 }

@@ -20,15 +20,12 @@ import javafx.stage.Stage;
  * @author Asier Vila Dominguez
  */
 public class FXMLViewProgramController extends FXMLDocumentController {
-
     @FXML
     private Button btnLogout;
     @FXML
     private Label lblUserFullname;
-
     private Stage stage;
     private Stage loginStage;
-
     private static final Logger LOG = Logger.getLogger(FXMLViewProgramController.class.getName());
 
     /**
@@ -97,71 +94,51 @@ public class FXMLViewProgramController extends FXMLDocumentController {
      * @param stage
      */
     public void initStage(boolean happyMode, Stage stage, Parent root) {
-
         this.stage = stage;
-
         Scene scene = new Scene(root);
-
-        this.happyMode = happyMode;
-
+//        this.happyMode = happyMode;
         stage.setScene(scene);
         stage.setTitle("Home");
         stage.setMinWidth(1400);
         stage.setMinHeight(800);
         stage.show();
-
         // Check if the happyMode is true, and change the CSS.
-        setStylesheet(scene);
-
+        //       setStylesheet(scene);
         setElements();
-
         // Replace the label lblUserFullname with current user's full name
-        lblUserFullname.setText(user.getFullName());
-
+        //lblUserFullname.setText(user.getFullName());
         // Also make sure that the checkBox is correctly set
-        chkHappyMode.setSelected(happyMode);
-
+        //  chkHappyMode.setSelected(happyMode);
         btnLogout.setDisable(false);
-
         stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
-     * This method makes a logout for the current user. It also closes the
-     * window and returns to the login one
+     * This method makes a logout for the current user. It also closes the window and returns to the login one
      *
      * @param actionEvent
      */
     private void onBtnLogoutPress(ActionEvent event) {
-
         // Open the login window
         loginStage.show();
-
         // Close the current window
         stage.close();
     }
 
     /**
-     * This method initializes the elements in the window, setting listeners or
-     * enabling/disabling elements.
+     * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
-
-        chkHappyMode.setOnAction(this::onThemeChosen);
-
+        //chkHappyMode.setOnAction(this::onThemeChosen);
         getBtnLogout().setOnAction(this::onBtnLogoutPress);
-
         setFocusTraversable();
     }
 
     /**
-     * This method allows to change the focus between the elements of the
-     * window.
+     * This method allows to change the focus between the elements of the window.
      */
     private void setFocusTraversable() {
-
         btnLogout.setFocusTraversable(true);
-
-        chkHappyMode.setFocusTraversable(true);
+        //chkHappyMode.setFocusTraversable(true);
     }
 }

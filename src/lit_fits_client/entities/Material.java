@@ -2,9 +2,7 @@ package lit_fits_client.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -12,35 +10,32 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Charlie
  */
-@Entity
-@Table(name = "material", schema = "TestLitFitsDB")
 @XmlRootElement
 public class Material implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * Unique name for the material
      */
-    @Id
-    private String name;
+    private SimpleStringProperty name;
 
     public Material() {
     }
 
     public Material(String name) {
-        this.name = name;
+        this.name = new SimpleStringProperty(name);
     }
 
     public String getName() {
-        return name;
+        return this.name.get();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     @Override
     public String toString() {
-        return "Material{" + "name=" + name + '}';
+        return this.name.get();
     }
 
     @Override

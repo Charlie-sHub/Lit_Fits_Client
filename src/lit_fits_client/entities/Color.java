@@ -2,39 +2,35 @@ package lit_fits_client.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Color Class
+ *
  * @author Charlie
  */
-@Entity
-@Table(name = "color", schema = "TestLitFitsDB")
 @XmlRootElement
 public class Color implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * Unique name for the color
      */
-    @Id
-    private String name;
+    private SimpleStringProperty name;
 
     public Color() {
     }
 
     public Color(String name) {
-        this.name = name;
+        this.name = new SimpleStringProperty(name);
     }
 
     public String getName() {
-        return name;
+        return this.name.get();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     @Override
@@ -61,9 +57,6 @@ public class Color implements Serializable {
             return false;
         }
         final Color other = (Color) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
 }

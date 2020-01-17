@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.SocketTimeoutException;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -20,36 +14,27 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.WindowEvent;
 
-/*import thebestprogramlogiclibrary.User;
-import thebestprogramlogiclibrary.exceptions.DisabledAccountException;
-import thebestprogramlogiclibrary.exceptions.PasswordMismatchException;
-import thebestprogramlogiclibrary.exceptions.ThreadLimitException;
-import thebestprogramlogiclibrary.exceptions.UnreachableDatabaseException;
-import thebestprogramlogiclibrary.exceptions.UsedUsernameException;
-import thebestprogramlogiclibrary.exceptions.UsernameNotFoundException;
-import thebestprogramlogiclibrary.logic.ApplicationLogicImplementation;
- */
 /**
- * Core of the document controllers
+ * Core of the document controllers from which all other document controllers inherit
  *
- * @author Ander Rodriguez
+ * @author Ander Rodriguez & Carlos Mendez
  */
 public class FXMLDocumentController {
+    /**
+     * The Choice box with the different themes
+     */
     @FXML
     protected ChoiceBox<String> choiceTheme;
-    //protected User user;
+    /**
+     * The theme used
+     */
     protected String theme;
+    /**
+     * The address of the server
+     */
+    protected String uri;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
-    /*
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-     */
     public String getTheme() {
         return theme;
     }
@@ -74,6 +59,24 @@ public class FXMLDocumentController {
      */
     public void setChoiceTheme(ChoiceBox choiceBox) {
         this.choiceTheme = choiceBox;
+    }
+
+    /**
+     * Gets the address of the server used by the controller
+     *
+     * @return
+     */
+    public String getUri() {
+        return uri;
+    }
+
+    /**
+     * Sets the address of the server used by the controller
+     *
+     * @param uri
+     */
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     /**
@@ -105,31 +108,22 @@ public class FXMLDocumentController {
      * @author Carlos Rafael Mendez Gonzalez
      * @param e exception to be handled
      */
-    public void createDialog(Exception e) {
-        String errorString = null;
-        if (e instanceof IOException) {
-            errorString = "IOException ocurred \n" + e.getMessage();
-        } else if (e instanceof SocketTimeoutException) {
-            errorString = "Server did not respond on time \n" + e.getMessage();
-        }
-        /*else if (e instanceof DisabledAccountException) {
-            errorString = "The account you're trying to log in with is currently disabled \n" + e.getMessage();
-        } else if (e instanceof PasswordMismatchException) {
-            errorString = "Wrong password \n" + e.getMessage();
-        } else if (e instanceof ThreadLimitException) {
-            errorString = "Server refused connection due to the connection limit \n" + e.getMessage();
-        } else if (e instanceof UnreachableDatabaseException) {
-            errorString = "Server couldn't access the database \n" + e.getMessage();
-        } else if (e instanceof UsedUsernameException) {
-            errorString = "That username is already in use \n" + e.getMessage();
-        } else if (e instanceof UsernameNotFoundException) {
-            errorString = "Couldn't find the username \n";
-        } else {
-            errorString = "Unkown error ocurred";
-        }*/
+    public void createExceptionDialog(Exception e) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText(errorString);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates a dialog with information for the user
+     *
+     * @param text
+     */
+    public void createDialog(String text) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Attention");
+        alert.setContentText(text);
         alert.showAndWait();
     }
 

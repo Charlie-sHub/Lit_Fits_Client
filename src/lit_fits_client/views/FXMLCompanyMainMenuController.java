@@ -17,7 +17,7 @@ import lit_fits_client.entities.Company;
  *
  * @author Carlos Mendez
  */
-public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
+public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     /**
      * the log out button
      */
@@ -45,7 +45,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      * The company that logged in
      */
     private Company company;
-    private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
      * @return the btnLogout
@@ -167,37 +167,57 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      *
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
-     *
      * @param stage
+     * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root) {
-        this.stage = stage;
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Home");
-        stage.setMinWidth(1400);
-        stage.setMinHeight(800);
-        stage.show();
-        setStylesheet(scene, theme);
-        setElements();
-        btnLogout.setDisable(false);
-        stage.setOnCloseRequest(this::onClosing);
+    public void initStage(String theme, Stage stage, Parent root, String uri) {
+        try {
+            this.uri = uri;
+            this.stage = stage;
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Home");
+            stage.setMinWidth(1400);
+            stage.setMinHeight(800);
+            stage.show();
+            setStylesheet(scene, theme);
+            setElements();
+            btnLogout.setDisable(false);
+            stage.setOnCloseRequest(this::onClosing);
+        } catch (Exception e) {
+            createExceptionDialog(e);
+            LOG.severe(e.getMessage());
+        }
     }
 
     /**
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
-        choiceTheme.setOnAction(this::onThemeChosen);
-        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         // Fill the ChoiceBox
-        btnLogout.setOnAction(this::onBtnLogoutPress);
-        btnLogout.setTooltip(new Tooltip("Log out of the program"));
-        btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
-        btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
-        btnWarehouse.setOnAction(this::onBtnWarehousePress);
-        btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
+        setOnAction();
+        setTooltips();
         setFocusTraversable();
+    }
+
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        btnLogout.setOnAction(this::onBtnLogoutPress);
+        btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
+        btnWarehouse.setOnAction(this::onBtnWarehousePress);
+    }
+
+    /**
+     * Sets the tooltips of different elements
+     */
+    private void setTooltips() {
+        btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
+        btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
+        btnLogout.setTooltip(new Tooltip("Log out of the program"));
+        choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
     }
 
     /**
@@ -230,13 +250,13 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterModifyAccount.fxml"));
             Stage stageProgramMain = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewCompanyRegisterController modifyAccountView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
+            FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
-            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root);
+            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }
@@ -254,10 +274,10 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             warehouseView.setCompany(company);
             warehouseView.setStageMainMenu(stage);
-            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root);
+            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root, uri);
             stage.hide();
         } catch (IOException ex) {
-            createDialog(ex);
+            createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
     }

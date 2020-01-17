@@ -24,11 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import thebestprogramlogiclibrary.User;
 
 /**
- * This is the Document Controller class for the registration view of the
- * program.
+ * This is the Document Controller class for the registration view of the program.
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
@@ -286,10 +284,10 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
     public void initStage(boolean mode, Stage stage, Parent root) {
         this.stage = stage;
         //matches the happiness of this window with the happiness of the previous window
-        happyMode = mode;
+//        happyMode = mode;
         Scene scene = new Scene(root);
         //Changes the css stylesheet based on the happiness of the program
-        setStylesheet(scene);
+        // setStylesheet(scene);
         stage.setScene(scene);
         stage.setTitle("Registration");
         setElements();
@@ -304,8 +302,8 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
      * Sets the properties for several elements of the window
      */
     private void setElements() {
-        chkHappyMode.setOnAction(this::onThemeChosen);
-        chkHappyMode.setSelected(happyMode);
+//        chkHappyMode.setOnAction(this::onThemeChosen);
+        //chkHappyMode.setSelected(happyMode);
         btnRegister.setDisable(true);
         btnRedo.setDisable(true);
         lblPassMismatch.setVisible(false);
@@ -342,7 +340,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
             try {
                 openHelpView();
             } catch (Exception e) {
-                createDialog(e);
+                createExceptionDialog(e);
             }
         }
     }
@@ -357,7 +355,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
         Parent root = (Parent) fxmlLoader.load();
         Stage stageHelp = new Stage();
         FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(happyMode, stageHelp, root);
+//        helpView.initStage(happyMode, stageHelp, root);
     }
 
     /**
@@ -369,7 +367,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
         try {
             openHelpView();
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
         }
     }
 
@@ -422,8 +420,7 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * This function will cancel the register, close the window and will return
-     * to the login window
+     * This function will cancel the register, close the window and will return to the login window
      *
      * @param event
      */
@@ -434,18 +431,18 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        user = new User();
+//        user = new User();
         try {
             setUserdata();
-            user = appLogic.registerUser(user);
-            try {
-                openProgramMainWindow(user);
-                stage.hide();
-            } catch (IOException e) {
-                LOG.severe(e.getMessage());
-            }
+            // user = appLogic.registerUser(user);
+            // try {
+            //openProgramMainWindow(user);
+            stage.hide();
+            //} catch (IOException e) {
+            //LOG.severe(e.getMessage());
+            // }
         } catch (Exception e) {
-            createDialog(e);
+            createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         }
     }
@@ -454,14 +451,14 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
      * Sets the data of the user to be sent to the server
      */
     private void setUserdata() {
-        user.setEmail(txtEmail.getText());
+        /*user.setEmail(txtEmail.getText());
         user.setFullName(txtFullName.getText());
         user.setLogin(txtUsername.getText());
         user.setPassword(txtPassword.getText());
         user.setUserStatus(true);
         user.setUserPrivilege(false);
         user.setUserPrivilege(false);
-        user.setUserStatus(true);
+        user.setUserStatus(true);*/
     }
 
     /**
@@ -469,18 +466,17 @@ public class FXMLViewRegisterController extends FXMLDocumentControllerInput {
      *
      * @throws IOException
      */
-    private void openProgramMainWindow(User user) throws IOException {
+    /*    private void openProgramMainWindow(User user) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewProgramMain.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageProgramMain = new Stage();
         FXMLViewProgramController mainView = ((FXMLViewProgramController) fxmlLoader.getController());
-        mainView.setAppLogic(appLogic);
+//        mainView.setAppLogic(appLogic);
         mainView.setUser(user);
         mainView.setLogin(loginStage);
-        mainView.initStage(happyMode, stageProgramMain, root);
+        //  mainView.initStage(happyMode, stageProgramMain, root);
         stage.hide();
-    }
-
+    }*/
     /**
      * Enables or disables the btnRegister based on several factors
      *

@@ -107,7 +107,7 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
         garment.setGarmentType(GarmentType.PANTS);
         Long id = null;
         garment.setId(id);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);
@@ -144,7 +144,7 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
         garment.setGarmentType(GarmentType.PANTS);
         Long id = null;
         garment.setId(id);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);
@@ -181,7 +181,7 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
         garment.setGarmentType(GarmentType.PANTS);
         Long id = null;
         garment.setId(id);
-        garment.setImagePath(null);
+        garment.setPictureName(null);
         Set<Material> materials = null;
         materials.add(new Material("Leather"));
         garment.setMaterials(materials);
