@@ -527,6 +527,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
         }
+        garmentClient.close();
     }
 
     /**
@@ -553,6 +554,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
         }
+        garmentClient.close();
     }
 
     private void onSelectingAGarment(ObservableValue observable, Object oldValue, Object newValue) {
