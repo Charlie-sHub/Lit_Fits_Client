@@ -18,12 +18,12 @@
   <center>
     <VBox alignment="CENTER" prefHeight="323.0" prefWidth="291.0" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane prefHeight="334.0" prefWidth="480.0">
+            <AnchorPane fx:id="mainController" prefHeight="334.0" prefWidth="480.0">
                <children>
-                <Button fx:id="buttonRecommendations" layoutX="149.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Check Recommendations" />
-                <Button fx:id="buttonLogOut" layoutX="187.0" layoutY="274.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
-                  <Button fx:id="buttonModify" layoutX="149.0" layoutY="48.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Modify Account" />
-                  <Button fx:id="buttonBlog" layoutX="149.0" layoutY="128.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Blog (Working on it)" />
+                <Button fx:id="btnRecommendations" layoutX="149.0" layoutY="88.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Check Recommendations" />
+                <Button fx:id="btnLogOut" layoutX="187.0" layoutY="274.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
+                  <Button fx:id="btnModify" layoutX="149.0" layoutY="48.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Modify Account" />
+                  <Button fx:id="btnBlog" layoutX="149.0" layoutY="128.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Blog (Working on it)" />
                </children>
             </AnchorPane>
          </children>
