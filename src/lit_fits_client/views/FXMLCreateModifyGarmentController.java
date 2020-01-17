@@ -27,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -757,8 +758,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
-        imageViewGarmentPicture.setOnMouseClicked(this::onImageViewPress);
-        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewPress);
+        imageViewGarmentPicture.setOnMouseClicked(this::onImageViewClicked);
+        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewKeyPressed);
     }
 
     /**
@@ -850,7 +851,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         previousStage.show();
         stage.hide();
     }
-
+    
     @Override
     public void onRegisterPress(ActionEvent event) {
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
@@ -904,9 +905,29 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     }
 
     /**
+     * Calls the proper method
+     *
+     * @param event
+     */
+    public void onImageViewClicked(MouseEvent event) {
+        onImageViewPress();
+    }
+
+    /**
+     * Calls the proper method
+     *
+     * @param event
+     */
+    public void onImageViewKeyPressed(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            onImageViewPress();
+        }
+    }
+
+    /**
      * Opens a file chooser to change the Image
      */
-    public void onImageViewPress() {
+    private void onImageViewPress() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a picture for the Garment");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.jpg"));

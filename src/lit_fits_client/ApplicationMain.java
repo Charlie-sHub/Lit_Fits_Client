@@ -22,6 +22,7 @@ public class ApplicationMain extends Application {
             launch();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 

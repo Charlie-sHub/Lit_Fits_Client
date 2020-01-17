@@ -338,7 +338,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
         Stage stageExpertMainMenu = new Stage();
         Parent root = (Parent) fxmlLoader.load();
-        FXMLExpertMainMenuController mainView = ((FXMLExpertMainMenuController) fxmlLoader.getController());
+        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
         mainView.setExpert(fashionExpert);
         mainView.setLoginStage(this.stage);
         mainView.initStage(theme, stageExpertMainMenu, root, uri);
