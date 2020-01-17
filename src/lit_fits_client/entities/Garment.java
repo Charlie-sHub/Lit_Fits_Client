@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableSet;
+import javafx.scene.image.Image;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -63,7 +64,7 @@ public class Garment implements Serializable {
     /**
      * Path in the database to the picture of the garment
      */
-    private String imagePath; // Do i even need this in the client?
+    private String pictureName;
     /**
      * Company that sells the garment
      */
@@ -115,7 +116,7 @@ public class Garment implements Serializable {
         this.available = new SimpleBooleanProperty(available);
         this.promotionRequest = new SimpleBooleanProperty(promotionRequest);
         this.promoted = new SimpleBooleanProperty(promoted);
-        this.imagePath = imagePath;
+        this.pictureName = imagePath;
         this.company = company;
         this.colors = new SimpleSetProperty<Color>((ObservableSet<Color>) colors);
         this.materials = new SimpleSetProperty<Material>((ObservableSet<Material>) materials);
@@ -202,12 +203,12 @@ public class Garment implements Serializable {
         this.promoted.set(promoted);
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getPictureName() {
+        return pictureName;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
     }
 
     public Company getCompany() {
@@ -238,7 +239,7 @@ public class Garment implements Serializable {
         return (File) this.picture.get();
     }
 
-    public void setPicture(File picture) {
+    public void setPicture(Image picture) {
         this.picture.set(picture);
     }
 
@@ -255,7 +256,7 @@ public class Garment implements Serializable {
         hash = 59 * hash + Objects.hashCode(this.available);
         hash = 59 * hash + Objects.hashCode(this.promotionRequest);
         hash = 59 * hash + Objects.hashCode(this.promoted);
-        hash = 59 * hash + Objects.hashCode(this.imagePath);
+        hash = 59 * hash + Objects.hashCode(this.pictureName);
         hash = 59 * hash + Objects.hashCode(this.company);
         hash = 59 * hash + Objects.hashCode(this.colors);
         hash = 59 * hash + Objects.hashCode(this.materials);
@@ -292,7 +293,7 @@ public class Garment implements Serializable {
         if (!Objects.equals(this.designer, other.designer)) {
             return false;
         }
-        if (!Objects.equals(this.imagePath, other.imagePath)) {
+        if (!Objects.equals(this.pictureName, other.pictureName)) {
             return false;
         }
         if (!Objects.equals(this.price, other.price)) {
@@ -318,6 +319,6 @@ public class Garment implements Serializable {
 
     @Override
     public String toString() {
-        return "Garment{" + "id=" + id + ", barcode=" + barcode + ", designer=" + designer + ", price=" + price + ", mood=" + mood + ", bodyPart=" + bodyPart + ", garmentType=" + garmentType + ", available=" + available + ", promotionRequest=" + promotionRequest + ", promoted=" + promoted + ", imagePath=" + imagePath + ", company=" + company + ", colors=" + colors + ", materials=" + materials + '}';
+        return "Garment{" + "id=" + id + ", barcode=" + barcode + ", designer=" + designer + ", price=" + price + ", mood=" + mood + ", bodyPart=" + bodyPart + ", garmentType=" + garmentType + ", available=" + available + ", promotionRequest=" + promotionRequest + ", promoted=" + promoted + ", imagePath=" + pictureName + ", company=" + company + ", colors=" + colors + ", materials=" + materials + '}';
     }
 }

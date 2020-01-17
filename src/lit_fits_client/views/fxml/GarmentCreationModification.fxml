@@ -94,11 +94,13 @@
                   <TextField fx:id="txtPrice" layoutX="273.0" layoutY="142.0" prefHeight="26.0" prefWidth="240.0" />
                   <Label fx:id="lblInvalidBarcode" contentDisplay="CENTER" layoutX="528.0" layoutY="106.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Barcode" textAlignment="CENTER" textFill="#fc0400" />
                   <Label fx:id="lblinvalidprice" contentDisplay="CENTER" layoutX="528.0" layoutY="146.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Price" textAlignment="CENTER" textFill="#fc0400" />
-                  <ImageView fx:id="imageViewGarmentPicture" fitHeight="230.0" fitWidth="230.0" layoutX="550.0" layoutY="182.0" pickOnBounds="true">
+                  <ImageView fx:id="imageViewGarmentPicture" fitHeight="230.0" fitWidth="230.0" layoutX="714.0" layoutY="135.0" pickOnBounds="true">
                      <image>
                         <Image url="@../../../../../../../Pictures/t-shirt-hoodie-raglan-sleeve-shirt-design-cliparts-png-download-t-shirt-png-black-and-white-900_920.jpg" />
                      </image>
                   </ImageView>
+                  <Button fx:id="btnAddRemoveColor" layoutX="530.0" layoutY="341.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" text="Add/Remove" />
+                  <Button fx:id="btnAddRemoveMaterial" layoutX="529.0" layoutY="381.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" text=" Add/Remove" />
                     </children>
                 </AnchorPane>
             </children>

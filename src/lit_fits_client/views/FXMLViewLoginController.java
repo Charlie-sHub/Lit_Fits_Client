@@ -2,8 +2,6 @@ package lit_fits_client.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -19,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.core.GenericType;
 import lit_fits_client.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
@@ -27,7 +24,6 @@ import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
-import lit_fits_client.entities.Material;
 
 /**
  * Controller for the Login view
@@ -342,7 +338,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenuController.fxml"));
         Stage stageExpertMainMenu = new Stage();
         Parent root = (Parent) fxmlLoader.load();
-        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        FXMLExpertMainMenuController mainView = ((FXMLExpertMainMenuController) fxmlLoader.getController());
         mainView.setExpert(fashionExpert);
         mainView.setLoginStage(this.stage);
         mainView.initStage(theme, stageExpertMainMenu, root, uri);
@@ -379,7 +375,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenuController.fxml"));
         Stage stageCompanyMainMenu = new Stage();
         Parent root = (Parent) fxmlLoader.load();
-        FXMLViewCompanyMainMenuController mainView = ((FXMLViewCompanyMainMenuController) fxmlLoader.getController());
+        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLoginStage(this.stage);
         mainView.initStage(theme, stageCompanyMainMenu, root, uri);
@@ -417,7 +413,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             if (rBtnCompany.isSelected()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterController.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
-                FXMLViewCompanyRegisterController registerView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
+                FXMLCompanyRegisterController registerView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
                 registerView.initStage(theme, registerStage, root, uri);

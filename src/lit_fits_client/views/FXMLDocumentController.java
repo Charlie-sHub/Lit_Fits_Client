@@ -3,7 +3,6 @@ package lit_fits_client.views;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.SocketTimeoutException;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -16,7 +15,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.WindowEvent;
 
 /**
- * Core of the document controllers
+ * Core of the document controllers from which all other document controllers inherit
  *
  * @author Ander Rodriguez & Carlos Mendez
  */

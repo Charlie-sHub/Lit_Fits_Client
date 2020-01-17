@@ -68,7 +68,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException;
+    <T> T findGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException;
 
     /**
      * Finds all the garments of a given company
@@ -79,7 +79,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException;
+    <T> T findGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException;
 
     /**
      * Finds all the garments with or without requested promotions
@@ -90,7 +90,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException;
+    <T> T findGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException;
 
     /**
      * Finds all promoted garments
@@ -101,7 +101,7 @@ public interface GarmentClientInterface {
      * @return
      * @throws ClientErrorException
      */
-    <T> T findGarmentGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException;
+    <T> T findGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException;
 
     /**
      * Gets the picture of the garment

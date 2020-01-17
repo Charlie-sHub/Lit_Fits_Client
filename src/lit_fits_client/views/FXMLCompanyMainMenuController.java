@@ -17,7 +17,7 @@ import lit_fits_client.entities.Company;
  *
  * @author Carlos Mendez
  */
-public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
+public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     /**
      * the log out button
      */
@@ -45,7 +45,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
      * The company that logged in
      */
     private Company company;
-    private static final Logger LOG = Logger.getLogger(FXMLViewCompanyMainMenuController.class.getName());
+    private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
      * @return the btnLogout
@@ -250,7 +250,7 @@ public class FXMLViewCompanyMainMenuController extends FXMLDocumentController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyRegisterModifyAccount.fxml"));
             Stage stageProgramMain = new Stage();
             Parent root = (Parent) fxmlLoader.load();
-            FXMLViewCompanyRegisterController modifyAccountView = ((FXMLViewCompanyRegisterController) fxmlLoader.getController());
+            FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
             modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
