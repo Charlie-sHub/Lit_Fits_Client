@@ -32,14 +32,14 @@ public class User implements Serializable {
     private Set<Garment> garments;
     
     /**
-     * Empty constructor
+     * Empty constructor.
      */
     public User () {
         
     }
     
     /**
-     * Simple user constructor, used for classes that extend user
+     * Basic user constructor, used for classes that extend user.
      * 
      * @param username The username that will be set.
      * @param fullName The full name that will be set.
@@ -63,7 +63,7 @@ public class User implements Serializable {
     }
     
     /**
-     * Simple user constructor, used for classes that extend user
+     * Full user constructor.
      * 
      * @param username The username that will be set.
      * @param fullName The full name that will be set.
@@ -393,6 +393,10 @@ public class User implements Serializable {
         }
         
         if (!casted.getPhoneNumber().equals(this.phoneNumber.get())) {
+            return false;
+        }
+        
+        if (!casted.getType().equals(this.type)) {
             return false;
         }
         
