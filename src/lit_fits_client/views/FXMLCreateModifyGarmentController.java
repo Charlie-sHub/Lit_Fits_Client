@@ -630,7 +630,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.show();
         } catch (IOException e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -865,7 +864,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.hide();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             garmentClient.close();
         }

@@ -20,7 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
-import lit_fits_client.Encryptor;
+import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
@@ -430,7 +430,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -618,10 +617,8 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             }
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } catch (Exception ex) {
             createExceptionDialog(ex);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
         } finally {
             companyClient.close();
             publicKeyClient.close();

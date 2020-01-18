@@ -113,6 +113,7 @@ public class FXMLDocumentController {
         alert.setTitle("Error");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
+        LOG.severe(e.getMessage());
     }
 
     /**

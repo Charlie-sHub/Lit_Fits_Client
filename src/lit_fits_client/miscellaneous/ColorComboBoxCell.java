@@ -1,4 +1,4 @@
-package lit_fits_client.views;
+package lit_fits_client.miscellaneous;
 
 import java.util.Set;
 import javafx.scene.control.cell.ComboBoxTableCell;

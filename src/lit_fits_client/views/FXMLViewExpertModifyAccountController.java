@@ -27,7 +27,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
-import lit_fits_client.Encryptor;
+import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;

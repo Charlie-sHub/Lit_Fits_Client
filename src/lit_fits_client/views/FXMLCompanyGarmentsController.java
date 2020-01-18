@@ -358,7 +358,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -477,7 +476,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnAddPress(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification.fxml"));
             Stage stageCreate = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
@@ -488,7 +487,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -500,7 +498,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void onBtnModifyPress(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader;
-            fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification.fxml"));
             Stage stageModify = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
@@ -510,7 +508,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 

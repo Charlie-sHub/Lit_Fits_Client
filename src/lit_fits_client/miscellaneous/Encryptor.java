@@ -1,4 +1,4 @@
-package lit_fits_client;
+package lit_fits_client.miscellaneous;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;

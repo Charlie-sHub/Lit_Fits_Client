@@ -186,7 +186,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -257,7 +256,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -278,7 +276,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 }
