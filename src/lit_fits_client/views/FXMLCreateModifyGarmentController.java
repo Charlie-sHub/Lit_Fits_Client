@@ -4,18 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,6 +42,7 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -607,13 +605,13 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
             setElements();
             if (null != garment) {
@@ -850,7 +848,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         previousStage.show();
         stage.hide();
     }
-    
+
     @Override
     public void onRegisterPress(ActionEvent event) {
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
@@ -969,32 +967,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             } catch (IOException e) {
                 createExceptionDialog(e);
             }
-        }
-    }
-
-    /**
-     * Open the help window
-     *
-     * @throws IOException
-     */
-    private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageHelp = new Stage();
-        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(theme, stageHelp, root);
-    }
-
-    /**
-     * Opens the help window when the help button is pressed
-     *
-     * @param event
-     */
-    private void onHelpPressed(ActionEvent event) {
-        try {
-            openHelpView();
-        } catch (IOException e) {
-            createExceptionDialog(e);
         }
     }
 

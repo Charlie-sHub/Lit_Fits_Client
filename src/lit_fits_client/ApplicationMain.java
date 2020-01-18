@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import lit_fits_client.views.FXMLViewLoginController;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * Main class of the desktop program
@@ -22,18 +23,20 @@ public class ApplicationMain extends Application {
             launch();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
-            e.printStackTrace();
         }
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        String theme = ResourceBundle.getBundle("lit_fits_client.views.theme").getString("theme");
+        // Change it so it reads the theme from a file outside of the jar
+        String theme = ResourceBundle.getBundle("lit_fits_client.views.themes").getString("theme");
+        Theme previousTheme = new Theme();
+        previousTheme.setThemeCss(theme);
         String uri = ResourceBundle.getBundle("connection").getString("hostUrl");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/fxml/ViewLogin.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         FXMLViewLoginController loginView = ((FXMLViewLoginController) fxmlLoader.getController());
         loginView.setStage(stage);
-        loginView.initStage(theme, root, uri);
+        loginView.initStage(previousTheme, root, uri);
     }
 }

@@ -27,7 +27,7 @@ import lit_fits_client.RESTClients.UserClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
-import org.fxmisc.undo.UndoManager;
+import lit_fits_client.views.themes.Theme;
 import org.fxmisc.undo.UndoManagerFactory;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
@@ -165,12 +165,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @param theme the path to the theme chosen
      * @param root
      * @param uri
+     * @author Carlos Mendez
      */
-    public void initStage(String theme, Parent root, String uri) {
+    public void initStage(Theme theme, Parent root, String uri) {
         try {
             this.uri = uri;
             Scene scene = new Scene(root);
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
             stage.setTitle("Log In");
             stage.setMinWidth(700);
@@ -185,6 +186,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * This function set the initial stages of the control
+     *
+     * @author Carlos Mendez
      */
     private void setElements() {
         lblLength.setVisible(false);
@@ -209,6 +212,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Sets up all the things related to undoing and redoing.
      *
      * Following: https://github.com/FXMisc/UndoFX
+     *
+     * @author Carlos Mendez
      */
     private void setUndoRedo() {
         EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
@@ -225,6 +230,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * Sets the tooltips of different elements
+     *
+     * @author Carlos Mendez
      */
     private void setTooltips() {
         btnLogin.setTooltip(new Tooltip("Log into the program"));
@@ -239,6 +246,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * Sets the mnemonic parsing for different elements
+     *
+     * @author Carlos Mendez
      */
     private void setMnemonicParsing() {
         btnLogin.setText("_Login");
@@ -253,6 +262,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * Sets the methods that will be called when actions are performed on different elements
+     *
+     * @author Carlos Mendez
      */
     private void setOnAction() {
         btnLogin.setOnAction(this::onBtnLoginPress);
@@ -267,6 +278,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * password
      *
      * @param event
+     * @author Carlos Mendez
      */
     private void onReestablishPasswordPress(ActionEvent event) {
         try {
@@ -292,6 +304,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * Fills the array of text fields to check later if they're filled with text
+     *
+     * @author Carlos Mendez
      */
     @Deprecated
     private void fillArray() {
@@ -301,6 +315,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * This function set the focus of the fields
+     *
+     * @author Carlos Mendez
      */
     private void setFocusTraversable() {
         txtUsername.setFocusTraversable(true);
@@ -316,6 +332,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
 
     /**
      * Add listeners to all text inputs
+     *
+     * @author Carlos Mendez
      */
     private void setListeners() {
         txtUsername.textProperty().addListener(this::onFieldFilledListener);
@@ -339,6 +357,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * This function will be on charge of doing the login of the user will be used when the button Login is pressed
      *
      * @param event
+     * @author Carlos Mendez
      */
     private void onBtnLoginPress(ActionEvent event) {
         try {
@@ -362,8 +381,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * Opens the main menu of the admin User
      *
-     * @param fashionExpert
+     * @param user Admin
      * @throws IOException
+     * @author Carlos Mendez
      */
     private void openAdminMainMenu(User user) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/AdminMainMenu.fxml"));
@@ -378,9 +398,10 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * Login of the admin User
      *
-     * @return FashionExpert
+     * @return user Admin
      * @throws ClientErrorException
      * @throws Exception
+     * @author Carlos Mendez
      */
     private User adminLogin() throws ClientErrorException, Exception {
         UserClient userClient = ClientFactory.getUserClient(uri);
@@ -401,6 +422,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      *
      * @param fashionExpert
      * @throws IOException
+     * @author Carlos Mendez
      */
     private void openExpertMainMenu(FashionExpert fashionExpert) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenu.fxml"));
@@ -418,6 +440,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @return FashionExpert
      * @throws ClientErrorException
      * @throws Exception
+     * @author Carlos Mendez
      */
     private FashionExpert expertLogin() throws ClientErrorException, Exception {
         ExpertClient expertClient = ClientFactory.getExpertClient(uri);
@@ -438,6 +461,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      *
      * @param company
      * @throws IOException
+     * @author Carlos Mendez
      */
     private void openCompanyMainMenu(Company company) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
@@ -455,6 +479,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @return Company
      * @throws ClientErrorException
      * @throws Exception
+     * @author Carlos Mendez
      */
     private Company loginCompany() throws ClientErrorException, Exception {
         CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
@@ -474,6 +499,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * This functions open the window of register and hide the stage of login
      *
      * @param event
+     * @author Carlos Mendez
      */
     @Override
     public void onRegisterPress(ActionEvent event) {
@@ -486,7 +512,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 registerView.setLogin(stage);
                 registerView.initStage(theme, registerStage, root, uri);
             } else {
-                // fashion expert registration
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertRegisterAccount.fxml"));
+                Parent root = (Parent) fxmlLoader.load();
+                FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
+                registerStage = new Stage();
+                registerView.setLogin(stage);
+                registerView.initStage(theme, registerStage, root, uri);
             }
             stage.hide();
         } catch (IOException e) {
@@ -499,6 +530,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Checks that a given String follows the nif pattern, if it does it means the user is a Company
      *
      * @return boolean true if the nif matches the pattern
+     * @author Carlos Mendez
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);

@@ -1,9 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -25,6 +23,7 @@ import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -406,13 +405,13 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
             Scene scene;
             scene = new Scene(root);
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
             setElements();
             if (null != company) {
@@ -506,34 +505,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Open the help window
-     *
-     * @throws IOException
-     */
-    private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageHelp = new Stage();
-        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(theme, stageHelp, root);
-    }
-
-    /**
-     * Opens the help window when the help button is pressed
-     *
-     * @param event
-     */
-    private void onHelpPressed(ActionEvent event) {
-        try {
-            openHelpView();
-        } catch (IOException e) {
-            createExceptionDialog(e);
-        }
-    }
-
-    /**
      * Fills the array of text fields to check later if they're filled with text
      */
+    @Deprecated
     private void fillArray() {
         textFields.add(txtNif);
         textFields.add(txtFullName);
@@ -648,7 +622,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
-        mainView.initStage(theme, stageProgramMain, root, uri);
+        mainView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
         stage.hide();
     }
 

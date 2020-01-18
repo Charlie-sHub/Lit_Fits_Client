@@ -8,9 +8,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import lit_fits_client.entities.Company;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The main menu of the program for companies.
@@ -33,6 +36,16 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     @FXML
     private Button btnModifyAccount;
+    /**
+     * The menu bar on top
+     */
+    @FXML
+    private MenuBar menuBar;
+    /**
+     * The option of the menu to open the help window
+     */
+    @FXML
+    private MenuItem menuHelpOpenHelp;
     /**
      * The stage used by this view
      */
@@ -170,7 +183,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * @param stage
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -180,7 +193,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
             setElements();
             btnLogout.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
@@ -207,6 +220,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnLogout.setOnAction(this::onBtnLogoutPress);
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
+        menuHelpOpenHelp.setOnAction(this::onHelpPressed);
     }
 
     /**
