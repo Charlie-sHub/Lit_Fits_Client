@@ -6,23 +6,13 @@ package lit_fits_client.views.themes;
  * @author Carlos Mendez
  */
 public class Theme {
-    private String name;
     private String themeCss;
 
     public Theme() {
     }
 
-    public Theme(String name, String themeCss) {
-        this.name = name;
+    public Theme(String themeCss) {
         this.themeCss = themeCss;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getThemeCss() {
@@ -35,6 +25,6 @@ public class Theme {
 
     @Override
     public String toString() {
-        return name;
+        return themeCss.substring(0, themeCss.length() - 4);
     }
 }

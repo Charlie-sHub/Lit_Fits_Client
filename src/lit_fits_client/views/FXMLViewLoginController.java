@@ -3,6 +3,7 @@ package lit_fits_client.views;
 import lit_fits_client.miscellaneous.TextChange;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -167,11 +168,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @param uri
      * @author Carlos Mendez
      */
-    public void initStage(Theme theme, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Parent root, String uri) {
         try {
             this.uri = uri;
             Scene scene = new Scene(root);
             setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             stage.setScene(scene);
             stage.setTitle("Log In");
             stage.setMinWidth(700);
@@ -206,6 +208,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         fieldPassword.setEditable(true);
         setTooltips();
         setUndoRedo();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -346,6 +349,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @param observable
      * @param oldValue
      * @param newValue
+     * @author Carlos Mendez
      */
     public void onFieldFilledListener(ObservableValue observable,
             String oldValue,
@@ -392,7 +396,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLAdminMainMenuController mainView = ((FXMLAdminMainMenuController) fxmlLoader.getController());
         mainView.setAdmin(user);
         mainView.setLoginStage(this.stage);
-        mainView.initStage(theme, stageAdminMainMenu, root, uri);
+        mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
     }
 
     /**
@@ -431,7 +435,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
         mainView.setExpert(fashionExpert);
         mainView.setLoginStage(this.stage);
-        mainView.initStage(theme, stageExpertMainMenu, root, uri);
+        mainView.initStage(themeList, theme, stageExpertMainMenu, root, uri);
     }
 
     /**
@@ -470,7 +474,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLoginStage(this.stage);
-        mainView.initStage(theme, stageCompanyMainMenu, root, uri);
+        mainView.initStage(themeList, theme, stageCompanyMainMenu, root, uri);
     }
 
     /**
@@ -510,14 +514,14 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 FXMLCompanyRegisterController registerView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
-                registerView.initStage(theme, registerStage, root, uri);
+                registerView.initStage(themeList, theme, registerStage, root, uri);
             } else {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertRegisterAccount.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setLogin(stage);
-                registerView.initStage(theme, registerStage, root, uri);
+                registerView.initStage(themeList, theme, registerStage, root, uri);
             }
             stage.hide();
         } catch (IOException e) {

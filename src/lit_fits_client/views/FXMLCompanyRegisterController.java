@@ -2,6 +2,7 @@ package lit_fits_client.views;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -405,7 +406,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -414,6 +415,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
             setElements();
+            themeList = themes;
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -460,6 +462,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -622,7 +625,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
-        mainView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
+        mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
         stage.hide();
     }
 

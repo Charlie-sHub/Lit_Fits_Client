@@ -97,10 +97,6 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void fillChoiceBoxTheme() {
-        Theme happyMode = new Theme("Happy Mode", "HappyModeStyleSheet.css");
-        Theme defaultTheme = new Theme("Default", "default.css");
-        themeList.add(happyMode);
-        themeList.add(defaultTheme);
         choiceTheme = new ChoiceBox<>(FXCollections.observableArrayList(themeList));
     }
 

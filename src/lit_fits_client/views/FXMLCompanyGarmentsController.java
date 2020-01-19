@@ -391,7 +391,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param stage
      * @param uri
      */
-    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -402,6 +402,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinHeight(720);
             stage.show();
             setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
@@ -413,8 +414,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the options for different elements of the window
      */
     private void setElements() {
-        // Fill the ChoiceBox of themes or take an alredy filled box?
-        // Set the chosen choice of theme
         contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
@@ -422,6 +421,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         setMnemonicText();
         setOnAction();
         setTooltips();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -537,7 +537,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
+            garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
         }
@@ -558,7 +558,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
             garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
+            garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
         }

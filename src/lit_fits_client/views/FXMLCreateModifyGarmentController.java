@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -605,13 +606,14 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
             setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             stage.setScene(scene);
             setElements();
             if (null != garment) {
@@ -672,6 +674,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
+        fillChoiceBoxTheme();
     }
 
     /**

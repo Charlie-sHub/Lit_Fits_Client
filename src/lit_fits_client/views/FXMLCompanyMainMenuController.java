@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -183,7 +184,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * @param stage
      * @param uri
      */
-    public void initStage(Theme theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -194,6 +195,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinHeight(800);
             stage.show();
             setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             setElements();
             btnLogout.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
@@ -210,6 +212,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         setOnAction();
         setTooltips();
         setFocusTraversable();
+        fillChoiceBoxTheme();
     }
 
     /**
