@@ -1,6 +1,7 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  * The auto-generated interface for the UserClient.
@@ -17,7 +18,7 @@ public interface UserClientInterface {
 
     void editUser (Object requestEntity, String username) throws ClientErrorException;
 
-    <T> T findAllUser (Class<T> responseType) throws ClientErrorException;
+    <T> T findAllUser (GenericType<T> responseType) throws ClientErrorException;
 
     <T> T findUser (Class<T> responseType, String username) throws ClientErrorException;
 
