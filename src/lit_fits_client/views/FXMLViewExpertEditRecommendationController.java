@@ -49,8 +49,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private TableColumn<Material, Boolean> columnSelectMaterial;
 
-    private ObservableList<Color> colorList;
-    private ObservableList<Material> materialList;
+    ObservableList<Color> colorList;
+    ObservableList<Material> materialList;
     
     private Stage stage;
     private Stage stageMainMenu;
@@ -276,14 +276,14 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
 
     private void fillTable() {
-        /*
+        
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
         materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType(<List<Material>>)));
         tableMaterial.setItems(materialList);
         ColorClient colorClient = ClientFactory.getColorClient(uri);
         colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType(<List<Color>>)));
         tableColor.setItems(colorList);        
-    */
+    
     }
 
     
