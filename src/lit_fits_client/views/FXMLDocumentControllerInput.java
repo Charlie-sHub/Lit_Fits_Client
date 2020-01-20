@@ -51,7 +51,6 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      *
      * Recommended to use the UndoManager instead
      */
-    @Deprecated
     protected ArrayList<TextField> textFields;
 
     public Label getLblLength() {
@@ -147,7 +146,6 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param event
      */
     public void onUndoPress(ActionEvent event) {
-        btnRedo.setDisable(false);
         undoManager.undo();
     }
 
@@ -158,7 +156,6 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @param event
      */
     public void onRedoPress(ActionEvent event) {
-        btnRedo.setDisable(true);
         undoManager.redo();
     }
 

@@ -194,6 +194,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             setElements();
@@ -208,11 +209,10 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
-        // Fill the ChoiceBox
+        fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
         setFocusTraversable();
-        fillChoiceBoxTheme();
     }
 
     /**

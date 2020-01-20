@@ -401,6 +401,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinWidth(1280);
             stage.setMinHeight(720);
             stage.show();
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             setElements();
@@ -414,6 +415,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the options for different elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
@@ -421,7 +423,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         setMnemonicText();
         setOnAction();
         setTooltips();
-        fillChoiceBoxTheme();
     }
 
     /**

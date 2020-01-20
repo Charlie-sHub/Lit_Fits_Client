@@ -96,7 +96,7 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void fillChoiceBoxTheme() {
-        choiceTheme = new ChoiceBox<>(FXCollections.observableArrayList(themeList));
+        choiceTheme = new ChoiceBox<Theme>(FXCollections.observableArrayList(themeList));
     }
 
     /**
@@ -117,7 +117,7 @@ public class FXMLDocumentController {
      * @param themePath
      */
     public void setStylesheet(Scene scene, String themePath) {
-        scene.getStylesheets().add(getClass().getResource("themes/" + themePath).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(themePath).toExternalForm());
     }
 
     /**

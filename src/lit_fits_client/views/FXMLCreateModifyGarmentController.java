@@ -612,6 +612,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             this.stage = stage;
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             stage.setScene(scene);
@@ -656,6 +657,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * Sets the properties for several elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         Image image = new Image("/placeholder.jpg");
         imageViewGarmentPicture.setImage(image);
         setTooltips();
@@ -674,7 +676,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
-        fillChoiceBoxTheme();
     }
 
     /**

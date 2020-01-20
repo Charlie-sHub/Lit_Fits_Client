@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -30,7 +29,6 @@ public class ApplicationMain extends Application {
             launch();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -47,19 +45,14 @@ public class ApplicationMain extends Application {
                 }
             });
         }
-        for (Theme theme : themes) {
-            System.out.println(theme.getThemeCss());
-        }
         // Should get the last theme 
         String previousThemePath = ResourceBundle.getBundle("lit_fits_client.views.themes.theme").getString("theme");
         Theme previousThemeAux = new Theme(previousThemePath);
-        System.out.println(previousThemeAux.getThemeCss());
-        Optional<Theme> previousTheme = themes.stream().filter(theme -> theme.toString().equals(previousThemeAux.toString())).findAny();
         String uri = ResourceBundle.getBundle("lit_fits_client.connection").getString("hostUrl");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/fxml/ViewLogin.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         FXMLViewLoginController loginView = ((FXMLViewLoginController) fxmlLoader.getController());
         loginView.setStage(stage);
-        loginView.initStage((List) themes, previousTheme.get(), root, uri);
+        loginView.initStage((List) themes, previousThemeAux, root, uri);
     }
 }

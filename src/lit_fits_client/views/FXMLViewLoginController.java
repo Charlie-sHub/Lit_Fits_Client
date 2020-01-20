@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -69,12 +70,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Text field where username must be entered to log in
      */
     @FXML
-    protected TextField txtUsername;
+    private TextField txtUsername;
     /**
      * Field of the password
      */
     @FXML
-    protected PasswordField fieldPassword;
+    private PasswordField fieldPassword;
+    private ToggleGroup radioButtonGroup;
     private Stage stage;
     private Stage registerStage;
     private Stage mainStage;
@@ -172,7 +174,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             this.uri = uri;
             Scene scene = new Scene(root);
-            setStylesheet(scene, theme.getThemeCss());
+            this.theme = theme;
+            setStylesheet(scene, theme.getThemeCss());            
             themeList = themes;
             stage.setScene(scene);
             stage.setTitle("Log In");
@@ -183,6 +186,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -192,6 +196,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
@@ -208,7 +213,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         fieldPassword.setEditable(true);
         setTooltips();
         setUndoRedo();
-        fillChoiceBoxTheme();
+        radioButtonGroup = new ToggleGroup();
+        rBtnCompany.setToggleGroup(radioButtonGroup);
+        rBtnFashionExpert.setToggleGroup(radioButtonGroup);
     }
 
     /**

@@ -93,6 +93,11 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     @FXML
     private Button btnHelp;
     /**
+     * Label that informs the user the phone number is not valid
+     */
+    @FXML
+    private Label lblInvalidPhone;
+    /**
      * Stage to be used by the current controller
      */
     private Stage stage;
@@ -412,10 +417,11 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             this.stage = stage;
             Scene scene;
             scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
-            setElements();
             themeList = themes;
+            setElements();
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -431,6 +437,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
+            e.printStackTrace();
         }
     }
 
@@ -450,6 +457,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * Sets the properties for several elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         setOnAction();
         setMnemonicParsing();
         lblPassMismatch.setVisible(false);
@@ -462,7 +470,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
-        fillChoiceBoxTheme();
     }
 
     /**
@@ -594,8 +601,10 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             }
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
+            e.printStackTrace();
         } catch (Exception ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -637,7 +646,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @param newValue
      */
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
-        if (passwordMatchCheck() & emailPatternCheck() & nifPatternCheck()) {
+        if (passwordMatchCheck() & emailPatternCheck() & nifPatternCheck() & phonePatternCheck()) {
             onFieldFilled(btnSubmit);
         } else {
             btnSubmit.setDisable(true);
@@ -665,6 +674,18 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         boolean enableRegister;
         enableRegister = Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", txtNif.getText().trim());
         lblInvalidNIF.setVisible(!enableRegister);
+        return enableRegister;
+    }
+
+    /**
+     * Checks that the phone follows the phone pattern
+     *
+     * @return boolean true if the phone matches the pattern
+     */
+    private boolean phonePatternCheck() {
+        boolean enableRegister;
+        enableRegister = Pattern.matches("[0-9]{9}", txtPhone.getText().trim());
+        lblInvalidPhone.setVisible(!enableRegister);
         return enableRegister;
     }
 
