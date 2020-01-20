@@ -55,6 +55,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     private Button btnCheckPromotions;
     
     /**
+     * Gets the admin that is logged.
+     * 
      * @return the admin
      */
     public User getAdmin () {
@@ -62,6 +64,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * Sets the admin that is logged.
+     * 
      * @param admin the admin to set
      */
     public void setAdmin (User admin) {
@@ -69,6 +73,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * Gets the current stage.
+     * 
      * @return the stage
      */
     public Stage getStage () {
@@ -76,6 +82,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * 
+     * 
      * @param stage the stage to set
      */
     public void setStage (Stage stage) {
@@ -209,9 +217,11 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
             databaseView.initStage(choiceTheme.getValue(), databaseStage, root, uri);
             databaseView.getStage().show();
             stage.hide();
-        } catch (IOException ex) {
-            createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
+            
+        } catch (IOException ioException) {
+            
+            createExceptionDialog(ioException);
+            LOG.severe(ioException.getMessage());
         }
     }
     
@@ -232,9 +242,11 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
             requestView.initStage(choiceTheme.getValue(), requestsStage, root, uri);
             requestView.getStage().show();
             stage.hide();
-        } catch (IOException ex) {
-            createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
+            
+        } catch (IOException ioException) {
+            
+            createExceptionDialog(ioException);
+            LOG.severe(ioException.getMessage());
         }
     }
 }
