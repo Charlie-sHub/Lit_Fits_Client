@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lit_fits_client.entities.User;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The view controller for the admin's main menu.
@@ -118,10 +120,11 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
      * @param stage
      * @param root 
      */
-    private void initStage(String theme, Stage stage, Parent root, String uri) {
+    private void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
         this.setStage(stage);
         this.theme = theme;
+        this.themeList = themes;
         this.uri = uri;
         
         Scene scene = new Scene(root);
@@ -129,7 +132,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         this.stage.setTitle("Administrator - Main menu");
         this.stage.show();
         
-        this.setStylesheet(scene, theme);
+        this.setStylesheet(scene, this.theme.getThemeCss());
         this.setElements();
         this.choiceTheme.setValue(theme);
         this.lblAdmin.setText(this.admin.getFullName());
@@ -214,7 +217,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
             FXMLAdminCheckDatabaseController databaseView = ((FXMLAdminCheckDatabaseController) fxmlLoader.getController());
             databaseView.setAdmin(admin);
             databaseView.setPreviousStage(stage);
-            databaseView.initStage(choiceTheme.getValue(), databaseStage, root, uri);
+            databaseView.initStage(this.themeList, this.theme, databaseStage, root, uri);
             databaseView.getStage().show();
             stage.hide();
             
@@ -239,7 +242,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
             FXMLAdminCheckRequestsController requestView = ((FXMLAdminCheckRequestsController) fxmlLoader.getController());
             requestView.setAdmin(admin);
             requestView.setPreviousStage(stage);
-            requestView.initStage(choiceTheme.getValue(), requestsStage, root, uri);
+            requestView.initStage(this.themeList, this.theme, requestsStage, root, uri);
             requestView.getStage().show();
             stage.hide();
             
