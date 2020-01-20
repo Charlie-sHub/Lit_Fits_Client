@@ -276,14 +276,14 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
 
     private void fillTable() {
-        
+        /*
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
         materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType(<List<Material>>)));
         tableMaterial.setItems(materialList);
         ColorClient colorClient = ClientFactory.getColorClient(uri);
         colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType(<List<Color>>)));
         tableColor.setItems(colorList);        
-    
+    */
     }
 
     
