@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import javafx.fxml.FXML;
@@ -13,10 +8,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import lit_fits_client.views.themes.Theme;
 
 /**
- *
- * @author Charlie
+ * Controller for the help window
+ * @author Carlos Mendez
  */
 public class FXMLHelpController extends FXMLDocumentController {
     /**
@@ -41,10 +37,10 @@ public class FXMLHelpController extends FXMLDocumentController {
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
      */
-    public void initStage(String theme, Stage stage, Parent root) {
+    public void initStage(Theme theme, Stage stage, Parent root) {
         this.stage = stage;
         Scene scene = new Scene(root);
-        setStylesheet(scene, theme);
+        setStylesheet(scene, theme.getThemeCss());
         setElements();
         stage.setScene(scene);
         stage.setTitle("Help");
@@ -63,9 +59,11 @@ public class FXMLHelpController extends FXMLDocumentController {
         webEngine.load(getClass().getResource("help.html").toExternalForm());
         btnBack.setOnMouseClicked(this::onBackPressed);
     }
+
     /**
      * Closes the help window if the back button is pressed
-     * @param event 
+     *
+     * @param event
      */
     private void onBackPressed(MouseEvent event) {
         stage.close();

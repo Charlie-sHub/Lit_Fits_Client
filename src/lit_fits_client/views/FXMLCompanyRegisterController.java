@@ -1,9 +1,8 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -20,11 +19,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
-import lit_fits_client.Encryptor;
+import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -406,15 +406,16 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
             Scene scene;
             scene = new Scene(root);
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
             stage.setScene(scene);
             setElements();
+            themeList = themes;
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -430,7 +431,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -462,6 +462,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -507,34 +508,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Open the help window
-     *
-     * @throws IOException
-     */
-    private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageHelp = new Stage();
-        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(theme, stageHelp, root);
-    }
-
-    /**
-     * Opens the help window when the help button is pressed
-     *
-     * @param event
-     */
-    private void onHelpPressed(ActionEvent event) {
-        try {
-            openHelpView();
-        } catch (IOException e) {
-            createExceptionDialog(e);
-        }
-    }
-
-    /**
      * Fills the array of text fields to check later if they're filled with text
      */
+    @Deprecated
     private void fillArray() {
         textFields.add(txtNif);
         textFields.add(txtFullName);
@@ -618,10 +594,8 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             }
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } catch (Exception ex) {
             createExceptionDialog(ex);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -651,7 +625,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
         mainView.setLogin(previousStage);
-        mainView.initStage(theme, stageProgramMain, root, uri);
+        mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
         stage.hide();
     }
 

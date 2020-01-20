@@ -3,43 +3,55 @@ package lit_fits_client.views;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * Core of the document controllers from which all other document controllers inherit
  *
- * @author Ander Rodriguez & Carlos Mendez
+ * @author Ander & Carlos Mendez
  */
 public class FXMLDocumentController {
     /**
      * The Choice box with the different themes
      */
     @FXML
-    protected ChoiceBox<String> choiceTheme;
+    protected ChoiceBox<Theme> choiceTheme;
     /**
      * The theme used
      */
-    protected String theme;
+    protected Theme theme;
     /**
      * The address of the server
      */
     protected String uri;
+    /**
+     * List of all the themes to choose from
+     */
+    List<Theme> themeList;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
-    public String getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 
-    public void setTheme(String theme) {
+    public void setTheme(Theme theme) {
         this.theme = theme;
     }
 
@@ -80,14 +92,23 @@ public class FXMLDocumentController {
     }
 
     /**
+     * Fills the choice box with the themes
+     *
+     * @author Carlos Mendez
+     */
+    public void fillChoiceBoxTheme() {
+        choiceTheme = new ChoiceBox<>(FXCollections.observableArrayList(themeList));
+    }
+
+    /**
      * This method checks the happiness of the program
      *
      * @param event
+     * @author Carlos Mendez
      */
     public void onThemeChosen(ActionEvent event) {
-        //pick the path from the ChoiceBox
-        String path = "";
-        setStylesheet(((CheckBox) event.getSource()).getScene(), path);
+        String path = "themes/" + choiceTheme.getValue().getThemeCss();
+        setStylesheet(((ChoiceBox) event.getSource()).getScene(), path);
     }
 
     /**
@@ -98,7 +119,6 @@ public class FXMLDocumentController {
      * @param themePath
      */
     public void setStylesheet(Scene scene, String themePath) {
-        // How should we remove the theme to have the default look? just add an empty css?
         scene.getStylesheets().add(getClass().getResource(themePath).toExternalForm());
     }
 
@@ -113,18 +133,39 @@ public class FXMLDocumentController {
         alert.setTitle("Error");
         alert.setContentText(e.getMessage());
         alert.showAndWait();
+        LOG.severe(e.getMessage());
     }
 
     /**
      * Creates a dialog with information for the user
      *
      * @param text
+     * @author Carlos Mendez
      */
     public void createDialog(String text) {
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Attention");
         alert.setContentText(text);
         alert.showAndWait();
+    }
+
+    /**
+     * Creates a dialog to confirm if the user wants to continue
+     *
+     *
+     * @return boolean
+     * @author Carlos Mendez
+     */
+    public boolean createConfirmationDialog() {
+        boolean result = false;
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Attention");
+        alert.setContentText("This action is irreversible, are you sure?");
+        Optional<ButtonType> buttonPressed = alert.showAndWait();
+        if (buttonPressed.get() == ButtonType.OK) {
+            result = true;
+        }
+        return result;
     }
 
     /**
@@ -139,7 +180,7 @@ public class FXMLDocumentController {
         try {
             out = new FileOutputStream("theme.properties");
             Properties properties = new Properties();
-            properties.setProperty("theme", theme);
+            properties.setProperty("theme", theme.getThemeCss());
             properties.store(out, null);
         } catch (IOException e) {
             LOG.severe(e.getMessage());
@@ -151,6 +192,34 @@ public class FXMLDocumentController {
             } catch (IOException e) {
                 LOG.severe(e.getMessage());
             }
+        }
+    }
+
+    /**
+     * Open the help window
+     *
+     * @throws IOException
+     * @author Carlos Mendez
+     */
+    protected void openHelpView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageHelp = new Stage();
+        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
+        helpView.initStage(theme, stageHelp, root);
+    }
+
+    /**
+     * Opens the help window when the help button is pressed
+     *
+     * @param event
+     * @author Carlos Mendez
+     */
+    protected void onHelpPressed(ActionEvent event) {
+        try {
+            openHelpView();
+        } catch (IOException e) {
+            createExceptionDialog(e);
         }
     }
 }

@@ -4,18 +4,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -44,6 +43,7 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -606,13 +606,14 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @param root The Parent created in the previous window
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             stage.setScene(scene);
             setElements();
             if (null != garment) {
@@ -629,7 +630,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.show();
         } catch (IOException e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -674,6 +674,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -757,8 +758,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
         btnRedo.setOnAction(this::onRedoPress);
-        imageViewGarmentPicture.setOnMouseClicked(this::onImageViewPress);
-        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewPress);
+        imageViewGarmentPicture.setOnMouseClicked(this::onImageViewClicked);
+        imageViewGarmentPicture.setOnKeyPressed(this::onImageViewKeyPressed);
     }
 
     /**
@@ -864,7 +865,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.hide();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
         } finally {
             garmentClient.close();
         }
@@ -904,9 +904,29 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     }
 
     /**
+     * Calls the proper method
+     *
+     * @param event
+     */
+    public void onImageViewClicked(MouseEvent event) {
+        onImageViewPress();
+    }
+
+    /**
+     * Calls the proper method
+     *
+     * @param event
+     */
+    public void onImageViewKeyPressed(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            onImageViewPress();
+        }
+    }
+
+    /**
      * Opens a file chooser to change the Image
      */
-    public void onImageViewPress() {
+    private void onImageViewPress() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a picture for the Garment");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.jpg"));
@@ -950,32 +970,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             } catch (IOException e) {
                 createExceptionDialog(e);
             }
-        }
-    }
-
-    /**
-     * Open the help window
-     *
-     * @throws IOException
-     */
-    private void openHelpView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageHelp = new Stage();
-        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
-        helpView.initStage(theme, stageHelp, root);
-    }
-
-    /**
-     * Opens the help window when the help button is pressed
-     *
-     * @param event
-     */
-    private void onHelpPressed(ActionEvent event) {
-        try {
-            openHelpView();
-        } catch (IOException e) {
-            createExceptionDialog(e);
         }
     }
 

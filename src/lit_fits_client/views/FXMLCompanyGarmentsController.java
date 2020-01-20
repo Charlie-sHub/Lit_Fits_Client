@@ -1,6 +1,5 @@
 package lit_fits_client.views;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -22,6 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -36,6 +38,7 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The "Warehouse" window for companies
@@ -77,7 +80,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * The columns for the pictures
      */
     @FXML
-    private TableColumn<Garment, File> tableColumnPicture;
+    private TableColumn<Garment, Image> tableColumnPicture;
     /**
      * The columns for the barcodes
      */
@@ -158,6 +161,51 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     @FXML
     private MenuItem menuItemDelete;
+    /**
+     * The menu bar on top
+     */
+    @FXML
+    private MenuBar menuBar;
+    /**
+     * The submenu related to "File"
+     */
+    @FXML
+    private Menu menuFile;
+    /**
+     * The submenu related to editing
+     */
+    @FXML
+    private Menu menuEdit;
+    /**
+     * The submenu related to Help
+     */
+    @FXML
+    private Menu menuHelp;
+    /**
+     * The option of the menu to add a new garment
+     */
+    @FXML
+    private MenuItem menuFileAdd;
+    /**
+     * The option of the menu to delete a garment
+     */
+    @FXML
+    private MenuItem menuFileDelete;
+    /**
+     * The option of the menu to promote a garment
+     */
+    @FXML
+    private MenuItem menuEditPromote;
+    /**
+     * The option of the menu to modify a garment
+     */
+    @FXML
+    private MenuItem menuEditModify;
+    /**
+     * The option of the menu to open the help window
+     */
+    @FXML
+    private MenuItem menuHelpOpenHelp;
     /**
      * The list of garments of the company
      */
@@ -343,7 +391,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param stage
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -353,12 +401,12 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinWidth(1280);
             stage.setMinHeight(720);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -366,8 +414,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the options for different elements of the window
      */
     private void setElements() {
-        // Fill the ChoiceBox of themes or take an alredy filled box?
-        // Set the chosen choice of theme
         contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
@@ -375,6 +421,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         setMnemonicText();
         setOnAction();
         setTooltips();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -460,7 +507,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnPromote.setOnAction(this::onBtnPromotePress);
         tableGarments.getSelectionModel().selectedItemProperty().addListener(this::onSelectingAGarment);
         tableGarments.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
-            if (event.getButton() == MouseButton.SECONDARY){
+            if (event.getButton() == MouseButton.SECONDARY) {
                 contextMenuTable.show(tableGarments, event.getScreenX(), event.getScreenY());
             }
         });
@@ -468,6 +515,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         menuItemDelete.setOnAction(this::onBtnDeletePress);
         menuItemModify.setOnAction(this::onBtnModifyPress);
         menuItemPromote.setOnAction(this::onBtnPromotePress);
+        menuFileAdd.setOnAction(this::onBtnAddPress);
+        menuFileDelete.setOnAction(this::onBtnDeletePress);
+        menuEditModify.setOnAction(this::onBtnModifyPress);
+        menuEditPromote.setOnAction(this::onBtnPromotePress);
+        menuHelpOpenHelp.setOnAction(this::onHelpPressed);
     }
 
     /**
@@ -477,7 +529,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnAddPress(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification.fxml"));
             Stage stageCreate = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
@@ -485,10 +537,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageCreate, root, uri);
+            garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -500,17 +551,16 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void onBtnModifyPress(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader;
-            fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification"));
+            fxmlLoader = new FXMLLoader(getClass().getResource("fxml/GarmentCreationModification.fxml"));
             Stage stageModify = new Stage();
             Parent root = (Parent) fxmlLoader.load();
             FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
             garmentCreationView.setCompany(company);
             garmentCreationView.setStage(stage);
-            garmentCreationView.initStage(choiceTheme.getValue(), stageModify, root, uri);
+            garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -520,12 +570,15 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param event
      */
     private void onBtnDeletePress(ActionEvent event) {
-        Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
-        try {
-            garmentClient.remove(Long.toString(garment.getId()));
-        } catch (ClientErrorException e) {
-            createExceptionDialog(e);
+        if (createConfirmationDialog()) {
+            Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
+            GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+            try {
+                garmentClient.remove(Long.toString(garment.getId()));
+            } catch (ClientErrorException e) {
+                createExceptionDialog(e);
+            }
+            garmentClient.close();
         }
     }
 
@@ -553,6 +606,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
         }
+        garmentClient.close();
     }
 
     private void onSelectingAGarment(ObservableValue observable, Object oldValue, Object newValue) {

@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import lit_fits_client.miscellaneous.InputChange;
+import org.fxmisc.undo.UndoManager;
+import org.reactfx.EventStream;
 
 /**
  * Document Controller with methods to validate input fields common to all views with inputs
@@ -29,50 +32,80 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
     @FXML
     protected Button btnRedo;
     /**
-     * ArrayList that saves the text that was undone
+     * The Undo Manager of the application
      */
+    protected UndoManager<InputChange<?>> undoManager;
+    /**
+     * The stream of events to be undone or redone
+     */
+    protected EventStream<InputChange<?>> inputChanges;
+    /**
+     * ArrayList that saves the text that was undone
+     *
+     * Recommended to use the UndoManager instead
+     */
+    @Deprecated
     protected ArrayList<String> undoneStrings;
     /**
      * ArrayList of all the TextFields of the view
+     *
+     * Recommended to use the UndoManager instead
      */
+    @Deprecated
     protected ArrayList<TextField> textFields;
-    
+
     public Label getLblLength() {
         return lblLength;
     }
-    
+
     public void setLblLength(Label lblLength) {
         this.lblLength = lblLength;
     }
-    
+
     public Button getBtnUndo() {
         return btnUndo;
     }
-    
+
     public void setBtnUndo(Button btnUndo) {
         this.btnUndo = btnUndo;
     }
-    
+
     public Button getBtnRedo() {
         return btnRedo;
     }
-    
+
     public void setBtnRedo(Button btnRedo) {
         this.btnRedo = btnRedo;
     }
-    
+
+    public UndoManager<InputChange<?>> getUndoManager() {
+        return undoManager;
+    }
+
+    public void setUndoManager(UndoManager<InputChange<?>> undoManager) {
+        this.undoManager = undoManager;
+    }
+
+    public EventStream<InputChange<?>> getInputChanges() {
+        return inputChanges;
+    }
+
+    public void setInputChanges(EventStream<InputChange<?>> inputChanges) {
+        this.inputChanges = inputChanges;
+    }
+
     public ArrayList<String> getUndoneStrings() {
         return undoneStrings;
     }
-    
+
     public void setUndoneStrings(ArrayList<String> undoneStrings) {
         this.undoneStrings = undoneStrings;
     }
-    
+
     public ArrayList<TextField> getTextFields() {
         return textFields;
     }
-    
+
     public void setTextFields(ArrayList<TextField> textFields) {
         this.textFields = textFields;
     }
@@ -108,34 +141,25 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
     }
 
     /**
-     * A worthy but ultimately failed attempt at a Undo
+     * Un-does the last change
      *
      * @author Carlos Rafael Mendez Gonzalez
      * @param event
      */
     public void onUndoPress(ActionEvent event) {
-        textFields.stream().forEach(textField -> {
-            undoneStrings.add(textField.getText());
-            textField.setText("");
-        });
-        
         btnRedo.setDisable(false);
+        undoManager.undo();
     }
 
     /**
-     * A worthy but ultimately failed attempt at a Undo
+     * Re-does the last change
      *
      * @author Carlos Rafael Mendez Gonzalez
      * @param event
      */
     public void onRedoPress(ActionEvent event) {
-        int aux = 0;
-        //textFields.stream().forEach(textField -> {
-        //    textField.setText(undoneStrings.get(aux));
-        //    aux++;
-        //});
         btnRedo.setDisable(true);
-        undoneStrings.removeAll(undoneStrings);
+        undoManager.redo();
     }
 
     /**

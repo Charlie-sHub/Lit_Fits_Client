@@ -57,21 +57,21 @@
                         <TextField fx:id="txtFullName" layoutX="358.0" layoutY="155.0" prefHeight="25.0" prefWidth="228.0" />
                         <TextField fx:id="txtEmail" layoutX="357.0" layoutY="196.0" prefHeight="25.0" prefWidth="228.0" />
                         <PasswordField fx:id="txtPassword" layoutX="357.0" layoutY="312.0" prefHeight="25.0" prefWidth="228.0" />
-                        <PasswordField fx:id="txtNewPassword" layoutX="357.0" layoutY="349.0" prefHeight="25.0" prefWidth="228.0" />
-                        <Button id="btnRegister" fx:id="btnRegister" layoutX="381.0" layoutY="430.0" mnemonicParsing="false" text="Submit">
+                        <PasswordField fx:id="txtRepeatPassword" layoutX="357.0" layoutY="349.0" prefHeight="25.0" prefWidth="228.0" />
+                        <Button id="btnRegister" fx:id="btnRegister" layoutX="381.0" layoutY="430.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="90.0" text="Register">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Button fx:id="btnCancel" layoutX="495.0" layoutY="430.0" mnemonicParsing="false" text="Cancel">
+                        <Button fx:id="btnCancel" layoutX="497.0" layoutY="429.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="90.0" text="Cancel">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
                         <Label fx:id="lblLength" layoutX="361.0" layoutY="389.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
-                  <Button fx:id="btnUndo" layoutX="359.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Undo" />
-                  <Button fx:id="btnRedo" layoutX="431.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Redo" />
-                  <Button fx:id="btnHelp" layoutX="521.0" layoutY="34.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" text="Help" />
+                  <Button fx:id="btnUndo" layoutX="350.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Undo" />
+                  <Button fx:id="btnRedo" layoutX="438.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Redo" />
+                  <Button fx:id="btnHelp" layoutX="541.0" layoutY="34.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Help" />
                   <Label fx:id="lblInvalidMail" layoutX="598.0" layoutY="200.0" prefHeight="18.0" prefWidth="226.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
                   <Label fx:id="lblPublication" layoutX="179.0" layoutY="239.0" prefHeight="18.0" prefWidth="172.0" text="Publication:">
                      <font>

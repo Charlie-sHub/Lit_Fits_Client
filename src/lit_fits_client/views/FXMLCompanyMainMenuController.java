@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,9 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import lit_fits_client.entities.Company;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The main menu of the program for companies.
@@ -33,6 +37,16 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     @FXML
     private Button btnModifyAccount;
+    /**
+     * The menu bar on top
+     */
+    @FXML
+    private MenuBar menuBar;
+    /**
+     * The option of the menu to open the help window
+     */
+    @FXML
+    private MenuItem menuHelpOpenHelp;
     /**
      * The stage used by this view
      */
@@ -170,7 +184,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * @param stage
      * @param uri
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stage;
@@ -180,13 +194,13 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             setElements();
             btnLogout.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -198,6 +212,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         setOnAction();
         setTooltips();
         setFocusTraversable();
+        fillChoiceBoxTheme();
     }
 
     /**
@@ -208,6 +223,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnLogout.setOnAction(this::onBtnLogoutPress);
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
+        menuHelpOpenHelp.setOnAction(this::onHelpPressed);
     }
 
     /**
@@ -257,7 +273,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -278,7 +293,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 }
