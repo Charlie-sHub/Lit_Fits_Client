@@ -6,6 +6,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.views.themes.Theme;
 
 /**
  *
@@ -92,7 +94,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
         this.expert = expert;
     }
             
-    public void initStage (String theme, Stage stage, Parent root, String uri) {
+    public void initStage (List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try{
             this.uri = uri;
             this.stage = stage;
@@ -102,7 +104,8 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCss());
+            themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
@@ -159,7 +162,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             FXMLViewExpertModifyAccountController modifyAccount = ((FXMLViewExpertModifyAccountController) fxmlLoader.getController());
             modifyAccount.setExpert(expert);
             modifyAccount.setStageMainMenu(stage);
-            modifyAccount.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
+            modifyAccount.initStage(themeList, theme, stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -175,7 +178,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             FXMLViewExpertEditRecommendationController editRecommendations = ((FXMLViewExpertEditRecommendationController) fXMLLoader.getController());
             editRecommendations.setExpert(expert);
             editRecommendations.setStageMainMenu(stage);
-            editRecommendations.initStage(choiceTheme.getValue(), stageMainProgram, root, uri);
+            editRecommendations.initStage(themeList, theme, stageMainProgram, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
