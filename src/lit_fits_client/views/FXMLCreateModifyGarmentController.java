@@ -645,12 +645,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        // This should be unneccessary if the File is already embbeded in the Garment
-        // GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
-        // garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
-        byte[] pictureBytes;
-        pictureBytes = Files.readAllBytes(garment.getPicture().toPath());
-        imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
+        imageViewGarmentPicture.setImage(garment.getPicture());
     }
 
     /**

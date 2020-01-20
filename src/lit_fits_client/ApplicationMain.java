@@ -34,7 +34,7 @@ public class ApplicationMain extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        List<Theme> themes = new ArrayList<Theme>();
+        List<Theme> themes = new ArrayList<>();
         // This should read and put all the themes from a certain folder into a List
         try (Stream<Path> filePathStream = Files.walk(Paths.get("themes"))) {
             filePathStream.forEach((Path filePath) -> {

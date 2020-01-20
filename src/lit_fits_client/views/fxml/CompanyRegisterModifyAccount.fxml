@@ -54,9 +54,9 @@
                             </font>
                         </Label>
                         <TextField fx:id="txtNif" layoutX="372.0" layoutY="123.0" prefHeight="25.0" prefWidth="240.0" />
-                        <TextField fx:id="txtPhone" layoutX="372.0" layoutY="242.0" prefHeight="25.0" prefWidth="240.0" />                        
                         <TextField fx:id="txtFullName" layoutX="372.0" layoutY="162.0" prefHeight="25.0" prefWidth="240.0" />
                         <TextField fx:id="txtEmail" layoutX="372.0" layoutY="203.0" prefHeight="25.0" prefWidth="240.0" />
+                        <TextField fx:id="txtPhone" layoutX="372.0" layoutY="242.0" prefHeight="25.0" prefWidth="240.0" />                     
                         <PasswordField fx:id="txtPassword" layoutX="372.0" layoutY="279.0" prefHeight="25.0" prefWidth="240.0" />
                         <PasswordField fx:id="txtRepeatPassword" layoutX="372.0" layoutY="316.0" prefHeight="25.0" prefWidth="240.0" />
                         <Button id="btnRegister" fx:id="btnSubmit" layoutX="396.0" layoutY="441.0" mnemonicParsing="false" text="Submit">
@@ -79,9 +79,9 @@
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                  <Label fx:id="lblInvalidNIF" layoutX="629.0" layoutY="127.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid NIF" textAlignment="JUSTIFY" textFill="RED" />
-                  <Label fx:id="lblPassMismatch" layoutX="629.0" layoutY="282.0" prefHeight="18.0" prefWidth="291.0" text="The passwords don't match" textAlignment="JUSTIFY" textFill="RED" />
-                  <Label fx:id="lblInvalidPhone" layoutX="629.0" layoutY="245.0" prefHeight="18.0" prefWidth="286.0" text="Not a valid phone number" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblInvalidNIF" layoutX="629.0" layoutY="127.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid NIF" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblPassMismatch" layoutX="629.0" layoutY="282.0" prefHeight="18.0" prefWidth="291.0" text="The passwords don't match" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblInvalidPhone" layoutX="629.0" layoutY="245.0" prefHeight="18.0" prefWidth="286.0" text="Not a valid phone number" textAlignment="JUSTIFY" textFill="RED" />
                         
                     </children>
                 </AnchorPane>

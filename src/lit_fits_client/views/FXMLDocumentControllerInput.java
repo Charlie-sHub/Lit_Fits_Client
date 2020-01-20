@@ -145,6 +145,7 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @author Carlos Rafael Mendez Gonzalez
      * @param event
      */
+    @Deprecated
     public void onUndoPress(ActionEvent event) {
         undoManager.undo();
     }
@@ -155,6 +156,7 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * @author Carlos Rafael Mendez Gonzalez
      * @param event
      */
+    @Deprecated
     public void onRedoPress(ActionEvent event) {
         undoManager.redo();
     }

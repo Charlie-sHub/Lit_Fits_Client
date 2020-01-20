@@ -96,7 +96,7 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void fillChoiceBoxTheme() {
-        choiceTheme = new ChoiceBox<Theme>(FXCollections.observableArrayList(themeList));
+        choiceTheme.setItems(FXCollections.observableArrayList(themeList));
     }
 
     /**
