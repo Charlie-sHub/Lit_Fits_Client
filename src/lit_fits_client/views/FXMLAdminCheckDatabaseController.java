@@ -34,6 +34,7 @@ import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.User;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The controller for the view in wich the admin can check all the 
@@ -156,14 +157,17 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     /**
      * The method that initiates the view.
      * 
+     * @param themes
      * @param theme
      * @param stage
      * @param root 
+     * @param uri 
      */
-    public void initStage (String theme, Stage stage, Parent root, String uri) {
+    public void initStage (List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
         this.stage = stage;
         this.theme = theme;
+        this.themeList = themes;
         this.uri = uri;
         
         Scene scene = new Scene(root);
@@ -175,9 +179,9 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         this.stage.show();
         
-        this.setStylesheet(scene, theme);
+        this.setStylesheet(scene, this.theme.getThemeCss());
         this.setElements();
-        this.choiceTheme.setValue(theme);
+        this.choiceTheme.setValue(this.theme);
         
         stage.setOnCloseRequest(this::onClosing);
     }
@@ -248,6 +252,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
+     * Fills the columns for the user's table.
      * 
      * @throws ClientErrorException 
      */

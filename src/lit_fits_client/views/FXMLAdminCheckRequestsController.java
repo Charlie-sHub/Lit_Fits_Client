@@ -23,6 +23,7 @@ import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.User;
+import lit_fits_client.views.themes.Theme;
 
 /**
  * The view controller in wich the admin can check 
@@ -136,15 +137,17 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     /**
      * The method that initiates the view.
      * 
+     * @param themes
      * @param theme
      * @param stage
      * @param root 
      * @param uri 
      */
-    public void initStage(String theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
         this.stage = stage;
         this.theme = theme;
+        this.themeList = themes;
         this.uri = uri;
         
         Scene scene = new Scene(root);
@@ -152,7 +155,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.stage.setTitle("Administrator - Check promotion requests");
         this.stage.show();
         
-        this.setStylesheet(scene, theme);
+        this.setStylesheet(scene, this.theme.getThemeCss());
         this.setElements();
         this.choiceTheme.setValue(theme);
         
