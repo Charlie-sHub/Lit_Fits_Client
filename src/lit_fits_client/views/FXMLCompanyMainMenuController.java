@@ -269,7 +269,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
-            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
+            modifyAccountView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -289,7 +289,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             warehouseView.setCompany(company);
             warehouseView.setStageMainMenu(stage);
-            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root, uri);
+            warehouseView.initStage(themeList, choiceTheme.getValue(), stageWarehouse, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);

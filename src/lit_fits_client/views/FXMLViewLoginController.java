@@ -395,7 +395,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         Parent root = (Parent) fxmlLoader.load();
         FXMLAdminMainMenuController mainView = ((FXMLAdminMainMenuController) fxmlLoader.getController());
         mainView.setAdmin(user);
-        mainView.setLoginStage(this.stage);
+        mainView.setPreviousStage(this.stage);
         mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
     }
 
@@ -520,7 +520,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
-                registerView.setLogin(stage);
+                registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
             }
             stage.hide();
