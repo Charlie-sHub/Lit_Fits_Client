@@ -84,7 +84,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
-     * 
+     * Sets the current stage.
      * 
      * @param stage the stage to set
      */
@@ -93,6 +93,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * Get the stage of the previous view.
+     * 
      * @return the previousStage
      */
     public Stage getPreviousStage () {
@@ -100,6 +102,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * Sets the stage of the previous view.
+     * 
      * @param previousStage the previousStage to set
      */
     public void setPreviousStage (Stage previousStage) {
@@ -107,6 +111,8 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     }
 
     /**
+     * The name of the admin that will be shown in the view.
+     * 
      * @param lblAdmin the lblAdmin to set
      */
     public void setLblAdmin (Label lblAdmin) {
@@ -120,7 +126,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
      * @param stage
      * @param root 
      */
-    private void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
         this.setStage(stage);
         this.theme = theme;

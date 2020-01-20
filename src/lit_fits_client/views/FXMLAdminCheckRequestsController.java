@@ -162,6 +162,11 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         stage.setOnCloseRequest(this::onClosing);
     }
     
+    /**
+     * Fills the table
+     * 
+     * @throws ClientErrorException 
+     */
     private void fillTable() throws ClientErrorException {
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         
@@ -195,6 +200,9 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.setMnemonicText();
         this.setTooltips();
         this.setOnAction();
+        
+        this.setColumnFactories();
+        this.fillTable();
     }
     
     /**
