@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPaneLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="440.0" minWidth="675.0" prefHeight="532.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thebestprogramdesktop.views.FXMLViewLoginController">
+<BorderPane fx:id="borderPaneLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="440.0" minWidth="675.0" prefHeight="532.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewLoginController">
     
     <top>
         <HBox alignment="CENTER" prefHeight="73.0" prefWidth="700.0" BorderPane.alignment="CENTER">
