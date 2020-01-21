@@ -612,6 +612,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             this.stage = stage;
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             stage.setScene(scene);
@@ -644,18 +645,14 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        // This should be unneccessary if the File is already embbeded in the Garment
-        // GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
-        // garment.setPicture(garmentClient.getImage(File.class, String.valueOf(garment.getId())));
-        byte[] pictureBytes;
-        pictureBytes = Files.readAllBytes(garment.getPicture().toPath());
-        imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(pictureBytes)));
+        imageViewGarmentPicture.setImage(garment.getPicture());
     }
 
     /**
      * Sets the properties for several elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         Image image = new Image("/placeholder.jpg");
         imageViewGarmentPicture.setImage(image);
         setTooltips();
@@ -674,7 +671,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
-        fillChoiceBoxTheme();
     }
 
     /**

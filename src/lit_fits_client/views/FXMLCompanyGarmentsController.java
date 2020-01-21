@@ -17,6 +17,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -24,9 +25,12 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -38,6 +42,7 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import lit_fits_client.miscellaneous.ImageViewCell;
 import lit_fits_client.views.themes.Theme;
 
 /**
@@ -384,7 +389,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     /**
      * This method initializes the window
      *
-     *
+     * @param themes
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
      *
@@ -401,6 +406,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinWidth(1280);
             stage.setMinHeight(720);
             stage.show();
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             setElements();
@@ -414,6 +420,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the options for different elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
         setColumnFactories();
@@ -421,7 +428,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         setMnemonicText();
         setOnAction();
         setTooltips();
-        fillChoiceBoxTheme();
     }
 
     /**
@@ -455,6 +461,17 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
+        // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
+        tableColumnPicture.setCellFactory(new Callback<TableColumn<Garment, Image>, TableCell<Garment, Image>>() {
+            @Override
+            public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
+                ImageViewCell imageViewCell = new ImageViewCell();
+                imageViewCell.setOnMouseDragOver({{
+                    // Open a window with the full sized image
+                }});                
+                return imageViewCell;
+            }
+        });
         tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
@@ -468,9 +485,10 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMaterials.setCellFactory((TableColumn<Garment, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
         tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
         tableColumnColors.setCellFactory((TableColumn<Garment, Set<Color>> tableColumnParam) -> new ComboBoxTableCell());
-        // Yet to implement the value factory fot eh colors
+        // Yet to implement the value factory for the colors, meaning it shows the colors as backgrounds of cells of a ComboBox
+        tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
     }
-
+    
     /**
      * Sets the text used for mnemonic parsing
      */

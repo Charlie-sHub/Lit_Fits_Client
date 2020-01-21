@@ -86,6 +86,18 @@ public class Garment implements Serializable {
      * Empty constructor
      */
     public Garment() {
+        this.barcode = new SimpleStringProperty();
+        this.designer = new SimpleStringProperty();
+        this.price = new SimpleDoubleProperty();
+        this.mood = new SimpleObjectProperty<Mood>();
+        this.bodyPart = new SimpleObjectProperty<BodyPart>();
+        this.garmentType = new SimpleObjectProperty<GarmentType>();
+        this.available = new SimpleBooleanProperty();
+        this.promotionRequest = new SimpleBooleanProperty();
+        this.promoted = new SimpleBooleanProperty();
+        this.colors = new SimpleSetProperty<Color>();
+        this.materials = new SimpleSetProperty<Material>();
+        this.picture = new SimpleObjectProperty<File>();
     }
 
     /**
@@ -235,8 +247,8 @@ public class Garment implements Serializable {
         this.materials.addAll(materials);
     }
 
-    public File getPicture() {
-        return (File) this.picture.get();
+    public Image getPicture() {
+        return (Image) this.picture.get();
     }
 
     public void setPicture(Image picture) {

@@ -1,5 +1,7 @@
 package lit_fits_client.views.themes;
 
+import java.util.Objects;
+
 /**
  * Class for the Themes
  *
@@ -24,7 +26,19 @@ public class Theme {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        final Theme other = (Theme) obj;
+        return Objects.equals(this.themeCss, other.getThemeCss());
+    }
+
+    @Override
     public String toString() {
-        return themeCss.substring(0, themeCss.length() - 4);
+        return themeCss.substring(7, themeCss.length() - 4);
     }
 }

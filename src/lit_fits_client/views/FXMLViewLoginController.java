@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -69,12 +70,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Text field where username must be entered to log in
      */
     @FXML
-    protected TextField txtUsername;
+    private TextField txtUsername;
     /**
      * Field of the password
      */
     @FXML
-    protected PasswordField fieldPassword;
+    private PasswordField fieldPassword;
+    private ToggleGroup radioButtonGroup;
     private Stage stage;
     private Stage registerStage;
     private Stage mainStage;
@@ -163,6 +165,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * This function will initialize the window
      *
+     * @param themes
      * @param theme the path to the theme chosen
      * @param root
      * @param uri
@@ -172,6 +175,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             this.uri = uri;
             Scene scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             stage.setScene(scene);
@@ -183,6 +187,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -192,6 +197,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
@@ -208,7 +214,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         fieldPassword.setEditable(true);
         setTooltips();
         setUndoRedo();
-        fillChoiceBoxTheme();
+        radioButtonGroup = new ToggleGroup();
+        rBtnCompany.setToggleGroup(radioButtonGroup);
+        rBtnFashionExpert.setToggleGroup(radioButtonGroup);
     }
 
     /**
@@ -229,6 +237,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 (change1, change2) -> change1.mergeWith(change2));  // function to merge two changes
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(evt -> undoManager.undo());
+        btnRedo.setOnAction(evt -> undoManager.redo());
     }
 
     /**
@@ -271,8 +281,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void setOnAction() {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
-        btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
-        btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
+        // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
+        // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
     }
 
@@ -395,7 +405,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         Parent root = (Parent) fxmlLoader.load();
         FXMLAdminMainMenuController mainView = ((FXMLAdminMainMenuController) fxmlLoader.getController());
         mainView.setAdmin(user);
-        mainView.setLoginStage(this.stage);
+        mainView.setPreviousStage(this.stage);
         mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
     }
 
@@ -520,7 +530,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
-                registerView.setLogin(stage);
+                registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
             }
             stage.hide();

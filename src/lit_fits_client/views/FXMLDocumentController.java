@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -44,7 +43,7 @@ public class FXMLDocumentController {
     /**
      * List of all the themes to choose from
      */
-    List<Theme> themeList;
+    protected List<Theme> themeList;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
     public Theme getTheme() {
@@ -97,7 +96,7 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void fillChoiceBoxTheme() {
-        choiceTheme = new ChoiceBox<>(FXCollections.observableArrayList(themeList));
+        choiceTheme.setItems(FXCollections.observableArrayList(themeList));
     }
 
     /**
@@ -107,8 +106,7 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void onThemeChosen(ActionEvent event) {
-        String path = "themes/" + choiceTheme.getValue().getThemeCss();
-        setStylesheet(((ChoiceBox) event.getSource()).getScene(), path);
+        setStylesheet(((ChoiceBox) event.getSource()).getScene(), choiceTheme.getValue().getThemeCss());
     }
 
     /**

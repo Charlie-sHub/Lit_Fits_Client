@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPaneRegisterCompany" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thebestprogramdesktop.views.FXMLViewRegisterController">
+<BorderPane fx:id="borderPaneRegisterCompany" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLCompanyRegisterController">
     
     <top>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -54,11 +54,11 @@
                             </font>
                         </Label>
                         <TextField fx:id="txtNif" layoutX="372.0" layoutY="123.0" prefHeight="25.0" prefWidth="240.0" />
-                        <TextField fx:id="txtPhone" layoutX="372.0" layoutY="242.0" prefHeight="25.0" prefWidth="240.0" />                        
                         <TextField fx:id="txtFullName" layoutX="372.0" layoutY="162.0" prefHeight="25.0" prefWidth="240.0" />
                         <TextField fx:id="txtEmail" layoutX="372.0" layoutY="203.0" prefHeight="25.0" prefWidth="240.0" />
+                        <TextField fx:id="txtPhone" layoutX="372.0" layoutY="242.0" prefHeight="25.0" prefWidth="240.0" />                     
                         <PasswordField fx:id="txtPassword" layoutX="372.0" layoutY="279.0" prefHeight="25.0" prefWidth="240.0" />
-                        <PasswordField fx:id="txtNewPassword" layoutX="372.0" layoutY="316.0" prefHeight="25.0" prefWidth="240.0" />
+                        <PasswordField fx:id="txtRepeatPassword" layoutX="372.0" layoutY="316.0" prefHeight="25.0" prefWidth="240.0" />
                         <Button id="btnRegister" fx:id="btnSubmit" layoutX="396.0" layoutY="441.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
@@ -73,13 +73,15 @@
                         <Button fx:id="btnUndo" layoutX="374.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Undo" />
                         <Button fx:id="btnRedo" layoutX="446.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Redo" />
                         <Button fx:id="btnHelp" layoutX="536.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="64.0" text="Help" />
-                        <Label fx:id="lblInvalidMail" layoutX="629.0" layoutY="207.0" prefHeight="18.0" prefWidth="170.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblInvalidMail" layoutX="629.0" layoutY="207.0" prefHeight="18.0" prefWidth="230.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
                         <Label fx:id="lblPhone" layoutX="193.0" layoutY="246.0" prefHeight="18.0" prefWidth="172.0" text="Phone Number:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                  <Label fx:id="lblInvalidNIF" layoutX="629.0" layoutY="127.0" prefHeight="18.0" prefWidth="170.0" text="Not a valid NIF" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblInvalidNIF" layoutX="629.0" layoutY="127.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid NIF" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblPassMismatch" layoutX="629.0" layoutY="282.0" prefHeight="18.0" prefWidth="291.0" text="The passwords don't match" textAlignment="JUSTIFY" textFill="RED" />
+                        <Label fx:id="lblInvalidPhone" layoutX="629.0" layoutY="245.0" prefHeight="18.0" prefWidth="286.0" text="Not a valid phone number" textAlignment="JUSTIFY" textFill="RED" />
                         
                     </children>
                 </AnchorPane>

@@ -52,8 +52,15 @@ public class Company implements Serializable {
 
     /**
      * Empty constructor
+     *
+     * It initializes the SimpleStringProperty(s) so the setters work
      */
     public Company() {
+        this.email = new SimpleStringProperty();
+        this.fullName = new SimpleStringProperty();
+        this.nif = new SimpleStringProperty();
+        this.password = new SimpleStringProperty();
+        this.phoneNumber = new SimpleStringProperty();
     }
 
     /**
