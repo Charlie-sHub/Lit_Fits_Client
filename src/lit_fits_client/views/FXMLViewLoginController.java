@@ -165,6 +165,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * This function will initialize the window
      *
+     * @param themes
      * @param theme the path to the theme chosen
      * @param root
      * @param uri
@@ -175,7 +176,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             this.uri = uri;
             Scene scene = new Scene(root);
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());            
+            setStylesheet(scene, theme.getThemeCss());
             themeList = themes;
             stage.setScene(scene);
             stage.setTitle("Log In");
@@ -236,6 +237,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 (change1, change2) -> change1.mergeWith(change2));  // function to merge two changes
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(evt -> undoManager.undo());
+        btnRedo.setOnAction(evt -> undoManager.redo());
     }
 
     /**
@@ -278,8 +281,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void setOnAction() {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
-        btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
-        btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
+        // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
+        // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
     }
 

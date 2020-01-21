@@ -19,6 +19,7 @@ public class Color implements Serializable {
     private SimpleStringProperty name;
 
     public Color() {
+        this.name = new SimpleStringProperty();
     }
 
     public Color(String name) {

@@ -406,6 +406,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Initializes the register window
      *
+     * @param themes
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
@@ -493,10 +494,22 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         choiceTheme.setOnAction(this::onThemeChosen);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
+        btnSubmit.setOnKeyPressed(this::onEnterPressed);
         btnUndo.setOnAction(this::onUndoPress);
         btnRedo.setOnAction(this::onRedoPress);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         btnHelp.setOnAction(this::onHelpPressed);
+    }
+
+    /**
+     * Checks that the F1 key is pressed to open the help window
+     *
+     * @param event
+     */
+    private void onEnterPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            onRegisterPress(new ActionEvent());
+        }
     }
 
     /**
