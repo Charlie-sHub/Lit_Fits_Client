@@ -85,7 +85,8 @@
                      </font>
                   </Label>
                   <TextField fx:id="txtPhone" layoutX="357.0" layoutY="275.0" prefHeight="25.0" prefWidth="228.0" />
-                  <Label fx:id="lblInvalidMail1" layoutX="598.0" layoutY="333.0" prefHeight="18.0" prefWidth="226.0" text="Password do not match" textAlignment="JUSTIFY" textFill="RED" />
+                  <Label fx:id="lblPasswordMismatch" layoutX="598.0" layoutY="333.0" prefHeight="18.0" prefWidth="226.0" text="Password do not match" textAlignment="JUSTIFY" textFill="RED" />
+                  <Label fx:id="lblInvalidUsername" layoutX="598.0" layoutY="120.0" prefHeight="18.0" prefWidth="226.0" text="Username cannot start by 'admin'" textAlignment="JUSTIFY" textFill="RED" />
                     </children>
                 </AnchorPane>
             </children>

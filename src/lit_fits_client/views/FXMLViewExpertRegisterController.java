@@ -5,18 +5,32 @@
  */
 package lit_fits_client.views;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.ExpertClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.views.themes.Theme;
 
 /**
@@ -24,6 +38,11 @@ import lit_fits_client.views.themes.Theme;
  * @author 2dam
  */
 public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInput {
+    /**
+     * Invalid username label
+     */
+    @FXML
+    private Label lblInvalidUsername;
     /**
      * Invalid email label
      */
@@ -73,7 +92,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      * Label password mismatch
      */
     @FXML
-    private Label lblPassMismatch;
+    private Label lblPasswordMismatch;
     /**
      * Help button
      */
@@ -91,12 +110,27 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     
     private FashionExpert expert;
     
+    private boolean correctPatterns;
+    
     /**
      * Logger object
      */
     private static final Logger LOG = Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName());
 
-    
+    /**
+     * @return the lblLabel
+     */
+    public Label getLblLabel() {
+        return lblInvalidUsername;
+    }
+
+    /**
+     * @param lblInvalidUsername
+     */
+    public void setLblLabel(Label lblInvalidUsername) {
+        this.lblInvalidUsername = lblInvalidUsername;
+    }
+
         
 
     /**
@@ -226,17 +260,17 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     }
 
     /**
-     * @return the lblPassMismatch
+     * @return the lblPasswordMismatch
      */
     public Label getLblPassMismatch() {
-        return lblPassMismatch;
+        return lblPasswordMismatch;
     }
 
     /**
-     * @param lblPassMismatch the lblPassMismatch to set
+     * @param lblPassMismatch the lblPasswordMismatch to set
      */
     public void setLblPassMismatch(Label lblPassMismatch) {
-        this.lblPassMismatch = lblPassMismatch;
+        this.lblPasswordMismatch = lblPassMismatch;
     }
 
     /**
@@ -296,7 +330,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     }
     
     
-        public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
         try {
             this.uri = uri;
             this.setStage(stageProgramMain);
@@ -315,17 +349,222 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             LOG.severe(e.getMessage());
         }
     }
-    
-    
-    
-    @Override
-    public void onRegisterPress(ActionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     private void setElements() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setOnAction();
+        setFocusTraversable();
+        setListeners();
+        fillArray();
+        txtUsername.requestFocus();
+        lblInvalidMail.setVisible(false);
+        lblLength.setVisible(false);
+        lblPasswordMismatch.setVisible(false);
+        lblInvalidUsername.setVisible(false);
+        btnRegister.setDisable(true);
     }
 
+    private void setOnAction() {
+        btnRegister.setOnAction(this::onRegisterPress);
+        btnCancel.setOnAction(this::onCancelPress);
+        btnHelp.setOnAction(this::onHelpPressed);
+        btnRedo.setOnAction(this::onRedoPress);
+        btnUndo.setOnAction(this::onUndoPress);
+        btnHelp.setOnKeyPressed(this::onF1Pressed);
+        
+    }
+
+    private void setFocusTraversable() {
+        txtUsername.setFocusTraversable(true);
+        txtFullName.setFocusTraversable(true);
+        txtEmail.setFocusTraversable(true);
+        txtPhone.setFocusTraversable(true);
+        txtPassword.setFocusTraversable(true);
+        txtRepeatPassword.setFocusTraversable(true);
+    }
+
+    private void setListeners() {
+        txtUsername.textProperty().addListener(this::onFieldChange);
+        txtFullName.textProperty().addListener(this::onFieldChange);
+        txtEmail.textProperty().addListener(this::onFieldChange);
+        txtPhone.textProperty().addListener(this::onFieldChange);
+        txtPassword.textProperty().addListener(this::onFieldChange);
+        txtRepeatPassword.textProperty().addListener(this::onFieldChange);
+        txtUsername.lengthProperty().addListener(this::lengthListener);
+        txtFullName.lengthProperty().addListener(this::lengthListener);
+        txtEmail.lengthProperty().addListener(this::lengthListener);
+        txtPhone.lengthProperty().addListener(this::lengthListener);        
+        txtPassword.lengthProperty().addListener(this::lengthListener);
+        txtRepeatPassword.lengthProperty().addListener(this::lengthListener);                
+    }
+    
+    private void fillArray() {
+        textFields = new ArrayList<>();
+        textFields.add(txtUsername);
+        textFields.add(txtFullName);
+        textFields.add(txtEmail);
+        textFields.add(txtPhone);
+        textFields.add(txtPassword);
+        textFields.add(txtRepeatPassword);
+    }
+
+        
+    @Override
+    public void onRegisterPress(ActionEvent event) {
+        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        try {
+            setExpertData(publicKeyClient.getPublicKey(String.class));
+            expertClient.create(expert);
+            openMainWindow();
+        } catch (ClientErrorException e) {
+            createExceptionDialog(e);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        } catch(Exception ex) {
+            createExceptionDialog(ex);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
+        } finally {
+            expertClient.close();
+            publicKeyClient.close();
+        }
+    }
+    
+    protected void onCancelPress(ActionEvent event){
+        previousStage.show();
+        stage.hide();
+    }
+    
+        
+   
+    /**
+     * Opens the help window when the help button is pressed
+     *
+     * @param event
+     */
+    @Override
+    protected void onHelpPressed(ActionEvent event) {
+        try {
+            openHelpView();
+        } catch (IOException e) {
+            createExceptionDialog(e);
+        }
+    }
+    
+    @Override
+    protected void openHelpView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageHelp = new Stage();
+        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
+        helpView.initStage(theme, stageHelp, root);
+    }
+
+    /**
+     * Checks that the F1 key is pressed to open the help window
+     *
+     * @param event
+     */
+    private void onF1Pressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.F1) {
+            try {
+                openHelpView();
+            } catch (IOException e) {
+                createExceptionDialog(e);
+            }
+        }
+    }
+    
+    /**
+     * Simply calls the proper length listener method
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
+    public void lengthListener(ObservableValue observable, Number oldValue, Number newValue) {
+        lengthCheck(btnRegister);
+    }
+    
+    private void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
+        boolean correctUser = false;
+        boolean correctEmail = false;
+        boolean passwordMatch = false;
+        boolean length = false;
+        if(!txtUsername.getText().isEmpty()){
+            correctUser = verifyUser();
+        }
+        if(!txtEmail.getText().isEmpty()) {
+            correctEmail = verifyEmail();
+        }
+        if(!txtPassword.getText().isEmpty() && !txtRepeatPassword.getText().isEmpty()){
+            passwordMatch = verifyPasswords();
+        }
+        length = verifyLength();
+        
+        if(correctUser && correctEmail && passwordMatch && length){
+            correctPatterns = true;
+            btnRegister.setDisable(false);
+        }else {
+            correctPatterns = false;
+            btnRegister.setDisable(true);
+        }
+        
+    }
+
+    private boolean verifyUser() {
+        boolean correctUser;
+        correctUser = txtUsername.getText().startsWith("admin");
+        lblInvalidUsername.setVisible(!correctUser);
+        return correctUser;
+    }
+
+    private boolean verifyEmail() {
+        boolean correctEmail;
+        correctEmail = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        lblInvalidMail.setVisible(!correctEmail);
+        return correctEmail;
+    }
+
+    private boolean verifyPasswords() {
+        boolean correctPassword;
+        correctPassword = txtPassword.getText().equals(txtRepeatPassword.getText());
+        lblPasswordMismatch.setVisible(!correctPatterns);
+        return correctPassword;
+    }
+
+    private boolean verifyLength() {
+        boolean length = true;
+           for (TextField tField : textFields) {
+               if (tField.getText().isEmpty()) {
+                    length = false;
+                    break;
+               }
+        }
+        lblLength.setVisible(!length);
+        return length;
+    }    
+
+    private void setExpertData(String publicKey) throws Exception {
+        expert.setUsername(txtUsername.getText());
+        expert.setFullName(txtFullName.getText());
+        expert.setEmail(txtEmail.getText());
+        expert.setPhoneNumber(txtPhone.getText());
+        expert.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
+    }
+
+    private void openMainWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenu.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageProgramMain = new Stage();
+        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        mainView.setExpert(expert);
+        mainView.setLoginStage(previousStage);
+        mainView.initStage(themeList, theme, stageProgramMain, root, uri);
+        stage.hide();        
+    }
+
+
+
+
+    
     
 }
