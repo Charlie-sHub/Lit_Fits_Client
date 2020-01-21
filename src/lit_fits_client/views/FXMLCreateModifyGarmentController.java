@@ -613,7 +613,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.initModality(Modality.APPLICATION_MODAL);
             Scene scene = new Scene(root);
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             stage.setScene(scene);
             setElements();

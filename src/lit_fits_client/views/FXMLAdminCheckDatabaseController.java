@@ -179,7 +179,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         this.stage.show();
         
-        this.setStylesheet(scene, this.theme.getThemeCss());
+        this.setStylesheet(scene, this.theme.getThemeCssPath());
         this.setElements();
         this.choiceTheme.setValue(this.theme);
         

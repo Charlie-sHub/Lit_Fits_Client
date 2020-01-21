@@ -306,7 +306,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             getStage().setMinWidth(1400);
             getStage().setMinHeight(800);
             getStage().show();
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             getStage().setOnCloseRequest(this::onClosing);

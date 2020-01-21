@@ -1,5 +1,7 @@
 package lit_fits_client;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +31,7 @@ public class ApplicationMain extends Application {
             launch();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -40,7 +43,7 @@ public class ApplicationMain extends Application {
             filePathStream.forEach((Path filePath) -> {
                 if (Files.isRegularFile(filePath)) {
                     Theme newTheme = new Theme();
-                    newTheme.setThemeCss(filePath.toString());
+                    newTheme.setThemeCssPath(filePath.toString());
                     themes.add(newTheme);
                 }
             });

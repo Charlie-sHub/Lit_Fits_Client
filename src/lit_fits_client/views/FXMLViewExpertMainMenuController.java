@@ -104,7 +104,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);

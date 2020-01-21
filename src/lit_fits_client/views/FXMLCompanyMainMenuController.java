@@ -195,7 +195,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinHeight(800);
             stage.show();
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             btnLogout.setDisable(false);

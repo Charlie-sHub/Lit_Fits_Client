@@ -407,7 +407,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinHeight(720);
             stage.show();
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
@@ -462,16 +462,18 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
         // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
+        /*
         tableColumnPicture.setCellFactory(new Callback<TableColumn<Garment, Image>, TableCell<Garment, Image>>() {
             @Override
             public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
                 ImageViewCell imageViewCell = new ImageViewCell();
-                imageViewCell.setOnMouseDragOver({{
+                imageViewCell.setOnMouseDragOver({
                     // Open a window with the full sized image
-                }});                
+                });                
                 return imageViewCell;
             }
         });
+        */
         tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));

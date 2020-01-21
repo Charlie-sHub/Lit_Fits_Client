@@ -79,7 +79,7 @@
     <bottom>
         <HBox alignment="CENTER" prefHeight="37.0" prefWidth="715.0" BorderPane.alignment="CENTER">
             <children>
-                <ChoiceBox prefHeight="25.0" prefWidth="150.0" />
+                <ChoiceBox fx:id="choiceTheme" prefHeight="25.0" prefWidth="150.0" />
                 <Label fx:id="lblCtrlR" alignment="CENTER" prefHeight="17.0" prefWidth="175.0" text="Alt + S = Register">
                     <font>
                         <Font size="11.0" />

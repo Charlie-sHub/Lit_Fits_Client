@@ -250,7 +250,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);

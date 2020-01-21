@@ -2,6 +2,7 @@ package lit_fits_client.views;
 
 import lit_fits_client.miscellaneous.TextChange;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
 import org.fxmisc.undo.UndoManagerFactory;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
@@ -176,7 +178,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             this.uri = uri;
             Scene scene = new Scene(root);
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             stage.setScene(scene);
             stage.setTitle("Log In");
@@ -300,12 +302,14 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                     CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close();
-                } else {
-                    // How to differentiate between them?
-                    ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-                    expertClient.reestablishPassword(txtUsername.getText());
+                } else if (txtUsername.getText().startsWith("admin")) {
                     UserClient userClient = ClientFactory.getUserClient(uri);
                     userClient.reestablishPassword(txtUsername.getText());
+                    userClient.close();
+                } else {
+                    ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                    expertClient.reestablishPassword(txtUsername.getText());
+                    expertClient.close();
                 }
             } else {
                 createDialog("Please insert your username/nif");
@@ -376,18 +380,20 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void onBtnLoginPress(ActionEvent event) {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
-                Company company = loginCompany();
-                openCompanyMainMenu(company);
+                openCompanyMainMenu(loginCompany());
+            } else if (txtUsername.getText().startsWith("admin")) {
+                openAdminMainMenu(adminLogin());
             } else {
                 openExpertMainMenu(expertLogin());
-                openAdminMainMenu(adminLogin());
             }
             stage.hide();
         } catch (IOException | ClientErrorException ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         } catch (Exception ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         }
     }
@@ -421,10 +427,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         UserClient userClient = ClientFactory.getUserClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         User admin = new User();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         admin.setUsername(txtUsername.getText());
-        admin.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        admin.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         admin = userClient.login(admin, User.class);
         userClient.close();
         publicKeyClient.close();
@@ -460,10 +465,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         ExpertClient expertClient = ClientFactory.getExpertClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         FashionExpert fashionExpert = new FashionExpert();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         fashionExpert.setUsername(txtUsername.getText());
-        fashionExpert.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        fashionExpert.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         fashionExpert = expertClient.login(fashionExpert, FashionExpert.class);
         expertClient.close();
         publicKeyClient.close();
@@ -499,10 +503,10 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         Company company = new Company();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        // Maybe check http://docs.oracle.com/javase/7/docs/api/javax/xml/bind/DatatypeConverter.html#parseHexBinary%28java.lang.String%29
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         company.setNif(txtUsername.getText());
-        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         company = companyClient.login(company, Company.class);
         companyClient.close();
         publicKeyClient.close();

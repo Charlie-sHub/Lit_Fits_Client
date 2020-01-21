@@ -155,7 +155,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.stage.setTitle("Administrator - Check promotion requests");
         this.stage.show();
         
-        this.setStylesheet(scene, this.theme.getThemeCss());
+        this.setStylesheet(scene, this.theme.getThemeCssPath());
         this.setElements();
         this.choiceTheme.setValue(theme);
         
