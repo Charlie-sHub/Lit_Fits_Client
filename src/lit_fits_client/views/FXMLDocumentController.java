@@ -1,6 +1,5 @@
 package lit_fits_client.views;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -108,16 +107,18 @@ public class FXMLDocumentController {
      */
     public void onThemeChosen(ActionEvent event) {
         setStylesheet(((ChoiceBox) event.getSource()).getScene(), choiceTheme.getValue().getThemeCssPath());
+        theme = choiceTheme.getValue();
     }
 
     /**
-     * Based on the happiness of the window is set the correct mood
+     * Changes the theme of the program by removing and adding stylesheets to the scene
      *
      * @author Carlos Rafael Mendez Gonzalez
      * @param scene scene to be loaded with the stylesheet
      * @param themeCssPath
      */
     public void setStylesheet(Scene scene, String themeCssPath) {
+        scene.getStylesheets().remove(getClass().getResource(theme.getThemeCssPath()).toExternalForm());
         scene.getStylesheets().add(getClass().getResource(themeCssPath).toExternalForm());
     }
 

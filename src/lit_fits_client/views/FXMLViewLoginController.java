@@ -283,9 +283,11 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void setOnAction() {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
+        choiceTheme.setOnAction(this::onThemeChosen);
         // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
         // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -529,19 +531,22 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 registerStage = new Stage();
                 registerView.setLogin(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
-            } else {
+                stage.hide();
+            } else if (rBtnFashionExpert.isSelected()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertRegisterAccount.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
                 registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
+                stage.hide();
+            } else {
+                createDialog("Please select what kind of registration you want");
             }
-            stage.hide();
         } catch (IOException e) {
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
-        stage.hide();
     }
 
     /**
@@ -552,5 +557,5 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-    }
+    }    
 }

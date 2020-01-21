@@ -462,18 +462,18 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
         // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
-        /*
         tableColumnPicture.setCellFactory(new Callback<TableColumn<Garment, Image>, TableCell<Garment, Image>>() {
             @Override
             public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
                 ImageViewCell imageViewCell = new ImageViewCell();
+                /*
                 imageViewCell.setOnMouseDragOver({
                     // Open a window with the full sized image
-                });                
+                });   
+                 */
                 return imageViewCell;
             }
         });
-        */
         tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
@@ -490,7 +490,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         // Yet to implement the value factory for the colors, meaning it shows the colors as backgrounds of cells of a ComboBox
         tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
     }
-    
+
     /**
      * Sets the text used for mnemonic parsing
      */

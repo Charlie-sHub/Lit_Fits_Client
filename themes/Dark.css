@@ -1,0 +1,19 @@
+/* 
+    Created on : 30-oct-2019, 8:33:50
+    Author     : Carlos Rafael Mendez Gonzalez
+*/
+.root {
+    -fx-background-color: dimgray;
+}
+.button {
+    -fx-background-color: gainsboro;
+    -fx-text-fill: black;
+}
+.label {
+    -fx-font-family: "Arial";
+    -fx-text-fill: black;
+}
+.text-field, .password-field {
+    -fx-text-fill: lightgray;
+    -fx-border-color: slategray;
+}

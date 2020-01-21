@@ -20,7 +20,7 @@ public class Theme {
     }
 
     public void setThemeCssPath(String themeCssPath) {
-        this.themeCssPath = themeCssPath;
+        this.themeCssPath = "themes/" + themeCssPath;
     }
 
     @Override
