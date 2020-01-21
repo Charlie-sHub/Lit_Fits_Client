@@ -154,11 +154,11 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     /**
      * The method that initiates the view.
      * 
-     * @param themes
-     * @param theme
-     * @param stage
-     * @param root 
-     * @param uri 
+     * @param themes All the themes that can be set to the view.
+     * @param theme The theme that was selected in the previous window.
+     * @param stage The stage that will be used for the view.
+     * @param root The root of the view.
+     * @param uri The uri for the clients.
      */
     public void initStage (List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
@@ -184,7 +184,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * This method was created to group another 3 different methods. 
+     * This method was created to group another methods. 
      * That makes reading the code easier.
      */
     private void setElements() {
@@ -201,7 +201,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * 
+     * Sets the factory for each column in garmentTable.
      */
     private void setGarmentTableFactories() {
         
@@ -219,6 +219,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
+     * Fills the garmentTable with data from the database.
      * 
      * @throws ClientErrorException 
      */
@@ -233,7 +234,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * 
+     * Sets the factory for each column in userTable.
      */
     private void setUserTableFactories() {
         
@@ -277,12 +278,18 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         btnBack.setText("_Back");
     }
 
+    /**
+     * Sets the tooltip help for every button in the view.
+     */
     private void setTooltips() {
         
         btnDeleteItem.setTooltip(new Tooltip("Delete the selected item"));
         btnBack.setTooltip(new Tooltip("Go back"));
     }
 
+    /**
+     * Sets the actions for all the controllers on the view.
+     */
     private void setOnAction() {
         menuItemDeleteItem.setOnAction(this::onBtnDeleteItemPress);
         menuItemBack.setOnAction(this::onBtnBackPress);
@@ -320,10 +327,12 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                     userClient.close();
                 }
             } else {
+                
                 this.nothingToDelete();
             }
             
         } else if (garmentsTable.isVisible()) {
+            
             Garment deleteGarment = garmentsTable.getSelectionModel().getSelectedItem();
             
             if (deleteGarment != null) {
@@ -334,6 +343,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                     garmentClient.remove(String.valueOf(deleteGarment.getId()));
                     garmentClient.close();
                 }
+                
             } else {
                 this.nothingToDelete();
             }
@@ -344,6 +354,11 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         }
     }
     
+    /**
+     * This method opens the dialog to confirm the delete operation.
+     * 
+     * @return A boolean. True if the admin selects Yes, false if not.
+     */
     private Boolean deleteConfirmation() {
         boolean delete;
         
@@ -365,6 +380,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         return delete;
     }
     
+    /**
+     * The error dialog that opens when nothing is selected and the
+     * <i>Delete item</i> button is pressed.
+     */
     private void nothingToDelete() {
         
         Alert nothingToDelete = new Alert(AlertType.ERROR);

@@ -122,9 +122,11 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     /**
      * This method initializes the view.
      * 
-     * @param theme
-     * @param stage
-     * @param root 
+     * @param themes All the themes that can be set to the view.
+     * @param theme The theme that was selected in the previous window.
+     * @param stage The stage that will be used for the view.
+     * @param root The root of the view.
+     * @param uri The uri for the clients.
      */
     public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         

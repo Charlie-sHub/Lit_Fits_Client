@@ -37,7 +37,6 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private static final Logger LOG = Logger.getLogger(FXMLAdminCheckRequestsController.class.getName());
     
     private User admin;
-    private boolean saved;
     private Stage stage;
     private Stage previousStage;
     private String uri;
@@ -91,6 +90,8 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private ObservableList<Garment> garmentList;
     
     /**
+     * Returns the admin that is currently logged.
+     * 
      * @return The admin that is using the view (the admin that should be logged).
      */
     public User getAdmin () {
@@ -98,13 +99,17 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
 
     /**
-     * @param admin The admin that will be set. It should be the logged admin.
+     * Sets the admin that is currently logged.
+     * 
+     * @param admin The admin that will be set.
      */
     public void setAdmin (User admin) {
         this.admin = admin;
     }
 
     /**
+     * Returns the actual stage.
+     * 
      * @return The actual stage.
      */
     public Stage getStage () {
@@ -112,6 +117,8 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
 
     /**
+     * Sets the actual stage.
+     * 
      * @param stage The stage that will be set.
      */
     public void setStage (Stage stage) {
@@ -119,6 +126,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
     
     /**
+     * Sets the previous stage.
      * 
      * @param previousStage The previous Stage that will be set.
      */
@@ -127,8 +135,9 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
     
     /**
+     * Returns the previous stage.
      * 
-     * @return 
+     * @return The previous Stage.
      */
     public Stage getPreviousStage() {
         return this.previousStage;
@@ -163,7 +172,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
     
     /**
-     * Fills the table
+     * Fills the table of garments that is shown in the view.
      * 
      * @throws ClientErrorException 
      */
@@ -175,6 +184,9 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         garmentsTable.setItems(garmentList);
     }
     
+    /**
+     * Sets the factory for the columns of the table.
+     */
     private void setColumnFactories() {
         
         barcodeColumn.setCellValueFactory(new PropertyValueFactory("barcode"));
@@ -192,7 +204,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     }
     
     /**
-     * This method was created to group another 3 different methods. 
+     * This method was created to group another methods. 
      * That makes reading the code easier.
      */
     private void setElements() {
@@ -255,7 +267,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      * @param event The action event of the view.
      */
 //    private void onBtnSavePress(ActionEvent event) {
-        
+        // This method was finally deleted because all the actions use the client directly.
 //    }
     
     /**
