@@ -35,7 +35,13 @@ public class User implements Serializable {
      * Empty constructor.
      */
     public User () {
-        
+        username = new SimpleStringProperty();
+        fullName = new SimpleStringProperty();
+        password = new SimpleStringProperty();
+        phoneNumber = new SimpleStringProperty();
+        email = new SimpleStringProperty();
+        likedColors = new SimpleSetProperty<Color>();
+        likedMaterials = new SimpleSetProperty<Material>();
     }
     
     /**
