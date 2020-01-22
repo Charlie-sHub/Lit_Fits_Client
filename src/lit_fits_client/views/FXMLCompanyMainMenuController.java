@@ -198,6 +198,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             btnLogout.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
@@ -224,6 +225,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**

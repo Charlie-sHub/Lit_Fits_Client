@@ -1,9 +1,7 @@
 package lit_fits_client.views;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +31,9 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.ColorClient;
-import lit_fits_client.RESTClients.GarmentClient;
-import lit_fits_client.RESTClients.MaterialClient;
+import lit_fits_client.RESTClients.ColorClientInterface;
+import lit_fits_client.RESTClients.GarmentClientInterface;
+import lit_fits_client.RESTClients.MaterialClientInterface;
 import lit_fits_client.entities.BodyPart;
 import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Company;
@@ -43,7 +41,14 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import lit_fits_client.miscellaneous.ComboBoxChange;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.Change;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -601,6 +606,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     /**
      * Initializes the register window
      *
+     * @param themes
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
@@ -617,6 +623,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             themeList = themes;
             stage.setScene(scene);
             setElements();
+            choiceTheme.setValue(theme);
             if (null != garment) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -679,11 +686,11 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @throws ClientErrorException
      */
     private void fillComboBoxes() throws ClientErrorException {
-        ColorClient colorClient = ClientFactory.getColorClient(uri);
+        ColorClientInterface colorClient = ClientFactory.getColorClient(uri);
         comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
         })));
         colorClient.close();
-        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        MaterialClientInterface materialClient = ClientFactory.getMaterialClient(uri);
         comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
         })));
         materialClient.close();
@@ -751,11 +758,10 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         btnSubmit.setOnAction(this::onRegisterPress);
         btnAddRemoveColor.setOnAction(this::onAddRemoveColorPress);
         btnAddRemoveMaterial.setOnAction(this::onAddRemoveMaterialPress);
-        btnUndo.setOnAction(this::onUndoPress);
         btnHelp.setOnAction(this::onHelpPressed);
-        btnRedo.setOnAction(this::onRedoPress);
         imageViewGarmentPicture.setOnMouseClicked(this::onImageViewClicked);
         imageViewGarmentPicture.setOnKeyPressed(this::onImageViewKeyPressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -850,7 +856,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
+        GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             setGarmentData();
             if (garment.getId() != 0) {
@@ -993,5 +999,35 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         } else {
             garment.getMaterials().add((Material) comboMaterials.getValue());
         }
+    }
+
+    /**
+     * Sets up all the things related to undoing and redoing.
+     *
+     * Following and adapting: https://github.com/FXMisc/UndoFX
+     *
+     * @author Carlos Mendez
+     */
+    private void setUndoRedo() {
+        // txtUsername.textProperty().bind(colorPicker.valueProperty());
+        // fieldPassword.textProperty().bind(radius.valueProperty());
+        EventStream<TextChange> barcodeChange = changesOf(txtBarcode.textProperty()).map(textChange -> new TextChange(textChange, txtBarcode));
+        EventStream<TextChange> designerChange = changesOf(txtDesigner.textProperty()).map(textChange -> new TextChange(textChange, txtDesigner));
+        EventStream<TextChange> priceChange = changesOf(txtPrice.textProperty()).map(textChange -> new TextChange(textChange, txtPrice));
+        EventStream<ComboBox> moodChanges = changesOf(comboMood.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboMood));
+        EventStream<ComboBox> bodyPartChanges = changesOf(comboBodyPart.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboBodyPart));
+        EventStream<ComboBox> garmentTypeChanges = changesOf(comboGarmentType.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboGarmentType));
+        EventStream<ComboBox> colorsChanges = changesOf(comboColors.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboColors));
+        EventStream<ComboBox> materialsChanges = changesOf(comboMaterials.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboMaterials));
+        // inputChanges = merge(barcodeChange, designerChange, priceChange, moodChanges, bodyPartChanges, garmentTypeChanges, colorsChanges, materialsChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (change1, change2) -> change1.mergeWith(change2));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(evt -> undoManager.undo());
+        btnRedo.setOnAction(evt -> undoManager.redo());
     }
 }

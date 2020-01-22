@@ -23,10 +23,10 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.ExpertClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
-import lit_fits_client.RESTClients.UserClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.ExpertClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
+import lit_fits_client.RESTClients.UserClientInterface;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
@@ -185,6 +185,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.setMinWidth(700);
             stage.setMinHeight(500);
             setElements();
+            choiceTheme.setValue(theme);
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
@@ -229,14 +230,16 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setUndoRedo() {
+        // txtUsername.textProperty().bind(colorPicker.valueProperty());
+        // fieldPassword.textProperty().bind(radius.valueProperty());
         EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
-        EventStream<TextChange> passwordChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
+        EventStream<TextChange> passwordChanges = changesOf(fieldPassword.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
         inputChanges = merge(usernameChanges, passwordChanges);
         undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
-                inputChanges, // stream of changes to observe
-                changes -> changes.invert(), // function to invert a change
-                changes -> changes.redo(), // function to undo a change
-                (change1, change2) -> change1.mergeWith(change2));  // function to merge two changes
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (change1, change2) -> change1.mergeWith(change2));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
         btnUndo.setOnAction(evt -> undoManager.undo());
@@ -301,15 +304,15 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+                    CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close();
                 } else if (txtUsername.getText().startsWith("admin")) {
-                    UserClient userClient = ClientFactory.getUserClient(uri);
+                    UserClientInterface userClient = ClientFactory.getUserClient(uri);
                     userClient.reestablishPassword(txtUsername.getText());
                     userClient.close();
                 } else {
-                    ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                    ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
                     expertClient.reestablishPassword(txtUsername.getText());
                     expertClient.close();
                 }
@@ -426,8 +429,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private User adminLogin() throws ClientErrorException, Exception {
-        UserClient userClient = ClientFactory.getUserClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        UserClientInterface userClient = ClientFactory.getUserClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         User admin = new User();
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         admin.setUsername(txtUsername.getText());
@@ -464,8 +467,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private FashionExpert expertLogin() throws ClientErrorException, Exception {
-        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         FashionExpert fashionExpert = new FashionExpert();
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         fashionExpert.setUsername(txtUsername.getText());
@@ -502,8 +505,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private Company loginCompany() throws ClientErrorException, Exception {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         Company company = new Company();
         // Maybe check http://docs.oracle.com/javase/7/docs/api/javax/xml/bind/DatatypeConverter.html#parseHexBinary%28java.lang.String%29
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));

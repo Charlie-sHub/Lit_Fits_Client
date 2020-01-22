@@ -22,11 +22,16 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
 import lit_fits_client.entities.Company;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -425,6 +430,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.setScene(scene);
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -469,6 +475,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         txtNif.requestFocus();
         setFocusTraversable();
         setListeners();
+        setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
@@ -496,10 +503,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
         btnSubmit.setOnKeyPressed(this::onEnterPressed);
-        btnUndo.setOnAction(this::onUndoPress);
-        btnRedo.setOnAction(this::onRedoPress);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         btnHelp.setOnAction(this::onHelpPressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -598,8 +604,8 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
@@ -723,5 +729,32 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             enableRegister = false;
         }
         return enableRegister;
+    }
+    /**
+     * Sets up all the things related to undoing and redoing.
+     *
+     * Following and adapting: https://github.com/FXMisc/UndoFX
+     *
+     * @author Carlos Mendez
+     */
+    private void setUndoRedo() {
+        // txtUsername.textProperty().bind(colorPicker.valueProperty());
+        // fieldPassword.textProperty().bind(radius.valueProperty());
+        EventStream<TextChange> nifChanges = changesOf(txtNif.textProperty()).map(textChange -> new TextChange(textChange, txtNif));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtRepeatPassword.textProperty()).map(textChange -> new TextChange(textChange, txtRepeatPassword));
+        inputChanges = merge(nifChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (change1, change2) -> change1.mergeWith(change2));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(evt -> undoManager.undo());
+        btnRedo.setOnAction(evt -> undoManager.redo());
     }
 }
