@@ -128,7 +128,7 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
     }
 
     /**
-     * Tests that the register is succesful
+     * Tests that the register is successful
      */
     @Test
     public void testE_RegisterSuccess() {
