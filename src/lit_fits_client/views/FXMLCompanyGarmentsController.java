@@ -407,7 +407,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             stage.setMinHeight(720);
             stage.show();
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
@@ -466,9 +466,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             @Override
             public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
                 ImageViewCell imageViewCell = new ImageViewCell();
-                imageViewCell.setOnMouseDragOver({{
+                /*
+                imageViewCell.setOnMouseDragOver({
                     // Open a window with the full sized image
-                }});                
+                });   
+                 */
                 return imageViewCell;
             }
         });
@@ -488,7 +490,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         // Yet to implement the value factory for the colors, meaning it shows the colors as backgrounds of cells of a ComboBox
         tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
     }
-    
+
     /**
      * Sets the text used for mnemonic parsing
      */

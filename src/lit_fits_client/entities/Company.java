@@ -24,7 +24,7 @@ public class Company implements Serializable {
     /**
      * Password required for the company to log in
      */
-    protected SimpleStringProperty password;
+    protected String password;
     /**
      * Name of the company
      */
@@ -59,7 +59,6 @@ public class Company implements Serializable {
         this.email = new SimpleStringProperty();
         this.fullName = new SimpleStringProperty();
         this.nif = new SimpleStringProperty();
-        this.password = new SimpleStringProperty();
         this.phoneNumber = new SimpleStringProperty();
     }
 
@@ -77,7 +76,7 @@ public class Company implements Serializable {
      */
     public Company(String nif, String password, String fullName, String phoneNumber, String email, Date lastAccess, Date lastPasswordChange, List<Garment> garments) {
         this.nif = new SimpleStringProperty(nif);
-        this.password = new SimpleStringProperty(password);
+        this.password = password;
         this.fullName = new SimpleStringProperty(fullName);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.email = new SimpleStringProperty(email);
@@ -103,11 +102,11 @@ public class Company implements Serializable {
     }
 
     public String getPassword() {
-        return this.password.get();
+        return this.password;
     }
 
     public void setPassword(String password) {
-        this.password.set(password);
+        this.password = password;
     }
 
     public String getFullName() {

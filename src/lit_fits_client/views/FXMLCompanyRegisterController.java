@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,6 +26,7 @@ import lit_fits_client.RESTClients.CompanyClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.Company;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -419,7 +421,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             Scene scene;
             scene = new Scene(root);
             this.theme = theme;
-            setStylesheet(scene, theme.getThemeCss());
+            setStylesheet(scene, theme.getThemeCssPath());
             stage.setScene(scene);
             themeList = themes;
             setElements();
@@ -429,7 +431,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             } else {
                 stage.setTitle("Registration");
                 company = new Company();
-                company.setId(0);
             }
             stage.setOnCloseRequest(this::onClosing);
             //pretty sure these dimensions will have to change
@@ -600,16 +601,19 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
-            setCompanyData(publicKeyClient.getPublicKey(String.class));
-            if (company.getId() == 0) {
+            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+            company = setCompanyData(publicKeyBytes);
+            if (company.getId() > 0) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);
             }
             try {
+                // Why does it open when an exception is thrown?
                 openCompanyMainMenu(company);
                 stage.hide();
             } catch (IOException e) {
+                e.printStackTrace();
                 LOG.severe(e.getMessage());
             }
         } catch (ClientErrorException e) {
@@ -627,12 +631,14 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Sets the data of the company to be sent to the server
      */
-    private void setCompanyData(String publicKey) throws Exception {
-        company.setEmail(txtEmail.getText());
-        company.setFullName(txtFullName.getText());
-        company.setNif(txtNif.getText());
-        company.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
-        company.setPhoneNumber(txtPhone.getText());
+    private Company setCompanyData(byte[] publicKey) throws Exception {
+        Company auxCompany = new Company();
+        auxCompany.setEmail(txtEmail.getText());
+        auxCompany.setFullName(txtFullName.getText());
+        auxCompany.setNif(txtNif.getText());
+        auxCompany.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
+        auxCompany.setPhoneNumber(txtPhone.getText());
+        return auxCompany;
     }
 
     /**

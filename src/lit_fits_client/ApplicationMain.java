@@ -1,10 +1,14 @@
 package lit_fits_client;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -29,6 +33,7 @@ public class ApplicationMain extends Application {
             launch();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -40,19 +45,42 @@ public class ApplicationMain extends Application {
             filePathStream.forEach((Path filePath) -> {
                 if (Files.isRegularFile(filePath)) {
                     Theme newTheme = new Theme();
-                    newTheme.setThemeCss(filePath.toString());
+                    newTheme.setThemeCssPath(filePath.getFileName().toString());
                     themes.add(newTheme);
                 }
             });
         }
-        // Should get the last theme 
-        String previousThemePath = ResourceBundle.getBundle("lit_fits_client.views.themes.theme").getString("theme");
-        Theme previousThemeAux = new Theme(previousThemePath);
+        Theme previousThemeAux = new Theme(getThemeProperty());
         String uri = ResourceBundle.getBundle("lit_fits_client.connection").getString("hostUrl");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("views/fxml/ViewLogin.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         FXMLViewLoginController loginView = ((FXMLViewLoginController) fxmlLoader.getController());
         loginView.setStage(stage);
         loginView.initStage((List) themes, previousThemeAux, root, uri);
+    }
+
+    /**
+     * Gets the property value of a properties file outside the jar
+     *
+     * @return String
+     * @throws IOException
+     */
+    public String getThemeProperty() throws IOException {
+        Properties properties = new Properties();
+        InputStream input = null;
+        try {
+            input = new FileInputStream("theme.properties");
+            properties.load(input);
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    // What can i do here?
+                    e.printStackTrace();
+                }
+            }
+        }
+        return properties.getProperty("theme");
     }
 }

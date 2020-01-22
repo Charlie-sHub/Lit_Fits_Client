@@ -40,7 +40,7 @@ public class FXMLHelpController extends FXMLDocumentController {
     public void initStage(Theme theme, Stage stage, Parent root) {
         this.stage = stage;
         Scene scene = new Scene(root);
-        setStylesheet(scene, theme.getThemeCss());
+        setStylesheet(scene, theme.getThemeCssPath());
         setElements();
         stage.setScene(scene);
         stage.setTitle("Help");

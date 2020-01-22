@@ -1,7 +1,6 @@
 package lit_fits_client.RESTClients;
 
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.core.GenericType;
 
 /**
  * Interface for the public key client

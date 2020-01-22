@@ -39,5 +39,4 @@ public class PublicKeyClient implements PublicKeyClientInterface {
     public void close() {
         client.close();
     }
-    
 }
