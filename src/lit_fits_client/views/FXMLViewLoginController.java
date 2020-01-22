@@ -230,8 +230,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setUndoRedo() {
-        // txtUsername.textProperty().bind(colorPicker.valueProperty());
-        // fieldPassword.textProperty().bind(radius.valueProperty());
         EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
         EventStream<TextChange> passwordChanges = changesOf(fieldPassword.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
         inputChanges = merge(usernameChanges, passwordChanges);

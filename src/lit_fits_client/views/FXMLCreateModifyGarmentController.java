@@ -678,6 +678,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
+        setUndoRedo();
     }
 
     /**
@@ -1009,8 +1010,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @author Carlos Mendez
      */
     private void setUndoRedo() {
-        // txtUsername.textProperty().bind(colorPicker.valueProperty());
-        // fieldPassword.textProperty().bind(radius.valueProperty());
         EventStream<TextChange> barcodeChange = changesOf(txtBarcode.textProperty()).map(textChange -> new TextChange(textChange, txtBarcode));
         EventStream<TextChange> designerChange = changesOf(txtDesigner.textProperty()).map(textChange -> new TextChange(textChange, txtDesigner));
         EventStream<TextChange> priceChange = changesOf(txtPrice.textProperty()).map(textChange -> new TextChange(textChange, txtPrice));
