@@ -6,6 +6,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -317,16 +319,17 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     private void setElements() {
+        setTextFields();
         setOnAction();
         setTooltips();
         setFocusTraversable();
-        setTextFields();
         setListeners();
         textFields = new ArrayList<>();
         fillArray();
         lblInvalidMail.setVisible(false);
         lblLength.setVisible(false);
     }
+
     
     private void setOnAction() {
         btnHelp.setOnAction(this::onHelpPressed);
@@ -433,18 +436,26 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
-        String fullName = expert.getFullName();
-        String email = expert.getEmail();
-        String phone = expert.getPhoneNumber();        
-        change = !txtFullName.getText().equals(fullName) ||
-                !txtEmail.getText().equals(email) ||
-                !txtPhone.getText().equals(phone); 
         
         try {
-            comparePasswords(publicKeyClient.getPublicKey(String.class));
-        } catch (Exception ex) {
-            createExceptionDialog(ex);
+            
+            PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+            String fullName = expert.getFullName();
+            String email = expert.getEmail();
+            String phone = expert.getPhoneNumber();
+            change = !txtFullName.getText().equals(fullName) ||
+                    !txtEmail.getText().equals(email) ||
+                    !txtPhone.getText().equals(phone);
+            
+            try {
+                comparePasswords(publicKeyBytes);
+            } catch (Exception ex) {
+                createExceptionDialog(ex);
+                
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName()).log(Level.SEVERE, null,ex);
             
         }
     }
@@ -479,7 +490,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             ExpertClient expertClient = ClientFactory.getExpertClient(uri);
             PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
             try {
-                setExpertData(publicKeyClient.getPublicKey(String.class));
+                byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+                setExpertData(publicKeyBytes);
                 expertClient.edit(expert);
                 openMainWindow();
             } catch (ClientErrorException e) {
@@ -502,7 +514,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     
     }
 
-    private void setExpertData(String publicKey) throws Exception {
+    private void setExpertData(byte[] publicKey) throws Exception {
+        
         expert.setFullName(txtFullName.getText());
         expert.setEmail(txtEmail.getText());
         expert.setPhoneNumber(txtPhone.getText());
@@ -510,7 +523,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         if(txtNewPassword.getText().isEmpty()){
             expert.setPassword(expert.getPassword());
         }else if (passwordChange && !txtNewPassword.getText().isEmpty()){
-            expert.setPassword(Encryptor.encryptText(txtNewPassword.getText(), publicKey.getBytes()));
+            expert.setPassword(Encryptor.encryptText(txtNewPassword.getText(), publicKey));
         }else{
             expert.setPassword(expert.getPassword());
         }
@@ -527,8 +540,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         stage.hide();
     }
 
-    private void comparePasswords(String publicKey) throws Exception{
-        String passw = Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes());
+    private void comparePasswords(byte[] publicKey) throws Exception{
+        String passw = Encryptor.encryptText(txtPassword.getText(), publicKey);
         String passwordInDB = expert.getPassword();
          
         passwordChange = passw.equals(passwordInDB);
@@ -541,7 +554,10 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             enableModify = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
             lblInvalidMail.setVisible(!enableModify);
         }
+        
         return enableModify;
     }
+
+
          
 }

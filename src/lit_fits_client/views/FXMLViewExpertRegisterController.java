@@ -6,6 +6,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +33,11 @@ import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
- * @author 2dam
+ * @author Ander
  */
 public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInput {
     /**
@@ -349,7 +351,9 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
+     */
     private void setElements() {
         setOnAction();
         setFocusTraversable();
@@ -362,7 +366,9 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         lblInvalidUsername.setVisible(false);
         btnRegister.setDisable(true);
     }
-
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
     private void setOnAction() {
         btnRegister.setOnAction(this::onRegisterPress);
         btnCancel.setOnAction(this::onCancelPress);
@@ -372,7 +378,9 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         
     }
-
+    /**
+     * This method allows to change the focus between the elements of the window.
+     */
     private void setFocusTraversable() {
         txtUsername.setFocusTraversable(true);
         txtFullName.setFocusTraversable(true);
@@ -381,7 +389,9 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         txtPassword.setFocusTraversable(true);
         txtRepeatPassword.setFocusTraversable(true);
     }
-
+    /**
+     * Add listeners to all text inputs
+     */
     private void setListeners() {
         txtUsername.textProperty().addListener(this::onFieldChange);
         txtFullName.textProperty().addListener(this::onFieldChange);
@@ -396,7 +406,10 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         txtPassword.lengthProperty().addListener(this::lengthListener);
         txtRepeatPassword.lengthProperty().addListener(this::lengthListener);                
     }
-    
+    /**
+     * Fills the array of text fields to check later if they're filled with text
+     */
+    @Deprecated
     private void fillArray() {
         textFields = new ArrayList<>();
         textFields.add(txtUsername);
@@ -413,7 +426,8 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         ExpertClient expertClient = ClientFactory.getExpertClient(uri);
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
-            setExpertData(publicKeyClient.getPublicKey(String.class));
+            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+            setExpertData(publicKeyBytes);
             expertClient.create(expert);
             openMainWindow();
         } catch (ClientErrorException e) {
@@ -488,16 +502,16 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         boolean correctUser = false;
         boolean correctEmail = false;
         boolean passwordMatch = false;
-        boolean length = false;
-        if(!txtUsername.getText().isEmpty()){
+        boolean length;
+        if(!txtUsername.getText().isEmpty())
             correctUser = verifyUser();
-        }
-        if(!txtEmail.getText().isEmpty()) {
+        
+        if(!txtEmail.getText().isEmpty()) 
             correctEmail = verifyEmail();
-        }
-        if(!txtPassword.getText().isEmpty() && !txtRepeatPassword.getText().isEmpty()){
+        
+        if(!txtPassword.getText().isEmpty() && !txtRepeatPassword.getText().isEmpty())
             passwordMatch = verifyPasswords();
-        }
+        
         length = verifyLength();
         
         if(correctUser && correctEmail && passwordMatch && length){
@@ -543,12 +557,12 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         return length;
     }    
 
-    private void setExpertData(String publicKey) throws Exception {
+    private void setExpertData(byte[] publicKey) throws Exception {
         expert.setUsername(txtUsername.getText());
         expert.setFullName(txtFullName.getText());
         expert.setEmail(txtEmail.getText());
         expert.setPhoneNumber(txtPhone.getText());
-        expert.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
+        expert.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
     }
 
     private void openMainWindow() throws IOException {

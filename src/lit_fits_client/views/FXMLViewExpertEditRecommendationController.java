@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,7 +24,6 @@ import lit_fits_client.RESTClients.ColorClient;
 import lit_fits_client.RESTClients.MaterialClient;
 import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
-import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.Material;
 import lit_fits_client.views.themes.Theme;
 
@@ -41,14 +41,10 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private TableColumn<Color, String> columnNameColor;
     @FXML
-    private TableColumn<Color, Boolean> columnSelectColor;
-    @FXML
     private TableView<Material> tableMaterial;
     @FXML
     private TableColumn<Material, String> columnNameMaterial;
-    @FXML
-    private TableColumn<Material, Boolean> columnSelectMaterial;
-
+    
     ObservableList<Color> colorList;
     ObservableList<Material> materialList;
     
@@ -113,21 +109,9 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     public void setColumnNameColor(TableColumn<Color, String> columnNameColor) {
         this.columnNameColor = columnNameColor;
     }
+    
 
-    /**
-     * @return the columnSelectMaterial
-     */
-    public TableColumn<Color, Boolean> getColumnSelectMaterial() {
-        return columnSelectColor;
-    }
-
-    /**
-     * @param columnSelectMaterial the columnSelectMaterial to set
-     */
-    public void setColumnSelectMaterial(TableColumn<Color, Boolean> columnSelectMaterial) {
-        this.columnSelectColor = columnSelectMaterial;
-    }
-
+    
     /**
      * @return the tableMaterial
      */
@@ -156,19 +140,6 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         this.columnNameMaterial = columnNameMaterial;
     }
 
-    /**
-     * @return the columnSelectMaterial
-     */
-    public TableColumn<Material, Boolean> getColumnSelectMMaterial() {
-        return columnSelectMaterial;
-    }
-
-    /**
-     * @param columnSelectMMaterial the columnSelectMaterial to set
-     */
-    public void setColumnSelectMMaterial(TableColumn<Material, Boolean> columnSelectMMaterial) {
-        this.columnSelectMaterial = columnSelectMMaterial;
-    }
 
     /**
      * @return the colorList
@@ -264,27 +235,47 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      */
     private void setElements() {
         setColumnFactories();
+        setSelectedReccomendations();
         fillTable();
+        setOnAction();
         
     }
 
     private void setColumnFactories() {
         columnNameColor.setCellFactory(new PropertyValueFactory("color_name"));
-        columnSelectColor.setCellFactory(new PropertyValueFactory("color select"));
-        columnNameMaterial.setCellFactory(new PropertyValueFactory("material name"));
-        columnSelectMaterial.setCellFactory(new PropertyValueFactory("material select"));
+        columnNameMaterial.setCellFactory(new PropertyValueFactory("material_name"));
     }
-
+    
+    private void setSelectedReccomendations() {
+        //tableColor.setSelectionModel();
+    }
+    
     private void fillTable() {
-        /*
+        
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
-        materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType(<List<Material>>)));
+        materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType<List<Material>>(){
+        }));
         tableMaterial.setItems(materialList);
         ColorClient colorClient = ClientFactory.getColorClient(uri);
-        colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType(<List<Color>>)));
+        colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType<List<Color>>(){
+        }));
         tableColor.setItems(colorList);        
-    */
     }
+
+    private void setOnAction() {
+        btnSave.setOnAction(this::onSavePress);
+        btnCancel.setOnAction(this::onCancelPress);
+    
+    }
+    
+    private void onSavePress(ActionEvent event) {
+
+    }
+    
+    private void onCancelPress(ActionEvent event) {
+        
+    }
+
 
     
 }

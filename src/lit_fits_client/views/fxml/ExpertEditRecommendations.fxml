@@ -28,8 +28,7 @@
                   </Label>
                   <TableView fx:id="tableColor" layoutX="20.0" layoutY="56.0" prefHeight="305.0" prefWidth="291.0">
                     <columns>
-                      <TableColumn fx:id="columnNameColor" prefWidth="213.60003662109375" text="Name" />
-                      <TableColumn fx:id="columnSelectColor" prefWidth="80.79998779296875" text="Select" />
+                      <TableColumn fx:id="columnNameColor" prefWidth="290.40001220703124" text="Name" />
                     </columns>
                   </TableView>
           </children>
@@ -52,8 +51,7 @@
                   </Label>
                   <TableView fx:id="tableMaterial" layoutX="14.0" layoutY="56.0" prefHeight="307.0" prefWidth="290.0">
                     <columns>
-                      <TableColumn fx:id="columnNameMaterial" prefWidth="209.60003662109375" text="Name" />
-                      <TableColumn fx:id="columnSelectMaterial" minWidth="0.0" prefWidth="82.4000244140625" text="Select" />
+                      <TableColumn fx:id="columnNameMaterial" prefWidth="289.6000122070312" text="Name" />
                     </columns>
                   </TableView>
           </children>
