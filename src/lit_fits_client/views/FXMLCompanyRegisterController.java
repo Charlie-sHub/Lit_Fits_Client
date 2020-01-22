@@ -738,8 +738,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setUndoRedo() {
-        // txtUsername.textProperty().bind(colorPicker.valueProperty());
-        // fieldPassword.textProperty().bind(radius.valueProperty());
         EventStream<TextChange> nifChanges = changesOf(txtNif.textProperty()).map(textChange -> new TextChange(textChange, txtNif));
         EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
         EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
@@ -751,10 +749,10 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
                 inputChanges,
                 changes -> changes.invert(),
                 changes -> changes.redo(),
-                (change1, change2) -> change1.mergeWith(change2));
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
-        btnUndo.setOnAction(evt -> undoManager.undo());
-        btnRedo.setOnAction(evt -> undoManager.redo());
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
     }
 }

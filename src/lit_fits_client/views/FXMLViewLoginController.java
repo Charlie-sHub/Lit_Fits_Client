@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +35,7 @@ import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
+import org.controlsfx.control.CheckComboBox;
 import org.fxmisc.undo.UndoManagerFactory;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
@@ -187,6 +191,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             setElements();
             choiceTheme.setValue(theme);
             stage.show();
+            // Just a test
+            test();
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
@@ -237,7 +243,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 inputChanges,
                 changes -> changes.invert(),
                 changes -> changes.redo(),
-                (change1, change2) -> change1.mergeWith(change2));
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
         btnUndo.setOnAction(evt -> undoManager.undo());
@@ -558,5 +564,24 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-    }    
+    }
+    /**
+     * Just trying to test something, ignore this if i left it
+     */
+    public void test() {
+        // create the data to show in the CheckComboBox 
+        final ObservableList<String> strings = FXCollections.observableArrayList();
+        for (int i = 0; i <= 100; i++) {
+            strings.add("Item " + i);
+        }
+        // Create the CheckComboBox with the data 
+        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+        // and listen to the relevant events (e.g. when the selected indices or 
+        // selected items change).
+        checkComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+            public void onChanged(ListChangeListener.Change<? extends String> c) {
+                System.out.println(checkComboBox.getCheckModel().getCheckedItems());
+            }
+        });
+    }
 }

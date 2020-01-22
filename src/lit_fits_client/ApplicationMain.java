@@ -76,8 +76,7 @@ public class ApplicationMain extends Application {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    // What can i do here?
-                    e.printStackTrace();
+                    LOG.severe(e.getMessage());
                 }
             }
         }

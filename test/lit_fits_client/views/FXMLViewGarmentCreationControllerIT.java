@@ -10,7 +10,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
@@ -20,9 +19,10 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
- * Test Class for the garment creation wiew and controller
+ * Test Class for the garment creation view and controller
  *
  * @author Carlos Rafael Mendez Gonzalez
  */

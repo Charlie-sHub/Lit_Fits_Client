@@ -28,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -675,7 +676,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         setListeners();
         textFields = new ArrayList<>();
         fillTxtArray();
-        undoneStrings = new ArrayList<>();
         fillComboBoxes();
         fillComboBoxArray();
         setUndoRedo();
@@ -772,7 +772,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         textFields.add(txtBarcode);
         textFields.add(txtDesigner);
         textFields.add(txtPrice);
-        // How to make the combo boxes work with my shitty attempt at a undo and redo?
     }
 
     /**
@@ -1013,6 +1012,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         EventStream<TextChange> barcodeChange = changesOf(txtBarcode.textProperty()).map(textChange -> new TextChange(textChange, txtBarcode));
         EventStream<TextChange> designerChange = changesOf(txtDesigner.textProperty()).map(textChange -> new TextChange(textChange, txtDesigner));
         EventStream<TextChange> priceChange = changesOf(txtPrice.textProperty()).map(textChange -> new TextChange(textChange, txtPrice));
+        //Make the value of the garment changes too if possible
         EventStream<ComboBoxChange> moodChanges = changesOf(comboMood.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboMood));
         EventStream<ComboBoxChange> bodyPartChanges = changesOf(comboBodyPart.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboBodyPart));
         EventStream<ComboBoxChange> garmentTypeChanges = changesOf(comboGarmentType.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboGarmentType));
@@ -1023,10 +1023,10 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
                 inputChanges,
                 changes -> changes.invert(),
                 changes -> changes.redo(),
-                (change1, change2) -> change1.mergeWith(change2));
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
-        btnUndo.setOnAction(evt -> undoManager.undo());
-        btnRedo.setOnAction(evt -> undoManager.redo());
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
     }
 }

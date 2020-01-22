@@ -9,14 +9,14 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 import lit_fits_client.ApplicationMain;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
- * Test Class for the company's garments wiew and controller
+ * Test Class for the company's garments view and controller
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
