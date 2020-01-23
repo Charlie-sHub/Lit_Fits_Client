@@ -3,7 +3,6 @@ package lit_fits_client.miscellaneous;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 import javax.crypto.Cipher;
 
 /**
@@ -26,7 +25,7 @@ public class Encryptor {
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        message = Arrays.toString(cipher.doFinal(message.getBytes()));
+        message = cipher.doFinal(message.getBytes()).toString();
         return message;
     }
 }

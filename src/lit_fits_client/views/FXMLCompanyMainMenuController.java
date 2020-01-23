@@ -26,7 +26,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * the log out button
      */
     @FXML
-    private Button btnLogout;
+    private Button btnLogOut;
     /**
      * The warehouse button, to open the warehouse view
      */
@@ -64,15 +64,15 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     /**
      * @return the btnLogout
      */
-    public Button getBtnLogout() {
-        return btnLogout;
+    public Button getBtnLogOut() {
+        return btnLogOut;
     }
 
     /**
-     * @param btnLogout the btnLogout to set
+     * @param btnLogOut the btnLogout to set
      */
-    public void setBtnLogout(Button btnLogout) {
-        this.btnLogout = btnLogout;
+    public void setBtnLogOut(Button btnLogOut) {
+        this.btnLogOut = btnLogOut;
     }
 
     /**
@@ -199,7 +199,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             themeList = themes;
             setElements();
             choiceTheme.setValue(theme);
-            btnLogout.setDisable(false);
+            btnLogOut.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
@@ -221,7 +221,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     private void setOnAction() {
         choiceTheme.setOnAction(this::onThemeChosen);
-        btnLogout.setOnAction(this::onBtnLogoutPress);
+        btnLogOut.setOnAction(this::onBtnLogoutPress);
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
@@ -234,7 +234,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     private void setTooltips() {
         btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
         btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
-        btnLogout.setTooltip(new Tooltip("Log out of the program"));
+        btnLogOut.setTooltip(new Tooltip("Log out of the program"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
     }
 
@@ -244,7 +244,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     private void setFocusTraversable() {
         btnModifyAccount.setFocusTraversable(true);
         btnWarehouse.setFocusTraversable(true);
-        btnLogout.setFocusTraversable(true);
+        btnLogOut.setFocusTraversable(true);
         choiceTheme.setFocusTraversable(true);
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -606,31 +607,38 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     public void onRegisterPress(ActionEvent event) {
         CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        boolean success = true;
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
+            System.out.println(company.getPassword());
+            System.out.println(company.getPassword().getBytes());
+            System.out.println(company.getPassword().getBytes().length);
             if (company.getId() > 0) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);
             }
-            try {
-                // Why does it open when an exception is thrown?
-                openCompanyMainMenu(company);
-                stage.hide();
-            } catch (IOException e) {
-                e.printStackTrace();
-                LOG.severe(e.getMessage());
-            }
         } catch (ClientErrorException e) {
+            success = false;
             createExceptionDialog(e);
             e.printStackTrace();
         } catch (Exception ex) {
+            success = false;
             createExceptionDialog(ex);
             ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
+        }
+        if (success) {
+            try {
+                openCompanyMainMenu(company);
+                stage.hide();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                createExceptionDialog(ex);
+            }
         }
     }
 
@@ -730,6 +738,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         }
         return enableRegister;
     }
+
     /**
      * Sets up all the things related to undoing and redoing.
      *
