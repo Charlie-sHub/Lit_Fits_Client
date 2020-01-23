@@ -5,15 +5,19 @@
  */
 package lit_fits_client.views;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,6 +25,7 @@ import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ColorClient;
+import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.MaterialClient;
 import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
@@ -247,7 +252,20 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
     
     private void setSelectedReccomendations() {
-        //tableColor.setSelectionModel();
+       List<Color> colorsSelected = expert.getRecommendedColors();
+       colorsSelected.forEach((colorExpert) -> {
+           colorList.stream().filter((colorDB) -> (colorExpert.getName().equals(colorDB.getName()))).forEachOrdered((colorDB) -> {
+               tableColor.getSelectionModel().select(colorDB);
+           });
+        });
+       
+       List<Material> materialsSelected = expert.getRecommendedMaterials();
+       materialsSelected.forEach((materialExpert) -> {
+           materialList.stream().filter((materialDB) -> (materialExpert.getName().equals(materialDB.getName()))).forEachOrdered((materialDB) -> {
+               tableMaterial.getSelectionModel().select(materialDB);
+           });
+        });
+        
     }
     
     private void fillTable() {
@@ -259,7 +277,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         ColorClient colorClient = ClientFactory.getColorClient(uri);
         colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType<List<Color>>(){
         }));
-        tableColor.setItems(colorList);        
+        tableColor.setItems(colorList);   
+        tableColor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void setOnAction() {
@@ -269,11 +288,41 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
     
     private void onSavePress(ActionEvent event) {
-
+        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+        try {
+            List<Color> colorsSelected = tableColor.getSelectionModel().getSelectedItems();
+            expert.setRecommendedColors(colorsSelected);
+            
+            List<Material> materialsSelected = tableMaterial.getSelectionModel().getSelectedItems();
+            expert.setRecommendedMaterials(materialsSelected);
+            
+            expertClient.edit(expert);
+            openMainWindow();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            expertClient.close();
+        }
+        
     }
     
     private void onCancelPress(ActionEvent event) {
-        
+        try {
+            openMainWindow();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void openMainWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenu.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageProgramMain = new Stage();
+        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        mainView.setExpert(expert);
+        mainView.setLoginStage(stageMainMenu);
+        mainView.initStage(themeList, theme, stageProgramMain, root, uri);
+        stage.hide();
     }
 
 

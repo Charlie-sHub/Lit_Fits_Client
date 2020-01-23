@@ -438,7 +438,6 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
         
         try {
-            
             PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             String fullName = expert.getFullName();
