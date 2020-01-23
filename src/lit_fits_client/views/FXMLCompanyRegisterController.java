@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -538,7 +537,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
-    @Deprecated
     private void fillArray() {
         textFields.add(txtNif);
         textFields.add(txtFullName);
@@ -611,9 +609,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
-            System.out.println(company.getPassword());
-            System.out.println(company.getPassword().getBytes());
-            System.out.println(company.getPassword().getBytes().length);
             if (company.getId() > 0) {
                 companyClient.edit(company);
             } else {
