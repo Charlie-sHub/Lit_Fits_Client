@@ -8,6 +8,7 @@ package lit_fits_client.views;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.views.themes.Theme;
 
 /**
  *
@@ -309,7 +311,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     
-    public void initStage(String value, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
         try {
             this.uri = uri;
             this.stage = stageProgramMain;
@@ -319,7 +321,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCssPath());
+            themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
@@ -385,7 +388,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         txtNewPassword.lengthProperty().addListener(this::lengthListener);
     }
     
-    private void openHelpView() throws IOException {
+    @Override
+    protected void openHelpView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
         Parent root = (Parent) fxmlLoader.load();
         Stage stageHelp = new Stage();
@@ -398,7 +402,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
      *
      * @param event
      */
-    private void onHelpPressed(ActionEvent event) {
+    @Override
+    protected void onHelpPressed(ActionEvent event) {
         try {
             openHelpView();
         } catch (IOException e) {
@@ -524,7 +529,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
         mainView.setExpert(expert);
         mainView.setLoginStage(previousStage);
-        mainView.initStage(theme, stageProgramMain, root, uri);
+        mainView.initStage(themeList, theme, stageProgramMain, root, uri);
         stage.hide();
     }
 

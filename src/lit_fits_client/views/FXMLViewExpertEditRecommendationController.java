@@ -25,6 +25,7 @@ import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.Material;
+import lit_fits_client.views.themes.Theme;
 
 /**
  *
@@ -48,8 +49,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private TableColumn<Material, Boolean> columnSelectMaterial;
 
-    private ObservableList<Color> colorList;
-    private ObservableList<Material> materialList;
+    ObservableList<Color> colorList;
+    ObservableList<Material> materialList;
     
     private Stage stage;
     private Stage stageMainMenu;
@@ -239,7 +240,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         this.expert = expert;
     }
 
-    void initStage(String value, Stage stageMainProgram, Parent root, String uri) {
+    void initStage(List<Theme> themes, Theme theme, Stage stageMainProgram, Parent root, String uri) {
         try{
             this.uri = uri;
             this.stage = stageMainProgram;
@@ -249,7 +250,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme);
+            setStylesheet(scene, theme.getThemeCssPath());
+            themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
@@ -267,7 +269,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
 
     private void setColumnFactories() {
-        columnNameColor.setCellFactory(new PropertyValueFactory("color name"));
+        columnNameColor.setCellFactory(new PropertyValueFactory("color_name"));
         columnSelectColor.setCellFactory(new PropertyValueFactory("color select"));
         columnNameMaterial.setCellFactory(new PropertyValueFactory("material name"));
         columnSelectMaterial.setCellFactory(new PropertyValueFactory("material select"));

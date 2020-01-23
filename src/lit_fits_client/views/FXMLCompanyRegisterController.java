@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,10 +22,16 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
 import lit_fits_client.entities.Company;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -92,6 +99,11 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      */
     @FXML
     private Button btnHelp;
+    /**
+     * Label that informs the user the phone number is not valid
+     */
+    @FXML
+    private Label lblInvalidPhone;
     /**
      * Stage to be used by the current controller
      */
@@ -401,6 +413,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Initializes the register window
      *
+     * @param themes
      * @param theme The chosen css theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
@@ -412,17 +425,18 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             this.stage = stage;
             Scene scene;
             scene = new Scene(root);
-            setStylesheet(scene, theme.getThemeCss());
+            this.theme = theme;
+            setStylesheet(scene, theme.getThemeCssPath());
             stage.setScene(scene);
-            setElements();
             themeList = themes;
+            setElements();
+            choiceTheme.setValue(theme);
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
             } else {
                 stage.setTitle("Registration");
                 company = new Company();
-                company.setId(0);
             }
             stage.setOnCloseRequest(this::onClosing);
             //pretty sure these dimensions will have to change
@@ -431,6 +445,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
+            e.printStackTrace();
         }
     }
 
@@ -450,6 +465,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * Sets the properties for several elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         setOnAction();
         setMnemonicParsing();
         lblPassMismatch.setVisible(false);
@@ -459,10 +475,10 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         txtNif.requestFocus();
         setFocusTraversable();
         setListeners();
+        setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
         undoneStrings = new ArrayList<>();
-        fillChoiceBoxTheme();
     }
 
     /**
@@ -486,10 +502,21 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         choiceTheme.setOnAction(this::onThemeChosen);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
-        btnUndo.setOnAction(this::onUndoPress);
-        btnRedo.setOnAction(this::onRedoPress);
+        btnSubmit.setOnKeyPressed(this::onEnterPressed);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         btnHelp.setOnAction(this::onHelpPressed);
+        stage.setOnCloseRequest(this::onClosing);
+    }
+
+    /**
+     * Checks that the F1 key is pressed to open the help window
+     *
+     * @param event
+     */
+    private void onEnterPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            onRegisterPress(new ActionEvent());
+        }
     }
 
     /**
@@ -577,25 +604,30 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
-            setCompanyData(publicKeyClient.getPublicKey(String.class));
-            if (company.getId() == 0) {
+            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+            company = setCompanyData(publicKeyBytes);
+            if (company.getId() > 0) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);
             }
             try {
+                // Why does it open when an exception is thrown?
                 openCompanyMainMenu(company);
                 stage.hide();
             } catch (IOException e) {
+                e.printStackTrace();
                 LOG.severe(e.getMessage());
             }
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
+            e.printStackTrace();
         } catch (Exception ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -605,12 +637,14 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Sets the data of the company to be sent to the server
      */
-    private void setCompanyData(String publicKey) throws Exception {
-        company.setEmail(txtEmail.getText());
-        company.setFullName(txtFullName.getText());
-        company.setNif(txtNif.getText());
-        company.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes()));
-        company.setPhoneNumber(txtPhone.getText());
+    private Company setCompanyData(byte[] publicKey) throws Exception {
+        Company auxCompany = new Company();
+        auxCompany.setEmail(txtEmail.getText());
+        auxCompany.setFullName(txtFullName.getText());
+        auxCompany.setNif(txtNif.getText());
+        auxCompany.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
+        auxCompany.setPhoneNumber(txtPhone.getText());
+        return auxCompany;
     }
 
     /**
@@ -637,7 +671,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @param newValue
      */
     public void onFieldFilledListener(ObservableValue observable, String oldValue, String newValue) {
-        if (passwordMatchCheck() & emailPatternCheck() & nifPatternCheck()) {
+        if (passwordMatchCheck() & emailPatternCheck() & nifPatternCheck() & phonePatternCheck()) {
             onFieldFilled(btnSubmit);
         } else {
             btnSubmit.setDisable(true);
@@ -669,6 +703,18 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
+     * Checks that the phone follows the phone pattern
+     *
+     * @return boolean true if the phone matches the pattern
+     */
+    private boolean phonePatternCheck() {
+        boolean enableRegister;
+        enableRegister = Pattern.matches("[0-9]{9}", txtPhone.getText().trim());
+        lblInvalidPhone.setVisible(!enableRegister);
+        return enableRegister;
+    }
+
+    /**
      * Checks that the passwords entered match each other
      *
      * @return boolean true if the passwords are the same
@@ -683,5 +729,30 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             enableRegister = false;
         }
         return enableRegister;
+    }
+    /**
+     * Sets up all the things related to undoing and redoing.
+     *
+     * Following and adapting: https://github.com/FXMisc/UndoFX
+     *
+     * @author Carlos Mendez
+     */
+    private void setUndoRedo() {
+        EventStream<TextChange> nifChanges = changesOf(txtNif.textProperty()).map(textChange -> new TextChange(textChange, txtNif));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtRepeatPassword.textProperty()).map(textChange -> new TextChange(textChange, txtRepeatPassword));
+        inputChanges = merge(nifChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
     }
 }

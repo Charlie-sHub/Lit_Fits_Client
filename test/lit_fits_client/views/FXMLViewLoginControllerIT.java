@@ -1,23 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lit_fits_client.views;
 
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Test;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
  *
- * @author Ander Rodriguez
+ * @author Ander Rodriguez & Carlos Mendez
  */
 public class FXMLViewLoginControllerIT extends ApplicationTest {
     @Override

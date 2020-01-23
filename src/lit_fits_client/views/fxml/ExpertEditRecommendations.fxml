@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thebestprogramdesktop.views.FXMLViewExpertEditRecommendationController">
   <left>
     <VBox alignment="CENTER" prefHeight="373.0" prefWidth="319.0" BorderPane.alignment="CENTER">
       <children>

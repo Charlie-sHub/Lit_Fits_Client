@@ -2,11 +2,15 @@ package lit_fits_client.views;
 
 import lit_fits_client.miscellaneous.TextChange;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,19 +20,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.ExpertClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
-import lit_fits_client.RESTClients.UserClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.ExpertClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
+import lit_fits_client.RESTClients.UserClientInterface;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
+import org.controlsfx.control.CheckComboBox;
 import org.fxmisc.undo.UndoManagerFactory;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
@@ -69,12 +76,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Text field where username must be entered to log in
      */
     @FXML
-    protected TextField txtUsername;
+    private TextField txtUsername;
     /**
      * Field of the password
      */
     @FXML
-    protected PasswordField fieldPassword;
+    private PasswordField fieldPassword;
+    private ToggleGroup radioButtonGroup;
     private Stage stage;
     private Stage registerStage;
     private Stage mainStage;
@@ -163,6 +171,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * This function will initialize the window
      *
+     * @param themes
      * @param theme the path to the theme chosen
      * @param root
      * @param uri
@@ -172,17 +181,22 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             this.uri = uri;
             Scene scene = new Scene(root);
-            setStylesheet(scene, theme.getThemeCss());
+            this.theme = theme;
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             stage.setScene(scene);
             stage.setTitle("Log In");
             stage.setMinWidth(700);
             stage.setMinHeight(500);
             setElements();
+            choiceTheme.setValue(theme);
             stage.show();
+            // Just a test
+            test();
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -192,6 +206,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         lblLength.setVisible(false);
         setFocusTraversable();
         setListeners();
@@ -208,7 +223,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         fieldPassword.setEditable(true);
         setTooltips();
         setUndoRedo();
-        fillChoiceBoxTheme();
+        radioButtonGroup = new ToggleGroup();
+        rBtnCompany.setToggleGroup(radioButtonGroup);
+        rBtnFashionExpert.setToggleGroup(radioButtonGroup);
     }
 
     /**
@@ -220,15 +237,17 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private void setUndoRedo() {
         EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
-        EventStream<TextChange> passwordChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
+        EventStream<TextChange> passwordChanges = changesOf(fieldPassword.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
         inputChanges = merge(usernameChanges, passwordChanges);
         undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
-                inputChanges, // stream of changes to observe
-                changes -> changes.invert(), // function to invert a change
-                changes -> changes.redo(), // function to undo a change
-                (change1, change2) -> change1.mergeWith(change2));  // function to merge two changes
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(evt -> undoManager.undo());
+        btnRedo.setOnAction(evt -> undoManager.redo());
     }
 
     /**
@@ -271,9 +290,11 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void setOnAction() {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
-        btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
-        btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
+        choiceTheme.setOnAction(this::onThemeChosen);
+        // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
+        // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -287,15 +308,17 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+                    CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close();
-                } else {
-                    // How to differentiate between them?
-                    ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-                    expertClient.reestablishPassword(txtUsername.getText());
-                    UserClient userClient = ClientFactory.getUserClient(uri);
+                } else if (txtUsername.getText().startsWith("admin")) {
+                    UserClientInterface userClient = ClientFactory.getUserClient(uri);
                     userClient.reestablishPassword(txtUsername.getText());
+                    userClient.close();
+                } else {
+                    ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
+                    expertClient.reestablishPassword(txtUsername.getText());
+                    expertClient.close();
                 }
             } else {
                 createDialog("Please insert your username/nif");
@@ -366,18 +389,20 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private void onBtnLoginPress(ActionEvent event) {
         try {
             if (nifPatternCheck(txtUsername.getText())) {
-                Company company = loginCompany();
-                openCompanyMainMenu(company);
+                openCompanyMainMenu(loginCompany());
+            } else if (txtUsername.getText().startsWith("admin")) {
+                openAdminMainMenu(adminLogin());
             } else {
                 openExpertMainMenu(expertLogin());
-                openAdminMainMenu(adminLogin());
             }
             stage.hide();
         } catch (IOException | ClientErrorException ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         } catch (Exception ex) {
             createExceptionDialog(ex);
+            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         }
     }
@@ -395,7 +420,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         Parent root = (Parent) fxmlLoader.load();
         FXMLAdminMainMenuController mainView = ((FXMLAdminMainMenuController) fxmlLoader.getController());
         mainView.setAdmin(user);
-        mainView.setLoginStage(this.stage);
+        mainView.setPreviousStage(this.stage);
         mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
     }
 
@@ -408,13 +433,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private User adminLogin() throws ClientErrorException, Exception {
-        UserClient userClient = ClientFactory.getUserClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        UserClientInterface userClient = ClientFactory.getUserClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         User admin = new User();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         admin.setUsername(txtUsername.getText());
-        admin.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        admin.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         admin = userClient.login(admin, User.class);
         userClient.close();
         publicKeyClient.close();
@@ -447,13 +471,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private FashionExpert expertLogin() throws ClientErrorException, Exception {
-        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         FashionExpert fashionExpert = new FashionExpert();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         fashionExpert.setUsername(txtUsername.getText());
-        fashionExpert.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        fashionExpert.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         fashionExpert = expertClient.login(fashionExpert, FashionExpert.class);
         expertClient.close();
         publicKeyClient.close();
@@ -486,13 +509,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private Company loginCompany() throws ClientErrorException, Exception {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         Company company = new Company();
-        String publicKey;
-        publicKey = publicKeyClient.getPublicKey(String.class);
+        // Maybe check http://docs.oracle.com/javase/7/docs/api/javax/xml/bind/DatatypeConverter.html#parseHexBinary%28java.lang.String%29
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         company.setNif(txtUsername.getText());
-        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKey.getBytes()));
+        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
         company = companyClient.login(company, Company.class);
         companyClient.close();
         publicKeyClient.close();
@@ -515,19 +538,22 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 registerStage = new Stage();
                 registerView.setLogin(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
-            } else {
+                stage.hide();
+            } else if (rBtnFashionExpert.isSelected()) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertRegisterAccount.fxml"));
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLViewExpertRegisterController registerView = ((FXMLViewExpertRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
-                registerView.setLogin(stage);
+                registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
+                stage.hide();
+            } else {
+                createDialog("Please select what kind of registration you want");
             }
-            stage.hide();
         } catch (IOException e) {
             LOG.severe(e.getMessage());
+            e.printStackTrace();
         }
-        stage.hide();
     }
 
     /**
@@ -538,5 +564,24 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
+    }
+    /**
+     * Just trying to test something, ignore this if i left it
+     */
+    public void test() {
+        // create the data to show in the CheckComboBox 
+        final ObservableList<String> strings = FXCollections.observableArrayList();
+        for (int i = 0; i <= 100; i++) {
+            strings.add("Item " + i);
+        }
+        // Create the CheckComboBox with the data 
+        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+        // and listen to the relevant events (e.g. when the selected indices or 
+        // selected items change).
+        checkComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+            public void onChanged(ListChangeListener.Change<? extends String> c) {
+                System.out.println(checkComboBox.getCheckModel().getCheckedItems());
+            }
+        });
     }
 }

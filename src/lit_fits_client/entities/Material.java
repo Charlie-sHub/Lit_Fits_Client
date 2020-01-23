@@ -19,6 +19,7 @@ public class Material implements Serializable {
     private SimpleStringProperty name;
 
     public Material() {
+        this.name = new SimpleStringProperty();
     }
 
     public Material(String name) {

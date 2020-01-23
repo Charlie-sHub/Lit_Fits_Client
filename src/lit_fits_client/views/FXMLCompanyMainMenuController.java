@@ -194,9 +194,11 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme.getThemeCss());
+            this.theme = theme;
+            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             btnLogout.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
@@ -208,11 +210,10 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
-        // Fill the ChoiceBox
+        fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
         setFocusTraversable();
-        fillChoiceBoxTheme();
     }
 
     /**
@@ -224,6 +225,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -269,7 +271,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
             modifyAccountView.setLogin(stage);
-            modifyAccountView.initStage(choiceTheme.getValue(), stageProgramMain, root, uri);
+            modifyAccountView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -289,7 +291,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             FXMLCompanyGarmentsController warehouseView = ((FXMLCompanyGarmentsController) fxmlLoader.getController());
             warehouseView.setCompany(company);
             warehouseView.setStageMainMenu(stage);
-            warehouseView.initStage(choiceTheme.getValue(), stageWarehouse, root, uri);
+            warehouseView.initStage(themeList, choiceTheme.getValue(), stageWarehouse, root, uri);
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);

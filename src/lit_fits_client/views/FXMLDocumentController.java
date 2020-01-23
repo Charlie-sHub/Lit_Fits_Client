@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -44,7 +43,7 @@ public class FXMLDocumentController {
     /**
      * List of all the themes to choose from
      */
-    List<Theme> themeList;
+    protected List<Theme> themeList;
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
     public Theme getTheme() {
@@ -97,7 +96,7 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void fillChoiceBoxTheme() {
-        choiceTheme = new ChoiceBox<>(FXCollections.observableArrayList(themeList));
+        choiceTheme.setItems(FXCollections.observableArrayList(themeList));
     }
 
     /**
@@ -107,19 +106,20 @@ public class FXMLDocumentController {
      * @author Carlos Mendez
      */
     public void onThemeChosen(ActionEvent event) {
-        String path = "themes/" + choiceTheme.getValue().getThemeCss();
-        setStylesheet(((ChoiceBox) event.getSource()).getScene(), path);
+        setStylesheet(((ChoiceBox) event.getSource()).getScene(), choiceTheme.getValue().getThemeCssPath());
+        theme = choiceTheme.getValue();
     }
 
     /**
-     * Based on the happiness of the window is set the correct mood
+     * Changes the theme of the program by removing and adding stylesheets to the scene
      *
      * @author Carlos Rafael Mendez Gonzalez
      * @param scene scene to be loaded with the stylesheet
-     * @param themePath
+     * @param themeCssPath
      */
-    public void setStylesheet(Scene scene, String themePath) {
-        scene.getStylesheets().add(getClass().getResource(themePath).toExternalForm());
+    public void setStylesheet(Scene scene, String themeCssPath) {
+        scene.getStylesheets().remove(getClass().getResource(theme.getThemeCssPath()).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(themeCssPath).toExternalForm());
     }
 
     /**
@@ -131,7 +131,7 @@ public class FXMLDocumentController {
     public void createExceptionDialog(Exception e) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setContentText(e.getMessage());
+        alert.setContentText("There's been an error while running the program: " + e.getMessage());
         alert.showAndWait();
         LOG.severe(e.getMessage());
     }
@@ -180,7 +180,7 @@ public class FXMLDocumentController {
         try {
             out = new FileOutputStream("theme.properties");
             Properties properties = new Properties();
-            properties.setProperty("theme", theme.getThemeCss());
+            properties.setProperty("theme", theme.getThemeCssPath());
             properties.store(out, null);
         } catch (IOException e) {
             LOG.severe(e.getMessage());
