@@ -22,6 +22,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
@@ -82,6 +85,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     @FXML
     private PasswordField fieldPassword;
+    @FXML
+    private CheckComboBox checkComboBox;
     private ToggleGroup radioButtonGroup;
     private Stage stage;
     private Stage registerStage;
@@ -193,6 +198,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.show();
             // Just a test
             test();
+            // date picker to show current date for no reason
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
@@ -259,8 +265,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setTooltip(new Tooltip("Log into the program"));
         btnReestablishPassword.setTooltip(new Tooltip("Forgot your password?"));
         btnRegister.setTooltip(new Tooltip("Register a new account"));
-        btnRedo.setTooltip(new Tooltip("Redo what's been erased"));
-        btnUndo.setTooltip(new Tooltip("Erase everything"));
+        btnRedo.setTooltip(new Tooltip("Redoes what's been erased"));
+        btnUndo.setTooltip(new Tooltip("Undoes the last change"));
         rBtnCompany.setTooltip(new Tooltip("Do you represent a company?"));
         rBtnFashionExpert.setTooltip(new Tooltip("Are you a fashion expert?"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
@@ -280,6 +286,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setMnemonicParsing(true);
         btnUndo.setMnemonicParsing(true);
         btnRedo.setMnemonicParsing(true);
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**

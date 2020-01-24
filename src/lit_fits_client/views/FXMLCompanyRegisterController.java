@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -492,6 +494,12 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         btnCancel.setMnemonicParsing(true);
         btnUndo.setMnemonicParsing(true);
         btnRedo.setMnemonicParsing(true);
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**

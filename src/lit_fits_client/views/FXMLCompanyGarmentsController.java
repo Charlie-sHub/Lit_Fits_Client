@@ -210,6 +210,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     @FXML
     private MenuItem menuHelpOpenHelp;
     /**
+     * Button to open the report view
+     */
+    @FXML
+    private Button btnReport;
+    /**
      * The list of garments of the company
      */
     private ObservableList<Garment> garmentList;
@@ -409,7 +414,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             themeList = themes;
             setElements();
             choiceTheme.setValue(theme);
-            
         } catch (Exception e) {
             createExceptionDialog(e);
         }
@@ -499,6 +503,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnDelete.setText("_Delete");
         btnModify.setText("_Modify");
         btnPromote.setText("_Promote");
+        btnReport.setText("_Report");
     }
 
     /**
@@ -512,6 +517,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnModify.setTooltip(new Tooltip("Modify the data of a garment"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         tableGarments.setTooltip(new Tooltip("List of garments owned by the company"));
+        btnReport.setTooltip(new Tooltip("List of garments owned by the company in PDF form"));
     }
 
     /**
@@ -540,6 +546,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         menuEditPromote.setOnAction(this::onBtnPromotePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
+        btnReport.setOnAction(this::onBtnReportPress);
     }
 
     /**
@@ -629,11 +636,27 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         garmentClient.close();
     }
 
+    /**
+     * Enables or disables certain buttons depending on whether a garment has been selected
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     private void onSelectingAGarment(ObservableValue observable, Object oldValue, Object newValue) {
         if (newValue != null) {
             enableDisableButtons(false);
         } else {
             enableDisableButtons(true);
         }
+    }
+
+    /**
+     * Opens the report view
+     *
+     * @param event
+     */
+    private void onBtnReportPress(ActionEvent event) {
+        
     }
 }

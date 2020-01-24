@@ -1,6 +1,8 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -9,10 +11,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateTimeStringConverter;
 import lit_fits_client.entities.Company;
 import lit_fits_client.views.themes.Theme;
 
@@ -47,6 +52,21 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     @FXML
     private MenuItem menuHelpOpenHelp;
+    /**
+     * A pretty useless DatePicker
+     */
+    @FXML
+    private DatePicker datePicker;
+    /**
+     * An obnoxious label
+     */
+    @FXML
+    private Label lblPutDate;
+    /**
+     * The other of the obnoxious label
+     */
+    @FXML
+    private Label lblCorrect;
     /**
      * The stage used by this view
      */
@@ -208,6 +228,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
+        lblCorrect.setVisible(false);
         fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
@@ -224,6 +245,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
+        datePicker.setOnAction(this::onDatePicked);
     }
 
     /**
@@ -234,6 +256,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
         btnLogOut.setTooltip(new Tooltip("Log out of the program"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
+        datePicker.setTooltip(new Tooltip("Pick a date to win a prize!"));
     }
 
     /**
@@ -244,6 +267,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
         btnWarehouse.setFocusTraversable(true);
         btnLogOut.setFocusTraversable(true);
         choiceTheme.setFocusTraversable(true);
+        datePicker.setFocusTraversable(true);
     }
 
     /**
@@ -277,7 +301,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     }
 
     /**
-     * Opens the warehouse(company garments) window and closes the current window
+     * Opens the warehouse(company garments) window and hides the current window
      *
      * @param event
      */
@@ -293,6 +317,17 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
+        }
+    }
+
+    /**
+     * It's some sad excuse to use the DatePicker
+     *
+     * @param event
+     */
+    public void onDatePicked(ActionEvent event) {
+        if(datePicker.getValue().equals(LocalDate.now())){
+            lblCorrect.setVisible(true);
         }
     }
 }

@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="borderPaneMainMenu" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLCompanyMainMenuController">
@@ -24,8 +25,19 @@
                 <AnchorPane prefHeight="334.0" prefWidth="480.0">
                     <children>
                         <Button fx:id="btnWarehouse" layoutX="189.0" layoutY="109.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="182.0" text="Check Warehouse" />
-                        <Button fx:id="btnLogOut" layoutX="226.0" layoutY="272.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
                         <Button fx:id="btnModifyAccount" layoutX="189.0" layoutY="69.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Modify Account" />
+                        <Button fx:id="btnLogOut" layoutX="226.0" layoutY="272.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
+                        <Label fx:id="lblPutDate" alignment="CENTER" prefHeight="17.0" prefWidth="150.0" text="Input whatever you think it's the current date for no reason at all!">
+                            <font>
+                                <Font name="Arial" size="11.0" />
+                            </font>
+                        </Label>
+                        <DatePicker fx:id="datePicker" layoutX="189.0" layoutY="100.0" prefHeight="25.0" prefWidth="181.0"/>
+                        <Label fx:id="lblCorrect" alignment="CENTER" prefHeight="17.0" prefWidth="150.0" text="Congrats for literally nothing!!!!!!11!1!?">
+                            <font>
+                                <Font name="Arial" size="11.0" />
+                            </font>
+                        </Label>
                     </children>
                 </AnchorPane>
             </children>

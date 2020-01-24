@@ -25,6 +25,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -752,6 +754,12 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         btnSubmit.setText("_Register");
         btnUndo.setText("_Undo");
         btnRedo.setText("_Redo");
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**
