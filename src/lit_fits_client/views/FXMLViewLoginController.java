@@ -588,7 +588,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             strings.add("Item " + i);
         }
         // Create the CheckComboBox with the data 
-        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+        checkComboBox.getItems().addAll(strings);
         // and listen to the relevant events (e.g. when the selected indices or 
         // selected items change).
         checkComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
