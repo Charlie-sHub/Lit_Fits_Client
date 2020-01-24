@@ -36,7 +36,7 @@ public class Color implements Serializable {
 
     @Override
     public String toString() {
-        return "Color{" + "name=" + name + '}';
+        return this.getName();
     }
 
     @Override

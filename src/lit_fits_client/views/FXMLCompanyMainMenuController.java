@@ -191,8 +191,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Home");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
             stage.show();
             this.theme = theme;
             setStylesheet(scene, theme.getThemeCssPath());

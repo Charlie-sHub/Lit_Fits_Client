@@ -1,11 +1,14 @@
 package lit_fits_client.views;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -28,7 +31,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -633,7 +635,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
                 garment = new Garment();
             }
             stage.setOnCloseRequest(this::onClosing);
-            //pretty sure these dimensions will have to change
             stage.setMinWidth(850);
             stage.setMinHeight(650);
             stage.show();
@@ -659,9 +660,11 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     /**
      * Sets the properties for several elements of the window
      */
-    private void setElements() {
+    private void setElements() throws FileNotFoundException {
         fillChoiceBoxTheme();
-        Image image = new Image("/placeholder.jpg");
+        File placeholderFile = new File("placeholder.jpg");
+        FileInputStream imageFileInput = new FileInputStream(placeholderFile);
+        Image image = new Image(imageFileInput);
         imageViewGarmentPicture.setImage(image);
         setTooltips();
         lblLength.setVisible(false);
@@ -688,22 +691,23 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     private void fillComboBoxes() throws ClientErrorException {
         ColorClientInterface colorClient = ClientFactory.getColorClient(uri);
-        comboMaterials.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
+        comboColors.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
         })));
         colorClient.close();
         MaterialClientInterface materialClient = ClientFactory.getMaterialClient(uri);
         comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
         })));
         materialClient.close();
-        comboBodyPart.getItems().setAll(Arrays.toString(BodyPart.values()));
-        comboMood.getItems().setAll(Arrays.toString(Mood.values()));
-        comboGarmentType.getItems().setAll(Arrays.toString(GarmentType.values()));
+        comboBodyPart.getItems().setAll(BodyPart.values());
+        comboMood.getItems().setAll(Mood.values());
+        comboGarmentType.getItems().setAll(GarmentType.values());
     }
 
     /**
      * Fills the ArrayList of combo boxes with the combo boxes of the stage
      */
     private void fillComboBoxArray() {
+        comboBoxes = new ArrayList<>();
         comboBoxes.add(comboBodyPart);
         comboBoxes.add(comboColors);
         comboBoxes.add(comboGarmentType);
@@ -802,8 +806,10 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     private void setListeners() {
         txtBarcode.textProperty().addListener(this::onFieldFilledListener);
         txtDesigner.textProperty().addListener(this::onFieldFilledListener);
+        txtPrice.textProperty().addListener(this::onFieldFilledListener);
         txtBarcode.lengthProperty().addListener(this::lenghtListener);
         txtDesigner.lengthProperty().addListener(this::lenghtListener);
+        txtPrice.lengthProperty().addListener(this::lenghtListener);
         comboBodyPart.onActionProperty().addListener(this::onItemChosen);
         comboColors.onActionProperty().addListener(this::onItemChosen);
         comboGarmentType.onActionProperty().addListener(this::onItemChosen);
@@ -911,7 +917,11 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @param event
      */
     public void onImageViewClicked(MouseEvent event) {
-        onImageViewPress();
+        try {
+            onImageViewPress();
+        } catch (FileNotFoundException ex) {
+            createExceptionDialog(ex);
+        }
     }
 
     /**
@@ -921,19 +931,24 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     public void onImageViewKeyPressed(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            onImageViewPress();
+            try {
+                onImageViewPress();
+            } catch (FileNotFoundException ex) {
+                createExceptionDialog(ex);
+            }
         }
     }
 
     /**
      * Opens a file chooser to change the Image
      */
-    private void onImageViewPress() {
+    private void onImageViewPress() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a picture for the Garment");
         fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Image Files", "*.jpg"));
         garmentPictureFile = fileChooser.showOpenDialog(stage);
-        imageViewGarmentPicture.setImage(new Image(garmentPictureFile.getPath()));
+        FileInputStream fileInputStream = new FileInputStream(garmentPictureFile);
+        imageViewGarmentPicture.setImage(new Image(fileInputStream));
     }
 
     /**
@@ -943,7 +958,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     private boolean pricePatternCheck() {
         boolean enableRegister;
-        enableRegister = Pattern.matches("[0-9]+,{1}[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim());
+        enableRegister = Pattern.matches("[0-9]+,[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim());
         lblInvalidPrice.setVisible(!enableRegister);
         return enableRegister;
     }

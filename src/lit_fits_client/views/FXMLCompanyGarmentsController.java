@@ -556,7 +556,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setCompany(company);
-            garmentCreationView.setStage(stage);
+            garmentCreationView.setPreviousStage(stage);
             garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);

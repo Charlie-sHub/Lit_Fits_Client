@@ -478,7 +478,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
-        undoneStrings = new ArrayList<>();
     }
 
     /**
@@ -486,7 +485,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      */
     private void setMnemonicParsing() {
         btnCancel.setText("_Cancel");
-        btnSubmit.setText("_Register");
+        btnSubmit.setText("_Submit");
         btnUndo.setText("_Undo");
         btnRedo.setText("_Redo");
         btnSubmit.setMnemonicParsing(true);
@@ -609,7 +608,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
-            if (company.getId() > 0) {
+            if (stage.getTitle().equals("Modification")) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);

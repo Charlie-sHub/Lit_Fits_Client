@@ -291,8 +291,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
         choiceTheme.setOnAction(this::onThemeChosen);
-        // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
-        // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
         stage.setOnCloseRequest(this::onClosing);
     }
@@ -308,14 +306,17 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
+                    LOG.info("Attempting to reestablish a company's password");
                     CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close();
                 } else if (txtUsername.getText().startsWith("admin")) {
+                    LOG.info("Attempting to reestablish an admin's password");
                     UserClientInterface userClient = ClientFactory.getUserClient(uri);
                     userClient.reestablishPassword(txtUsername.getText());
                     userClient.close();
                 } else {
+                    LOG.info("Attempting to reestablish an expert's password");
                     ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
                     expertClient.reestablishPassword(txtUsername.getText());
                     expertClient.close();
@@ -512,7 +513,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         Company company = new Company();
-        // Maybe check http://docs.oracle.com/javase/7/docs/api/javax/xml/bind/DatatypeConverter.html#parseHexBinary%28java.lang.String%29
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         company.setNif(txtUsername.getText());
         company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
@@ -565,8 +565,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
     }
+
     /**
-     * Just trying to test something, ignore this if i left it
+     * Just trying to test something, ignore this if i left it after th 31st
      */
     public void test() {
         // create the data to show in the CheckComboBox 
