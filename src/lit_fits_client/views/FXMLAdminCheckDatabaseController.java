@@ -2,7 +2,6 @@ package lit_fits_client.views;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,8 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -27,9 +25,7 @@ import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.RESTClients.UserClient;
-import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Garment;
-import lit_fits_client.entities.Material;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
 
@@ -46,6 +42,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private Stage previousStage;
     private String uri;
     
+    private ObservableList<String> entitiesList;
+    
     @FXML
     private Menu menuFile;
     @FXML
@@ -59,11 +57,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private Button btnBack;
     
     @FXML
-    private TreeView treeViewEntities;
-    @FXML
-    private TreeItem treeItemGarments;
-    @FXML
-    private TreeItem treeItemUsers;
+    private ChoiceBox choiceBoxEntities;
     
     // ------------------ Garment table ----------------------
     @FXML
@@ -104,10 +98,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private TableColumn<User, String> emailColumn;
     @FXML
     private TableColumn<User, Object> userTypeColumn;
-    @FXML
-    private TableColumn<User, Set<Material>> likedMaterialsColumn;
-    @FXML
-    private TableColumn<User, Set<Color>> likedColorsColumn;
+    //@FXML
+    //private TableColumn<User, Set<Material>> likedMaterialsColumn;
+    //@FXML
+    //private TableColumn<User, Set<Color>> likedColorsColumn;
     
     private ObservableList<User> userList;
     
@@ -198,6 +192,47 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         this.setUserTableFactories();
         this.fillTableUser();
+        
+        this.setChoiceBoxEntities();
+    }
+
+    /**
+     * This method sets the entities that can be shown on the tables.
+     */
+    private void setChoiceBoxEntities () {
+        
+        this.entitiesList.add("Garments");
+        this.entitiesList.add("Users");
+        
+        this.choiceBoxEntities.setItems(entitiesList);
+        this.choiceBoxEntities.setOnAction(this::onEntitiesChosen);
+    }
+    
+    /**
+     * This method changes the visibility of the tables when the choiceBox value changes.
+     * 
+     * @param actionEvent 
+     */
+    private void onEntitiesChosen (ActionEvent actionEvent) {
+        
+        String selected = this.choiceBoxEntities.getSelectionModel().getSelectedItem().toString();
+        
+       switch (selected) {
+           case "Garments":
+               this.usersTable.setSelectionModel(null);
+               this.usersTable.setVisible(false);
+               this.garmentsTable.setVisible(true);
+               break;
+               
+           case "Users":
+               this.garmentsTable.setSelectionModel(null);
+               this.garmentsTable.setVisible(false);
+               this.usersTable.setVisible(true);
+               break;
+               
+           default:
+               break;
+        }
     }
     
     /**
@@ -304,8 +339,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      * @param event 
      */
     private void onBtnBackPress(ActionEvent event) {
-        this.previousStage.show();
-        this.stage.hide();
+        previousStage.show();
+        stage.hide();
     }
     
     /**

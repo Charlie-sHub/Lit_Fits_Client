@@ -10,9 +10,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane minHeight="400.0" minWidth="400.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -57,55 +57,11 @@
          </BorderPane.margin>
       </HBox>
    </bottom>
-   <center>
-      <HBox spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <ScrollPane fitToHeight="true" minHeight="50.0" pannable="true">
-               <content>
-                  <TableView fx:id="tableViewGarment" prefHeight="536.0" prefWidth="985.0">
-                    <columns>
-                      <TableColumn fx:id="barcodeColumn" maxWidth="-1.0" minWidth="172.0" prefWidth="172.0" text="Barcode" />
-                        <TableColumn fx:id="designerColumn" maxWidth="-1.0" minWidth="143.0" prefWidth="143.0" text="Designer" />
-                      <TableColumn fx:id="garmentTypeColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="128.0" text="Garment Type" />
-                        <TableColumn fx:id="bodyPartColumn" maxWidth="-1.0" minWidth="136.0" prefWidth="136.0" text="Body part" />
-                        <TableColumn fx:id="moodColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="128.0" text="Mood" />
-                        <TableColumn fx:id="availableColumn" maxWidth="-1.0" minWidth="68.0" prefWidth="68.0" text="Available" />
-                        <TableColumn fx:id="promotedColumn" maxWidth="-1.0" minWidth="82.0" prefWidth="82.0" text="Promoted" />
-                        <TableColumn fx:id="promotionRequestColumn" maxWidth="-1.0" minWidth="127.0" prefWidth="127.0" text="Promotion request" />
-                    </columns>
-                  </TableView>
-               </content>
-            </ScrollPane>
-            <ScrollPane fitToHeight="true" minHeight="50.0" pannable="true">
-               <content>
-                  <TableView fx:id="tableViewGarment1" prefHeight="536.0" prefWidth="985.0">
-                     <columns>
-                        <TableColumn fx:id="usernameColumn" maxWidth="-1.0" minWidth="172.0" prefWidth="172.0" text="Username" />
-                        <TableColumn fx:id="passwordColumn" maxWidth="-1.0" minWidth="143.0" prefWidth="143.0" text="Password" />
-                        <TableColumn fx:id="fullNameColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="128.0" text="Full name" />
-                        <TableColumn fx:id="phoneNumberColumn" maxWidth="-1.0" minWidth="136.0" prefWidth="136.0" text="Phone number" />
-                        <TableColumn fx:id="emailColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="128.0" text="Email" />
-                        <TableColumn fx:id="userTypeColumn" maxWidth="-1.0" minWidth="68.0" prefWidth="68.0" text="User type" />
-                        <TableColumn fx:id="lastAccessColumn" maxWidth="-1.0" minWidth="82.0" prefWidth="82.0" text="Last access" />
-                        <TableColumn fx:id="lastPasswordColumn" maxWidth="-1.0" minWidth="127.0" prefWidth="127.0" text="Last password change" />
-                     </columns>
-                  </TableView>
-               </content>
-            </ScrollPane>
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
-         </BorderPane.margin>
-         <padding>
-            <Insets right="20.0" />
-         </padding>
-      </HBox>
-   </center>
    <left>
-      <VBox alignment="BOTTOM_LEFT" spacing="15.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER_LEFT" spacing="15.0" BorderPane.alignment="TOP_CENTER">
          <children>
-            <Label fx:id="lblFilterBy" prefHeight="17.0" prefWidth="94.0" text="Entities:" />
-            <TreeView fx:id="treeViewEntities" minWidth="-Infinity" prefHeight="308.0" prefWidth="200.0" />
+            <Label fx:id="lblEntities" prefHeight="17.0" prefWidth="94.0" text="Entities:" />
+            <ChoiceBox fx:id="choiceBoxEntities" prefWidth="150.0" />
             <HBox alignment="BOTTOM_LEFT" prefHeight="242.0" prefWidth="200.0" spacing="15.0">
                <children>
                   <Button fx:id="btnDeleteItem" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete Item" />
@@ -118,4 +74,43 @@
          </BorderPane.margin>
       </VBox>
    </left>
+   <center>
+      <StackPane fx:id="stackPane" BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane fitToHeight="true" pannable="true">
+               <content>
+                  <TableView fx:id="tableViewGarment">
+                    <columns>
+                      <TableColumn fx:id="barcodeColumn" maxWidth="-1.0" minWidth="172.0" prefWidth="-1.0" text="Barcode" />
+                        <TableColumn fx:id="designerColumn" maxWidth="-1.0" minWidth="143.0" prefWidth="-1.0" text="Designer" />
+                      <TableColumn fx:id="garmentTypeColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="-1.0" text="Garment Type" />
+                        <TableColumn fx:id="bodyPartColumn" maxWidth="-1.0" minWidth="136.0" prefWidth="-1.0" text="Body part" />
+                        <TableColumn fx:id="moodColumn" maxWidth="-1.0" minWidth="128.0" prefWidth="-1.0" text="Mood" />
+                        <TableColumn fx:id="availableColumn" maxWidth="-1.0" minWidth="68.0" prefWidth="-1.0" text="Available" />
+                        <TableColumn fx:id="promotedColumn" maxWidth="-1.0" minWidth="82.0" prefWidth="-1.0" text="Promoted" />
+                        <TableColumn fx:id="promotionRequestColumn" maxWidth="-1.0" minWidth="127.0" prefWidth="-1.0" text="Promotion request" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+            <ScrollPane fitToHeight="true" pannable="true">
+               <content>
+                  <TableView fx:id="tableViewGarment1" prefHeight="631.0" prefWidth="1018.0">
+                     <columns>
+                        <TableColumn fx:id="usernameColumn" maxWidth="-1.0" minWidth="172.0" prefWidth="-1.0" text="Username" />
+                        <TableColumn fx:id="passwordColumn" maxWidth="-1.0" minWidth="157.0" prefWidth="-1.0" text="Password" />
+                        <TableColumn fx:id="fullNameColumn" maxWidth="-1.0" minWidth="182.0" prefWidth="-1.0" text="Full name" />
+                        <TableColumn fx:id="phoneNumberColumn" maxWidth="-1.0" minWidth="178.0" prefWidth="-1.0" text="Phone number" />
+                        <TableColumn fx:id="emailColumn" maxWidth="-1.0" minWidth="208.0" prefWidth="-1.0" text="Email" />
+                        <TableColumn fx:id="userTypeColumn" maxWidth="-1.0" minWidth="120.0" prefWidth="-1.0" text="User type" />
+                     </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </StackPane>
+   </center>
 </BorderPane>
