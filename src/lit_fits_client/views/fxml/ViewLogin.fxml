@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.CheckComboBox?>
 
 <BorderPane fx:id="borderPaneLogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="440.0" minWidth="675.0" prefHeight="532.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewLoginController">
     
@@ -71,8 +70,7 @@
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
-                        </Button>  
-                        <CheckComboBox fx:id="checkComboBox" prefHeight="25.0" prefWidth="150.0" />        
+                        </Button>       
                     </children>
                 </AnchorPane>
             </children>

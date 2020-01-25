@@ -85,8 +85,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     @FXML
     private PasswordField fieldPassword;
-    @FXML
-    private CheckComboBox checkComboBox;
     private ToggleGroup radioButtonGroup;
     private Stage stage;
     private Stage registerStage;
@@ -196,9 +194,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             setElements();
             choiceTheme.setValue(theme);
             stage.show();
-            // Just a test
-            test();
-            // date picker to show current date for no reason
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
@@ -219,7 +214,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         txtUsername.requestFocus();
         textFields = new ArrayList<>();
         fillArray();
-        undoneStrings = new ArrayList<>();
         setOnAction();
         setMnemonicParsing();
         btnRedo.setDisable(true);
@@ -346,7 +340,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      *
      * @author Carlos Mendez
      */
-    @Deprecated
     private void fillArray() {
         textFields.add(txtUsername);
         textFields.add(fieldPassword);
@@ -576,25 +569,5 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-    }
-
-    /**
-     * Just trying to test something, ignore this if i left it after th 31st
-     */
-    public void test() {
-        // create the data to show in the CheckComboBox 
-        final ObservableList<String> strings = FXCollections.observableArrayList();
-        for (int i = 0; i <= 100; i++) {
-            strings.add("Item " + i);
-        }
-        // Create the CheckComboBox with the data 
-        checkComboBox.getItems().addAll(strings);
-        // and listen to the relevant events (e.g. when the selected indices or 
-        // selected items change).
-        checkComboBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-            public void onChanged(ListChangeListener.Change<? extends String> c) {
-                System.out.println(checkComboBox.getCheckModel().getCheckedItems());
-            }
-        });
     }
 }

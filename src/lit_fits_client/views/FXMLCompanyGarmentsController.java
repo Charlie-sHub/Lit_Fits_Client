@@ -1,8 +1,11 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -42,6 +45,13 @@ import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
 import lit_fits_client.miscellaneous.ImageViewCell;
 import lit_fits_client.views.themes.Theme;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * The "Warehouse" window for companies
@@ -657,6 +667,16 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param event
      */
     private void onBtnReportPress(ActionEvent event) {
-        
+        try {
+            JasperReport garmentReport = JasperCompileManager.compileReport("src/lit_fits_client/reports/garmentReport.jasper");
+            JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            createExceptionDialog(ex);
+        }
+                
     }
 }
