@@ -541,7 +541,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLCompanyRegisterController registerView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
-                registerView.setLogin(stage);
+                registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
                 stage.hide();
             } else if (rBtnFashionExpert.isSelected()) {

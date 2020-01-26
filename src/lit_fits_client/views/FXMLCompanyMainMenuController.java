@@ -2,7 +2,6 @@ package lit_fits_client.views;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
-import javafx.util.converter.LocalDateTimeStringConverter;
 import lit_fits_client.entities.Company;
 import lit_fits_client.views.themes.Theme;
 
@@ -199,6 +197,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the window
      *
      *
+     * @param themes
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
      * @param stage
@@ -292,7 +291,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             Parent root = (Parent) fxmlLoader.load();
             FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
-            modifyAccountView.setLogin(stage);
+            modifyAccountView.setPreviousStage(stage);
             modifyAccountView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {

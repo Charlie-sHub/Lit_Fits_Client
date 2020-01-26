@@ -90,10 +90,10 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     @Test
     public void testD_AltS() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("A1111111A");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
@@ -115,15 +115,15 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     }
 
     /**
-     * Tests that the register is succesful
+     * Tests that the register is successful
      */
     @Test
     public void testE_RegisterSuccess() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("B2222222B");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
@@ -150,10 +150,10 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     @Test
     public void testF_CompanyExists() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("A1111111A");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);

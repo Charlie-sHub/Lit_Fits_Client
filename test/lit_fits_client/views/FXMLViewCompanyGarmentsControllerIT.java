@@ -27,9 +27,9 @@ public class FXMLViewCompanyGarmentsControllerIT extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new ApplicationMain().start(stage);
         clickOn("#txtUsername");
-        write("111111111"); // Should create a company with this nif
+        write("A1111111A"); // Should create a company with this nif
         clickOn("#fieldPassword");
-        write("abcd*1234"); // Should create a company with this password
+        write("abcd"); // Should create a company with this password
         clickOn("#btnLogin");
         clickOn("#btnWarehouse");
     }

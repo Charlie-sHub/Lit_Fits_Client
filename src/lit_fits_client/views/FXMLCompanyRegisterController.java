@@ -287,24 +287,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Getter for the stage of login
-     *
-     * @return Stage
-     */
-    public Stage getLogin() {
-        return previousStage;
-    }
-
-    /**
-     * Setter for the stage of login
-     *
-     * @param login
-     */
-    public void setLogin(Stage login) {
-        this.previousStage = login;
-    }
-
-    /**
      * Getter for the invalid email label
      *
      * @return Label
@@ -668,7 +650,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         Stage stageProgramMain = new Stage();
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
-        mainView.setLogin(previousStage);
         mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
         stage.hide();
     }
