@@ -27,10 +27,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -475,16 +475,35 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
         // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
-        tableColumnPicture.setCellFactory((TableColumn<Garment, Image> param) -> {
-            ImageViewCell imageViewCell = new ImageViewCell();
-            /*
-            imageViewCell.setOnMouseDragOver({
-            // Open a window with the full sized image
-            });
-             */
-            return imageViewCell;
+        //tableColumnPicture.setCellFactory((TableColumn<Garment, Image> param) -> {
+        //    ImageViewCell imageViewCell = new ImageViewCell();
+        //    /*
+        //    imageViewCell.setOnMouseDragOver({
+        //    // Open a window with the full sized image
+        //    });
+        //     */
+        //    return imageViewCell;
+        //});
+        tableColumnPicture.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(50);
+            imageview.setFitWidth(50);
+            //Set up the Table
+            TableCell<Garment, Image> cell = new TableCell<Garment, Image>() {
+                @Override
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
         });
-        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture")); // Maybe set a listener to the table cell to show the image set in the cell
+        // Maybe set a listener to the table cell to show the image set in the cell
+        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("pictureObject"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         tableColumnDesigner.setCellValueFactory(new PropertyValueFactory("designer"));

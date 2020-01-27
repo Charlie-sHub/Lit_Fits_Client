@@ -1,6 +1,8 @@
 package lit_fits_client.entities;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
@@ -9,9 +11,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.scene.image.Image;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Garment entity
@@ -80,7 +84,7 @@ public class Garment implements Serializable {
     /**
      * The picture of the garment
      */
-    @Deprecated
+    @XmlTransient
     private SimpleObjectProperty pictureObject;
     /**
      * The picture in byte[] form
@@ -242,9 +246,7 @@ public class Garment implements Serializable {
     }
 
     public void setColors(Set<Color> colors) {
-        Collections
-        ObservableSet<Color> colorsObservableSet = colors;
-        this.colors.setValue(colors);
+        this.colors.setValue(FXCollections.observableSet(colors));
     }
 
     public Set<Material> getMaterials() {
@@ -252,7 +254,7 @@ public class Garment implements Serializable {
     }
 
     public void setMaterials(Set<Material> materials) {
-        this.materials.addAll(materials);
+        this.materials.setValue(FXCollections.observableSet(materials));
     }
 
     public Image getPictureObject() {
@@ -268,6 +270,9 @@ public class Garment implements Serializable {
     }
 
     public void setPicture(byte[] picture) {
+        InputStream imageInputStream = new ByteInputStream(picture, picture.length);
+        Image image = new Image(imageInputStream);
+        this.setPictureObject(image);
         this.picture = picture;
     }
 

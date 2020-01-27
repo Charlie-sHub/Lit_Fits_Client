@@ -57,6 +57,8 @@
                             </font>
                         </Label>
                         <TextField fx:id="txtBarcode" layoutX="272.0" layoutY="102.0" prefHeight="26.0" prefWidth="240.0" />
+                        <TextField fx:id="txtDesigner" layoutX="272.0" layoutY="182.0" prefHeight="25.0" prefWidth="240.0" />
+                        <TextField fx:id="txtPrice" layoutX="272.0" layoutY="142.0" prefHeight="26.0" prefWidth="240.0" />
                         <Button id="btnRegister" fx:id="btnSubmit" layoutX="432.0" layoutY="464.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
@@ -75,8 +77,7 @@
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
-                        </Label>
-                        <TextField fx:id="txtDesigner" layoutX="272.0" layoutY="182.0" prefHeight="25.0" prefWidth="240.0" />
+                        </Label>                        
                         <Label fx:id="lblMaterials" layoutX="91.0" layoutY="385.0" prefHeight="18.0" prefWidth="171.0" text="Materials:">
                             <font>
                                 <Font name="Arial" size="15.0" />
@@ -91,8 +92,7 @@
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
-                        </Label>
-                        <TextField fx:id="txtPrice" layoutX="272.0" layoutY="142.0" prefHeight="26.0" prefWidth="240.0" />
+                        </Label>                        
                         <Label fx:id="lblInvalidBarcode" contentDisplay="CENTER" layoutX="528.0" layoutY="106.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Barcode" textAlignment="CENTER" textFill="#fc0400" />
                         <Label fx:id="lblInvalidPrice" contentDisplay="CENTER" layoutX="528.0" layoutY="146.0" prefHeight="18.0" prefWidth="222.0" text="Not a valid Price" textAlignment="CENTER" textFill="#fc0400" />
                         <ImageView fx:id="imageViewGarmentPicture" fitHeight="230.0" fitWidth="230.0" layoutX="714.0" layoutY="135.0" pickOnBounds="true">
