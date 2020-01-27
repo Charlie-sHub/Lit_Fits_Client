@@ -1,15 +1,20 @@
 package lit_fits_client.views;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -23,6 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -32,6 +38,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -55,6 +62,7 @@ import org.reactfx.Change;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
 import static org.reactfx.EventStreams.merge;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -661,7 +669,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBodyPart.setValue(garment.getBodyPart().toString());
         comboGarmentType.setValue(garment.getGarmentType().toString());
         comboMood.setValue(garment.getMood().toString());
-        imageViewGarmentPicture.setImage(garment.getPicture());
+        imageViewGarmentPicture.setImage(new Image(new ByteArrayInputStream(garment.getPicture())));
     }
 
     /**
@@ -896,7 +904,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
                 garmentClient.createGarment(garment);
             }
             stage.hide();
-        } catch (ClientErrorException e) {
+        } catch (ClientErrorException | IOException e) {
             createExceptionDialog(e);
         } finally {
             garmentClient.close();
@@ -906,9 +914,9 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     /**
      * Sets the data of the garment to be sent to the server
      */
-    private void setGarmentData() {
+    private void setGarmentData() throws FileNotFoundException, IOException {
         garment.setBarcode(txtBarcode.getText());
-        garment.setPrice(Double.valueOf(txtPrice.getText()));
+        garment.setPrice(Double.valueOf(txtPrice.getText().substring(0, 1)));
         garment.setDesigner(txtDesigner.getText());
         garment.setCompany(company);
         garment.setAvailable(true);
@@ -917,14 +925,16 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         garment.setBodyPart((BodyPart) comboBodyPart.getValue());
         garment.setGarmentType((GarmentType) comboGarmentType.getValue());
         garment.setMood((Mood) comboMood.getValue());
-        garment.setPicture(imageViewGarmentPicture.getImage());
+        InputStream imageInputStream = new FileInputStream(garmentPictureFile);
+        byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
+        garment.setPicture(imageBytes);
         garment.setPictureName(garmentPictureFile.getName());
-        Set<Color> selectedColors = new HashSet<Color>();
-        selectedColors.addAll(comboColors.getCheckModel().getCheckedItems());
-        garment.setColors(selectedColors);
-        Set<Material> selectedMaterials = new HashSet<Material>();
-        selectedMaterials.addAll(comboMaterials.getCheckModel().getCheckedItems());
-        garment.setMaterials(selectedMaterials);
+        List<Color> selectedColorsList = new ArrayList<>(comboColors.getCheckModel().getCheckedItems());
+        Set<Color> selectedColorsSet = selectedColorsList.stream().collect(Collectors.toSet());
+        garment.setColors(selectedColorsSet);
+        List<Material> selectedMaterialsList = new ArrayList<>(comboMaterials.getCheckModel().getCheckedItems());
+        Set<Material> selectedMaterialsSet = selectedMaterialsList.stream().collect(Collectors.toSet());
+        garment.setMaterials(selectedMaterialsSet);
     }
 
     /**

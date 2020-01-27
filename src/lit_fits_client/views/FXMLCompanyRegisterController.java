@@ -645,12 +645,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @throws IOException
      */
     private void openCompanyMainMenu(Company company) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageProgramMain = new Stage();
-        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
-        mainView.setCompany(company);
-        mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
+        previousStage.show();
         stage.hide();
     }
 

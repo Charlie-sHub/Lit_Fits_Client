@@ -51,10 +51,10 @@ public class CompanyClient implements CompanyClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public void reestablishPassword(String nif) throws ClientErrorException {
+    public String reestablishPassword(String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
-        System.out.println("nif: " + nif);
         resource = resource.path(java.text.MessageFormat.format("passwordReestablishment/{0}", new Object[]{nif}));
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
     /**

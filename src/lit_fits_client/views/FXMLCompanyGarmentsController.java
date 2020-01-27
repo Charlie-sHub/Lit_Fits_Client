@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -463,6 +462,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
+        System.out.println("Trying to fill the table");
         GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
@@ -475,17 +475,14 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
         // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
-        tableColumnPicture.setCellFactory(new Callback<TableColumn<Garment, Image>, TableCell<Garment, Image>>() {
-            @Override
-            public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
-                ImageViewCell imageViewCell = new ImageViewCell();
-                /*
-                imageViewCell.setOnMouseDragOver({
-                    // Open a window with the full sized image
-                });   
-                 */
-                return imageViewCell;
-            }
+        tableColumnPicture.setCellFactory((TableColumn<Garment, Image> param) -> {
+            ImageViewCell imageViewCell = new ImageViewCell();
+            /*
+            imageViewCell.setOnMouseDragOver({
+            // Open a window with the full sized image
+            });
+             */
+            return imageViewCell;
         });
         tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture")); // Maybe set a listener to the table cell to show the image set in the cell
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
@@ -668,7 +665,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnReportPress(ActionEvent event) {
         try {
-            JasperReport garmentReport = JasperCompileManager.compileReport("src/lit_fits_client/reports/garmentReport.jasper");
+            JasperReport garmentReport = JasperCompileManager.compileReport("src/lit_fits_client/reports/garmentsReport.jasper");
             JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
@@ -677,6 +674,5 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         } catch (JRException ex) {
             createExceptionDialog(ex);
         }
-                
     }
 }

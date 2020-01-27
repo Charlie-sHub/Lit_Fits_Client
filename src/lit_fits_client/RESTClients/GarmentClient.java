@@ -151,7 +151,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param nif
-     * @return
+     * @return responseType
      * @throws ClientErrorException
      */
     @Override
@@ -167,7 +167,7 @@ public class GarmentClient implements GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param id
-     * @return Image
+     * @return responseType
      * @throws ClientErrorException
      */
     @Override

@@ -80,7 +80,12 @@ public class Garment implements Serializable {
     /**
      * The picture of the garment
      */
-    private SimpleObjectProperty picture;
+    @Deprecated
+    private SimpleObjectProperty pictureObject;
+    /**
+     * The picture in byte[] form
+     */
+    private byte[] picture;
 
     /**
      * Empty constructor
@@ -97,7 +102,7 @@ public class Garment implements Serializable {
         this.promoted = new SimpleBooleanProperty();
         this.colors = new SimpleSetProperty<Color>();
         this.materials = new SimpleSetProperty<Material>();
-        this.picture = new SimpleObjectProperty<File>();
+        this.pictureObject = new SimpleObjectProperty<File>();
     }
 
     /**
@@ -118,7 +123,7 @@ public class Garment implements Serializable {
      * @param materials
      * @param picture
      */
-    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, File picture) {
+    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, File pictureObject, byte[] picture) {
         this.barcode = new SimpleStringProperty(barcode);
         this.designer = new SimpleStringProperty(designer);
         this.price = new SimpleDoubleProperty(price);
@@ -132,7 +137,8 @@ public class Garment implements Serializable {
         this.company = company;
         this.colors = new SimpleSetProperty<Color>((ObservableSet<Color>) colors);
         this.materials = new SimpleSetProperty<Material>((ObservableSet<Material>) materials);
-        this.picture = new SimpleObjectProperty<File>(picture);
+        this.pictureObject = new SimpleObjectProperty<File>(pictureObject);
+        this.picture = picture;
     }
 
     public long getId() {
@@ -247,12 +253,20 @@ public class Garment implements Serializable {
         this.materials.addAll(materials);
     }
 
-    public Image getPicture() {
-        return (Image) this.picture.get();
+    public Image getPictureObject() {
+        return (Image) this.pictureObject.get();
     }
 
-    public void setPicture(Image picture) {
-        this.picture.set(picture);
+    public void setPictureObject(Image picture) {
+        this.pictureObject.set(picture);
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
     @Override

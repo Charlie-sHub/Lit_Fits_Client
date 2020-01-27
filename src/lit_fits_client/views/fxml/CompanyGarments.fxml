@@ -43,11 +43,11 @@
                 </MenuBar>
                 <AnchorPane>
                     <children>
-                        <Button fx:id="btnAdd" layoutX="445.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
+                        <Button fx:id="btnAdd" layoutX="443.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
                         <Button fx:id="btnModify" layoutX="545.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
                         <Button fx:id="btnPromote" layoutX="645.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
                         <Button fx:id="btnDelete" layoutX="745.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />              
-                        <Button fx:id="btnReport" layoutX="845.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Garment Report" /> 
+                        <Button fx:id="btnReport" layoutX="845.0" layoutY="594.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" /> 
                         <ScrollPane fitToHeight="true" layoutX="12.0" layoutY="12.0">
                             <content>
                                 <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">
