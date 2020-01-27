@@ -544,7 +544,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 createDialog("Please select what kind of registration you want");
             }
         } catch (IOException e) {
-            LOG.severe(e.getMessage());
             e.printStackTrace();
         }
     }

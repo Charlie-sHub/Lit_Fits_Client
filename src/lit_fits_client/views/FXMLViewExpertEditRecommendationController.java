@@ -17,10 +17,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -53,6 +56,18 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     ObservableList<Color> colorList;
     ObservableList<Material> materialList;
     
+    /**
+     * Context menu of the table of colors
+     */
+    @FXML
+    private ContextMenu contextMenuTableColors;
+    
+    /**
+     * Context menu of the table of Materials
+     */
+    @FXML
+    private ContextMenu contextMenuTableMaterials;
+        
     private Stage stage;
     private Stage stageMainMenu;
     
@@ -243,6 +258,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         setSelectedReccomendations();
         fillTable();
         setOnAction();
+        contextMenuTableColors.hide();
+        contextMenuTableMaterials.hide();
         
     }
 
@@ -284,7 +301,16 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     private void setOnAction() {
         btnSave.setOnAction(this::onSavePress);
         btnCancel.setOnAction(this::onCancelPress);
-    
+        tableColor.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+           if (event.getButton() == MouseButton.SECONDARY) {
+               contextMenuTableColors.show(tableColor, event.getScreenX(), event.getScreenY());
+           }
+        });
+        tableMaterial.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent event) -> {
+           if (event.getButton() == MouseButton.SECONDARY) {
+               contextMenuTableMaterials.show(tableMaterial, event.getScreenX(), event.getScreenY());
+           }
+        });
     }
     
     private void onSavePress(ActionEvent event) {

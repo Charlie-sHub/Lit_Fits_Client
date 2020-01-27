@@ -332,20 +332,22 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     }
     
     
-    public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
-            this.setStage(stageProgramMain);
-            Scene scene = new Scene(root);
-            getStage().setScene(scene);
-            getStage().setTitle("Modify Account");
-            getStage().setMinWidth(1400);
-            getStage().setMinHeight(800);
-            getStage().show();
+            this.stage = stage;
+            Scene scene;
+            scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCssPath());
+            stage.setScene(scene);
             themeList = themes;
             setElements();
-            getStage().setOnCloseRequest(this::onClosing);
+            stage.setTitle("Register Account");
+            stage.setOnCloseRequest(this::onClosing);
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
@@ -399,12 +401,14 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         txtPhone.textProperty().addListener(this::onFieldChange);
         txtPassword.textProperty().addListener(this::onFieldChange);
         txtRepeatPassword.textProperty().addListener(this::onFieldChange);
+        /*
         txtUsername.lengthProperty().addListener(this::lengthListener);
         txtFullName.lengthProperty().addListener(this::lengthListener);
         txtEmail.lengthProperty().addListener(this::lengthListener);
         txtPhone.lengthProperty().addListener(this::lengthListener);        
         txtPassword.lengthProperty().addListener(this::lengthListener);
         txtRepeatPassword.lengthProperty().addListener(this::lengthListener);                
+        */
     }
     /**
      * Fills the array of text fields to check later if they're filled with text
@@ -494,10 +498,11 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      * @param oldValue
      * @param newValue
      */
+    /*
     public void lengthListener(ObservableValue observable, Number oldValue, Number newValue) {
         lengthCheck(btnRegister);
     }
-    
+    */
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
         boolean correctUser = false;
         boolean correctEmail = false;
@@ -516,18 +521,17 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         
         if(correctUser && correctEmail && passwordMatch && length){
             correctPatterns = true;
-            btnRegister.setDisable(false);
+            btnRegister.setDisable(correctPatterns);
         }else {
             correctPatterns = false;
-            btnRegister.setDisable(true);
+            btnRegister.setDisable(correctPatterns);
         }
-        
     }
 
     private boolean verifyUser() {
         boolean correctUser;
         correctUser = txtUsername.getText().startsWith("admin");
-        lblInvalidUsername.setVisible(!correctUser);
+        lblInvalidUsername.setVisible(correctUser);
         return correctUser;
     }
 
@@ -553,7 +557,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
                     break;
                }
         }
-        lblLength.setVisible(!length);
+        lblLength.setVisible(length);
         return length;
     }    
 

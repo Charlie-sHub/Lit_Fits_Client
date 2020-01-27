@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -30,6 +31,13 @@
                     <columns>
                       <TableColumn fx:id="columnNameColor" prefWidth="290.40001220703124" text="Name" />
                     </columns>
+                     <contextMenu>
+                        <ContextMenu fx:id="contextMenuTableColors">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
           </children>
         </AnchorPane>
@@ -53,6 +61,13 @@
                     <columns>
                       <TableColumn fx:id="columnNameMaterial" prefWidth="289.6000122070312" text="Name" />
                     </columns>
+                     <contextMenu>
+                        <ContextMenu fx:id="contextMenuTableMaterials">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TableView>
           </children>
         </AnchorPane>
