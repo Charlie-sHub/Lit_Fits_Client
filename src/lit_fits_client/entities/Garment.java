@@ -242,7 +242,8 @@ public class Garment implements Serializable {
     }
 
     public void setColors(Set<Color> colors) {
-        this.colors.addAll(colors);
+        ObservableSet<Color> colorsObservableSet = colors;
+        this.colors.setValue(colors);
     }
 
     public Set<Material> getMaterials() {
