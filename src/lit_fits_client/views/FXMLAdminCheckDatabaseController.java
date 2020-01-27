@@ -5,6 +5,7 @@ import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -211,9 +212,9 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     /**
      * This method changes the visibility of the tables when the choiceBox value changes.
      * 
-     * @param actionEvent 
+     * @param Event 
      */
-    private void onEntitiesChosen (ActionEvent actionEvent) {
+    private void onEntitiesChosen (Event Event) {
         
         String selected = this.choiceBoxEntities.getSelectionModel().getSelectedItem().toString();
         
