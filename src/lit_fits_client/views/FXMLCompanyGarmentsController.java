@@ -684,7 +684,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnReportPress(ActionEvent event) {
         try {
-            JasperReport garmentReport = JasperCompileManager.compileReport("src/lit_fits_client/reports/garmentsReport.jasper");
+            JasperReport garmentReport = JasperCompileManager.compileReport("lit_fits_client/reports/garmentsReport.jasper");
             JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
