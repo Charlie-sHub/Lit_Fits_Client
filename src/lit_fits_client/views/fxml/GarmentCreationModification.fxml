@@ -58,7 +58,12 @@
                         </Label>
                         <TextField fx:id="txtBarcode" layoutX="272.0" layoutY="102.0" prefHeight="26.0" prefWidth="240.0" />
                         <TextField fx:id="txtPrice" layoutX="272.0" layoutY="142.0" prefHeight="26.0" prefWidth="240.0" />
-                        <TextField fx:id="txtDesigner" layoutX="272.0" layoutY="182.0" prefHeight="25.0" prefWidth="240.0" />                        
+                        <TextField fx:id="txtDesigner" layoutX="272.0" layoutY="182.0" prefHeight="25.0" prefWidth="240.0" />
+                        <ComboBox fx:id="comboBodyPart" layoutX="272.0" layoutY="261.0" prefHeight="26.0" prefWidth="240.0" />
+                        <ComboBox fx:id="comboMood" layoutX="272.0" layoutY="221.0" prefHeight="26.0" prefWidth="240.0" />
+                        <ComboBox fx:id="comboGarmentType" layoutX="273.0" layoutY="301.0" prefHeight="26.0" prefWidth="240.0" />
+                        <CheckComboBox fx:id="comboColors" layoutX="273.0" layoutY="341.0" prefHeight="26.0" prefWidth="240.0" />
+                        <CheckComboBox fx:id="comboMaterials" layoutX="273.0" layoutY="381.0" prefHeight="26.0" prefWidth="240.0" />                        
                         <Button id="btnRegister" fx:id="btnSubmit" layoutX="432.0" layoutY="464.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
@@ -83,11 +88,7 @@
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <ComboBox fx:id="comboBodyPart" layoutX="272.0" layoutY="261.0" prefHeight="26.0" prefWidth="240.0" />
-                        <ComboBox fx:id="comboMood" layoutX="272.0" layoutY="221.0" prefHeight="26.0" prefWidth="240.0" />
-                        <ComboBox fx:id="comboGarmentType" layoutX="273.0" layoutY="301.0" prefHeight="26.0" prefWidth="240.0" />
-                        <CheckComboBox fx:id="comboColors" layoutX="273.0" layoutY="341.0" prefHeight="26.0" prefWidth="240.0" />
-                        <CheckComboBox fx:id="comboMaterials" layoutX="273.0" layoutY="381.0" prefHeight="26.0" prefWidth="240.0" />
+                        
                         <Label fx:id="lblPrice" layoutX="91.0" layoutY="146.0" prefHeight="18.0" prefWidth="172.0" text="Price:">
                             <font>
                                 <Font name="Arial" size="15.0" />
@@ -100,8 +101,6 @@
                                 <Image url="@../../../../../../../Pictures/t-shirt-hoodie-raglan-sleeve-shirt-design-cliparts-png-download-t-shirt-png-black-and-white-900_920.jpg" />
                             </image>
                         </ImageView>
-                        <Button fx:id="btnAddRemoveColor" layoutX="530.0" layoutY="341.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" text="Add/Remove" />
-                        <Button fx:id="btnAddRemoveMaterial" layoutX="529.0" layoutY="381.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="114.0" text=" Add/Remove" />
                     </children>
                 </AnchorPane>
             </children>
