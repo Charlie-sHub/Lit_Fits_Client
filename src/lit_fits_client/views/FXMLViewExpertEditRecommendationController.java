@@ -231,11 +231,12 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         this.expert = expert;
     }
 
-    void initStage(List<Theme> themes, Theme theme, Stage stageMainProgram, Parent root, String uri) {
+    void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try{
             this.uri = uri;
-            this.stage = stageMainProgram;
+            this.stage = stage;
             Scene scene = new Scene(root);
+            this.theme = theme;
             stage.setScene(scene);
             stage.setTitle("Edit recommendations");
             stage.setMinWidth(1400);
@@ -254,6 +255,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * Sets the options for different elements of the window
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         setColumnFactories();
         setSelectedReccomendations();
         fillTable();

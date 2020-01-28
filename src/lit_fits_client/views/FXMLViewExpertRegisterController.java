@@ -446,9 +446,9 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
-            setExpertData(publicKeyBytes);
+            expert = setExpertData(publicKeyBytes);
             expertClient.create(expert);
-            openMainWindow();
+            openLogin(expert);
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
@@ -552,12 +552,14 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             return correctPassword;
     }
 
-    private void setExpertData(byte[] publicKey) throws Exception {
-        expert.setUsername(txtUsername.getText());
-        expert.setFullName(txtFullName.getText());
-        expert.setEmail(txtEmail.getText());
-        expert.setPhoneNumber(txtPhone.getText());
-        expert.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
+    private FashionExpert setExpertData(byte[] publicKey) throws Exception {
+        FashionExpert expertAUX = new FashionExpert();
+        expertAUX.setUsername(txtUsername.getText());
+        expertAUX.setFullName(txtFullName.getText());
+        expertAUX.setEmail(txtEmail.getText());
+        expertAUX.setPhoneNumber(txtPhone.getText());
+        expertAUX.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
+        return expertAUX;
     }
 
     private void openMainWindow() throws IOException {
@@ -569,6 +571,11 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         mainView.setLoginStage(previousStage);
         mainView.initStage(themeList, theme, stageProgramMain, root, uri);
         stage.hide();        
+    }
+
+    private void openLogin(FashionExpert expert1) {
+       previousStage.show();
+        stage.hide();
     }
 
 
