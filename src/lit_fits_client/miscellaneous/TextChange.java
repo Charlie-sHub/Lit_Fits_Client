@@ -7,7 +7,7 @@ import org.reactfx.Change;
 /**
  * Class that extends the InputChange class to accommodate changes in text fields
  *
- * Following: https://github.com/FXMisc/UndoFX
+ * Following and adapting: https://github.com/FXMisc/UndoFX
  *
  * @author Carlos Mendez
  */

@@ -9,14 +9,14 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
 import lit_fits_client.entities.Company;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
- * Test Class for the company register wiew and controller
+ * Test Class for the company register view and controller
  *
  *
  * @author Carlos Rafael Mendez Gonzalez
@@ -30,9 +30,9 @@ public class FXMLViewCompanyModificationControllerIT extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new ApplicationMain().start(stage);
         clickOn("#txtUsername");
-        write("111111111"); // Should create a company with this nif
+        write("A1111111A"); // Should create a company with this nif
         clickOn("#fieldPassword");
-        write("abcd*1234"); // Should create a company with this password
+        write("abcd"); // Should create a company with this password
         clickOn("#btnLogin");
         clickOn("#btnModifyAccount");
     }
@@ -71,10 +71,8 @@ public class FXMLViewCompanyModificationControllerIT extends ApplicationTest {
      */
     @Test
     public void testC_BtnSubmitIsDisabledByLenghtOfData() {
-        clickOn("#txtNif");
-        write("11111111111111111111111111111111111111111111111111");
         clickOn("#txtFullName");
-        write("SomeFullName");
+        write("SomeFullNameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         clickOn("#txtEmail");
         write("SomeEMail@Some.server");
         clickOn("#txtPhone");
@@ -94,15 +92,13 @@ public class FXMLViewCompanyModificationControllerIT extends ApplicationTest {
     @Test
     public void testD_AltS() {
         Company company = new Company();
-        company.setNif("111111111");
-        company.setFullName("SomeFullName");
-        company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setNif("A1111111A");
+        company.setFullName("SomeOtherFullName");
+        company.setEmail("SomeOtherEMail@Some.server");
+        company.setPassword("SomeOtherPassword");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
-        clickOn("#txtNif");
-        write(company.getNif());
         clickOn("#txtFullName");
         write(company.getFullName());
         clickOn("#txtEmail");
@@ -119,20 +115,18 @@ public class FXMLViewCompanyModificationControllerIT extends ApplicationTest {
     }
 
     /**
-     * Tests that the register is succesful
+     * Tests that the modification is successful
      */
     @Test
-    public void testE_RegisterSuccess() {
+    public void testE_ModificationSuccess() {
         Company company = new Company();
-        company.setNif("111111111");
-        company.setFullName("SomeFullName");
-        company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setNif("A1111111A");
+        company.setFullName("SomeOtherFullName");
+        company.setEmail("SomeOtherEMail@Some.server");
+        company.setPassword("SomeOtherPassword");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
-        clickOn("#txtNif");
-        write(company.getNif());
         clickOn("#txtFullName");
         write(company.getFullName());
         clickOn("#txtEmail");
@@ -155,6 +149,15 @@ public class FXMLViewCompanyModificationControllerIT extends ApplicationTest {
     public void testF_AltC() {
         press(KeyCode.ALT, KeyCode.C);
         verifyThat("#borderPaneLogin", isVisible());
+        close();
+    }
+    /**
+     * Tests that the nif text field is disabled
+     */
+    @Test
+    public void testG_TxtNifIsDisabled() {
+        clickOn("#txtNif");
+        verifyThat("#txtNif", isDisabled());
         close();
     }
 }

@@ -9,14 +9,14 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
 import lit_fits_client.entities.Company;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
- * Test Class for the company register wiew and controller
+ * Test Class for the company register view and controller
  *
  *
  * @author Carlos Rafael Mendez Gonzalez
@@ -90,10 +90,10 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     @Test
     public void testD_AltS() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("A1111111A");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
@@ -115,15 +115,15 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     }
 
     /**
-     * Tests that the register is succesful
+     * Tests that the register is successful
      */
     @Test
     public void testE_RegisterSuccess() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("B2222222B");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);
@@ -150,10 +150,10 @@ public class FXMLViewCompanyRegisterControllerIT extends ApplicationTest {
     @Test
     public void testF_CompanyExists() {
         Company company = new Company();
-        company.setNif("111111111");
+        company.setNif("A1111111A");
         company.setFullName("SomeFullName");
         company.setEmail("SomeEMail@Some.server");
-        company.setPassword("SomePassword");
+        company.setPassword("abcd");
         company.setPhoneNumber("123456789");
         Long id = null;
         company.setId(id);

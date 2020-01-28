@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,19 +22,23 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.ExpertClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
-import lit_fits_client.RESTClients.UserClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.ExpertClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
+import lit_fits_client.RESTClients.UserClientInterface;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
+import org.controlsfx.control.CheckComboBox;
 import org.fxmisc.undo.UndoManagerFactory;
 import org.reactfx.EventStream;
 import static org.reactfx.EventStreams.changesOf;
@@ -185,6 +192,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.setMinWidth(700);
             stage.setMinHeight(500);
             setElements();
+            choiceTheme.setValue(theme);
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
@@ -206,7 +214,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         txtUsername.requestFocus();
         textFields = new ArrayList<>();
         fillArray();
-        undoneStrings = new ArrayList<>();
         setOnAction();
         setMnemonicParsing();
         btnRedo.setDisable(true);
@@ -230,13 +237,13 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private void setUndoRedo() {
         EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
-        EventStream<TextChange> passwordChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
+        EventStream<TextChange> passwordChanges = changesOf(fieldPassword.textProperty()).map(textChange -> new TextChange(textChange, fieldPassword));
         inputChanges = merge(usernameChanges, passwordChanges);
         undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
-                inputChanges, // stream of changes to observe
-                changes -> changes.invert(), // function to invert a change
-                changes -> changes.redo(), // function to undo a change
-                (change1, change2) -> change1.mergeWith(change2));  // function to merge two changes
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
         btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
         btnUndo.setOnAction(evt -> undoManager.undo());
@@ -252,8 +259,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setTooltip(new Tooltip("Log into the program"));
         btnReestablishPassword.setTooltip(new Tooltip("Forgot your password?"));
         btnRegister.setTooltip(new Tooltip("Register a new account"));
-        btnRedo.setTooltip(new Tooltip("Redo what's been erased"));
-        btnUndo.setTooltip(new Tooltip("Erase everything"));
+        btnRedo.setTooltip(new Tooltip("Redoes what's been erased"));
+        btnUndo.setTooltip(new Tooltip("Undoes the last change"));
         rBtnCompany.setTooltip(new Tooltip("Do you represent a company?"));
         rBtnFashionExpert.setTooltip(new Tooltip("Are you a fashion expert?"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
@@ -273,6 +280,12 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setMnemonicParsing(true);
         btnUndo.setMnemonicParsing(true);
         btnRedo.setMnemonicParsing(true);
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**
@@ -284,8 +297,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         btnLogin.setOnAction(this::onBtnLoginPress);
         btnRegister.setOnAction(this::onRegisterPress);
         choiceTheme.setOnAction(this::onThemeChosen);
-        // btnUndo.setOnAction(this::onUndoPress); // probably unnessesary now
-        // btnRedo.setOnAction(this::onRedoPress); // probably unnessesary now
         btnReestablishPassword.setOnAction(this::onReestablishPasswordPress);
         stage.setOnCloseRequest(this::onClosing);
     }
@@ -301,15 +312,18 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         try {
             if (txtUsername.getText() != null) {
                 if (nifPatternCheck(txtUsername.getText())) {
-                    CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
+                    LOG.info("Attempting to reestablish a company's password");
+                    CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
                     companyClient.reestablishPassword(txtUsername.getText());
                     companyClient.close();
                 } else if (txtUsername.getText().startsWith("admin")) {
-                    UserClient userClient = ClientFactory.getUserClient(uri);
+                    LOG.info("Attempting to reestablish an admin's password");
+                    UserClientInterface userClient = ClientFactory.getUserClient(uri);
                     userClient.reestablishPassword(txtUsername.getText());
                     userClient.close();
                 } else {
-                    ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                    LOG.info("Attempting to reestablish an expert's password");
+                    ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
                     expertClient.reestablishPassword(txtUsername.getText());
                     expertClient.close();
                 }
@@ -326,7 +340,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      *
      * @author Carlos Mendez
      */
-    @Deprecated
     private void fillArray() {
         textFields.add(txtUsername);
         textFields.add(fieldPassword);
@@ -426,8 +439,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private User adminLogin() throws ClientErrorException, Exception {
-        UserClient userClient = ClientFactory.getUserClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        UserClientInterface userClient = ClientFactory.getUserClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         User admin = new User();
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         admin.setUsername(txtUsername.getText());
@@ -464,8 +477,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private FashionExpert expertLogin() throws ClientErrorException, Exception {
-        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        ExpertClientInterface expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         FashionExpert fashionExpert = new FashionExpert();
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         fashionExpert.setUsername(txtUsername.getText());
@@ -502,10 +515,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * @author Carlos Mendez
      */
     private Company loginCompany() throws ClientErrorException, Exception {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
         Company company = new Company();
-        // Maybe check http://docs.oracle.com/javase/7/docs/api/javax/xml/bind/DatatypeConverter.html#parseHexBinary%28java.lang.String%29
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         company.setNif(txtUsername.getText());
         company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
@@ -529,7 +541,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 Parent root = (Parent) fxmlLoader.load();
                 FXMLCompanyRegisterController registerView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
                 registerStage = new Stage();
-                registerView.setLogin(stage);
+                registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
                 stage.hide();
             } else if (rBtnFashionExpert.isSelected()) {
@@ -556,5 +568,5 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     private boolean nifPatternCheck(String nif) {
         return Pattern.matches("[A-W]{1}[0-9]{7}[A-Z_0-9]{1}", nif);
-    }    
+    }
 }

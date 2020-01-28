@@ -17,16 +17,23 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
-import lit_fits_client.RESTClients.CompanyClient;
-import lit_fits_client.RESTClients.PublicKeyClient;
+import lit_fits_client.RESTClients.CompanyClientInterface;
+import lit_fits_client.RESTClients.PublicKeyClientInterface;
 import lit_fits_client.entities.Company;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  * This is the Document Controller class for the registration view of the program.
@@ -280,24 +287,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Getter for the stage of login
-     *
-     * @return Stage
-     */
-    public Stage getLogin() {
-        return previousStage;
-    }
-
-    /**
-     * Setter for the stage of login
-     *
-     * @param login
-     */
-    public void setLogin(Stage login) {
-        this.previousStage = login;
-    }
-
-    /**
      * Getter for the invalid email label
      *
      * @return Label
@@ -425,6 +414,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.setScene(scene);
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             if (null != company) {
                 stage.setTitle("Modification");
                 fillFields();
@@ -469,9 +459,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         txtNif.requestFocus();
         setFocusTraversable();
         setListeners();
+        setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
-        undoneStrings = new ArrayList<>();
     }
 
     /**
@@ -479,13 +469,19 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      */
     private void setMnemonicParsing() {
         btnCancel.setText("_Cancel");
-        btnSubmit.setText("_Register");
+        btnSubmit.setText("_Submit");
         btnUndo.setText("_Undo");
         btnRedo.setText("_Redo");
         btnSubmit.setMnemonicParsing(true);
         btnCancel.setMnemonicParsing(true);
         btnUndo.setMnemonicParsing(true);
         btnRedo.setMnemonicParsing(true);
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**
@@ -496,10 +492,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
         btnSubmit.setOnKeyPressed(this::onEnterPressed);
-        btnUndo.setOnAction(this::onUndoPress);
-        btnRedo.setOnAction(this::onRedoPress);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         btnHelp.setOnAction(this::onHelpPressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
     /**
@@ -531,7 +526,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
-    @Deprecated
     private void fillArray() {
         textFields.add(txtNif);
         textFields.add(txtFullName);
@@ -598,33 +592,37 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
 
     @Override
     public void onRegisterPress(ActionEvent event) {
-        CompanyClient companyClient = ClientFactory.getCompanyClient(uri);
-        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
+        PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        boolean success = true;
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
-            if (company.getId() > 0) {
+            if (stage.getTitle().equals("Modification")) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);
             }
-            try {
-                // Why does it open when an exception is thrown?
-                openCompanyMainMenu(company);
-                stage.hide();
-            } catch (IOException e) {
-                e.printStackTrace();
-                LOG.severe(e.getMessage());
-            }
         } catch (ClientErrorException e) {
+            success = false;
             createExceptionDialog(e);
             e.printStackTrace();
         } catch (Exception ex) {
+            success = false;
             createExceptionDialog(ex);
             ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
+        }
+        if (success) {
+            try {
+                openCompanyMainMenu(company);
+                stage.hide();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                createExceptionDialog(ex);
+            }
         }
     }
 
@@ -647,13 +645,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @throws IOException
      */
     private void openCompanyMainMenu(Company company) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageProgramMain = new Stage();
-        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
-        mainView.setCompany(company);
-        mainView.setLogin(previousStage);
-        mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
+        previousStage.show();
         stage.hide();
     }
 
@@ -723,5 +715,31 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             enableRegister = false;
         }
         return enableRegister;
+    }
+
+    /**
+     * Sets up all the things related to undoing and redoing.
+     *
+     * Following and adapting: https://github.com/FXMisc/UndoFX
+     *
+     * @author Carlos Mendez
+     */
+    private void setUndoRedo() {
+        EventStream<TextChange> nifChanges = changesOf(txtNif.textProperty()).map(textChange -> new TextChange(textChange, txtNif));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtRepeatPassword.textProperty()).map(textChange -> new TextChange(textChange, txtRepeatPassword));
+        inputChanges = merge(nifChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
     }
 }

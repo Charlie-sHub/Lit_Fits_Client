@@ -9,12 +9,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
+import org.testfx.framework.junit5.ApplicationTest;
 
 /**
- * Test Class for the company's garments wiew and controller
+ * Test Class for the company's garments view and controller
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
@@ -27,9 +27,9 @@ public class FXMLViewCompanyGarmentsControllerIT extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new ApplicationMain().start(stage);
         clickOn("#txtUsername");
-        write("111111111"); // Should create a company with this nif
+        write("A1111111A"); // Should create a company with this nif
         clickOn("#fieldPassword");
-        write("abcd*1234"); // Should create a company with this password
+        write("abcd"); // Should create a company with this password
         clickOn("#btnLogin");
         clickOn("#btnWarehouse");
     }
