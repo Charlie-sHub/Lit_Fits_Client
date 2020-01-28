@@ -357,21 +357,25 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
+        fillChoiceBoxTheme();
         setOnAction();
+        setMnemonicParsing();
         setFocusTraversable();
         setListeners();
+        textFields = new ArrayList<>();
         fillArray();
+        undoneStrings = new ArrayList<>();
         txtUsername.requestFocus();
         lblInvalidMail.setVisible(false);
         lblLength.setVisible(false);
         lblPasswordMismatch.setVisible(false);
         lblInvalidUsername.setVisible(false);
-        btnRegister.setDisable(true);
     }
     /**
      * Sets the methods that will be called when actions are performed on different elements
      */
     private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
         btnRegister.setOnAction(this::onRegisterPress);
         btnCancel.setOnAction(this::onCancelPress);
         btnHelp.setOnAction(this::onHelpPressed);
@@ -380,6 +384,21 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         btnHelp.setOnKeyPressed(this::onF1Pressed);
         
     }
+
+    /**
+     * Sets the mnemonic parsing for different elements
+     */
+    private void setMnemonicParsing() {
+        btnCancel.setText("_Cancel");
+        btnRegister.setText("_Register");
+        btnUndo.setText("_Undo");
+        btnRedo.setText("_Redo");
+        btnRegister.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        btnUndo.setMnemonicParsing(true);
+        btnRedo.setMnemonicParsing(true);
+    }
+    
     /**
      * This method allows to change the focus between the elements of the window.
      */
@@ -401,21 +420,18 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         txtPhone.textProperty().addListener(this::onFieldChange);
         txtPassword.textProperty().addListener(this::onFieldChange);
         txtRepeatPassword.textProperty().addListener(this::onFieldChange);
-        /*
         txtUsername.lengthProperty().addListener(this::lengthListener);
         txtFullName.lengthProperty().addListener(this::lengthListener);
         txtEmail.lengthProperty().addListener(this::lengthListener);
         txtPhone.lengthProperty().addListener(this::lengthListener);        
         txtPassword.lengthProperty().addListener(this::lengthListener);
-        txtRepeatPassword.lengthProperty().addListener(this::lengthListener);                
-        */
+        txtRepeatPassword.lengthProperty().addListener(this::lengthListener);
     }
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
     @Deprecated
     private void fillArray() {
-        textFields = new ArrayList<>();
         textFields.add(txtUsername);
         textFields.add(txtFullName);
         textFields.add(txtEmail);
@@ -423,7 +439,6 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
         textFields.add(txtPassword);
         textFields.add(txtRepeatPassword);
     }
-
         
     @Override
     public void onRegisterPress(ActionEvent event) {
@@ -498,40 +513,23 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      * @param oldValue
      * @param newValue
      */
-    /*
+    
     public void lengthListener(ObservableValue observable, Number oldValue, Number newValue) {
         lengthCheck(btnRegister);
     }
-    */
-    private void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
-        boolean correctUser = false;
-        boolean correctEmail = false;
-        boolean passwordMatch = false;
-        boolean length;
-        if(!txtUsername.getText().isEmpty())
-            correctUser = verifyUser();
-        
-        if(!txtEmail.getText().isEmpty()) 
-            correctEmail = verifyEmail();
-        
-        if(!txtPassword.getText().isEmpty() && !txtRepeatPassword.getText().isEmpty())
-            passwordMatch = verifyPasswords();
-        
-        length = verifyLength();
-        
-        if(correctUser && correctEmail && passwordMatch && length){
-            correctPatterns = true;
-            btnRegister.setDisable(correctPatterns);
+    
+    public void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
+        if(verifyUser() & verifyEmail() & verifyPasswords()) {
+            onFieldFilled(btnRegister);
         }else {
-            correctPatterns = false;
-            btnRegister.setDisable(correctPatterns);
+            btnRegister.setDisable(true);
         }
     }
 
     private boolean verifyUser() {
         boolean correctUser;
-        correctUser = txtUsername.getText().startsWith("admin");
-        lblInvalidUsername.setVisible(correctUser);
+        correctUser = !txtUsername.getText().startsWith("admin");
+        lblInvalidUsername.setVisible(!correctUser);
         return correctUser;
     }
 
@@ -544,22 +542,15 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
 
     private boolean verifyPasswords() {
         boolean correctPassword;
-        correctPassword = txtPassword.getText().equals(txtRepeatPassword.getText());
-        lblPasswordMismatch.setVisible(!correctPatterns);
-        return correctPassword;
-    }
-
-    private boolean verifyLength() {
-        boolean length = true;
-           for (TextField tField : textFields) {
-               if (tField.getText().isEmpty()) {
-                    length = false;
-                    break;
-               }
+        if(txtPassword.getText().trim().equals(txtRepeatPassword.getText().trim())){
+            correctPassword = true;
+            lblPasswordMismatch.setVisible(false);
+        } else{
+            correctPassword = false;
+            lblPasswordMismatch.setVisible(true);
         }
-        lblLength.setVisible(length);
-        return length;
-    }    
+            return correctPassword;
+    }
 
     private void setExpertData(byte[] publicKey) throws Exception {
         expert.setUsername(txtUsername.getText());

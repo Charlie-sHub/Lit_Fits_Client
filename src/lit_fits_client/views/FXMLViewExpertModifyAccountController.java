@@ -45,6 +45,11 @@ import org.apache.commons.io.IOUtils;
 //TODO Comprobar si los campos estan vacios
 public class FXMLViewExpertModifyAccountController extends FXMLDocumentControllerInput{
     /**
+     * Invalid username label
+     */
+    @FXML
+    private Label lblInvalidUsername;
+    /**
      * Invalid email label
      */
     @FXML
@@ -114,6 +119,19 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
 
     boolean change = false; 
     boolean passwordChange = false;
+    /**
+     * @return the lblLabel
+     */
+    public Label getLblLabel() {
+        return lblInvalidUsername;
+    }
+
+    /**
+     * @param lblInvalidUsername
+     */
+    public void setLblLabel(Label lblInvalidUsername) {
+        this.lblInvalidUsername = lblInvalidUsername;
+    }
     /**
      * @return the lblInvalidMail
      */
@@ -298,17 +316,18 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     
-    public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
-            this.stage = stageProgramMain;
+            this.stage = stage;
+            this.theme = theme;
             Scene scene = new Scene(root);
+            setStylesheet(scene, theme.getThemeCssPath());
             stage.setScene(scene);
             stage.setTitle("Modify Account");
             stage.setMinWidth(1400);
             stage.setMinHeight(800);
             stage.show();
-            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             stage.setOnCloseRequest(this::onClosing);
@@ -319,9 +338,9 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     private void setElements() {
+        fillChoiceBoxTheme();
         setTextFields();
         setOnAction();
-        setTooltips();
         setFocusTraversable();
         setListeners();
         textFields = new ArrayList<>();
@@ -339,10 +358,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
     }
-    
-    private void setTooltips() {
-        //TODO
-    }
+
 
     private void setFocusTraversable() {
         txtUsername.setFocusTraversable(true);
@@ -446,9 +462,14 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             change = !txtFullName.getText().equals(fullName) ||
                     !txtEmail.getText().equals(email) ||
                     !txtPhone.getText().equals(phone);
+            if(verifyUser() & emailPatternCheck()){
+                onFieldFilled(btnSubmit);
+            }else{
+                btnSubmit.setDisable(true);
+            }
             
             try {
-                comparePasswords(publicKeyBytes);
+                passwordChange = comparePasswords(publicKeyBytes);
             } catch (Exception ex) {
                 createExceptionDialog(ex);
                 
@@ -539,19 +560,32 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         stage.hide();
     }
 
-    private void comparePasswords(byte[] publicKey) throws Exception{
+    private boolean comparePasswords(byte[] publicKey) throws Exception{
         String passw = Encryptor.encryptText(txtPassword.getText(), publicKey);
         String passwordInDB = expert.getPassword();
          
-        passwordChange = passw.equals(passwordInDB);
+        passwordChange = passw.trim().equals(passwordInDB.trim());
+        
+        return passwordChange;
     }
-
+    
+    private boolean emailPatternCheck(){
+        boolean verifyEmail;
+        verifyEmail = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        return verifyEmail;
+    }
+    
+    private boolean verifyUser() {
+        boolean correctUser;
+        correctUser = !txtUsername.getText().startsWith("admin");
+        lblInvalidUsername.setVisible(!correctUser);
+        return correctUser;
+    }
      
     private boolean enableModify(){
         boolean enableModify = false;
-        if(change || passwordChange){
-            enableModify = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
-            lblInvalidMail.setVisible(!enableModify);
+        if(verifyUser() & emailPatternCheck()){
+            enableModify = true;
         }
         
         return enableModify;

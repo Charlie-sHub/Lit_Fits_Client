@@ -99,6 +99,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             this.uri = uri;
             this.stage = stage;
             Scene scene = new Scene(root);
+            this.theme = theme;
             stage.setScene(scene);
             stage.setTitle("Home");
             stage.setMinWidth(1400);
@@ -115,9 +116,11 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
     }
 
     private void setElements() {
+        fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
         setFocusTraversable();
+        
     }
 
     private void setOnAction() {
