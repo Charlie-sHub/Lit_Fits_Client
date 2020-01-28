@@ -12,6 +12,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
 import org.testfx.framework.junit5.ApplicationTest;
+import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 
 /**
  * Test Class for the main menu view and controller
@@ -27,9 +28,9 @@ public class FXMLViewCompanyMainMenuControllerIT extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new ApplicationMain().start(stage);
         clickOn("#txtUsername");
-        write("111111111"); // Should create a company with this nif
+        write("A1111111A");
         clickOn("#fieldPassword");
-        write("abcd*1234"); // Should create a company with this password
+        write("abcd");
         clickOn("#btnLogin");
     }
 
@@ -43,7 +44,7 @@ public class FXMLViewCompanyMainMenuControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of OnBtnModifyAccountPress method, of class FXMLCompanyMainMenuController.
+     * Tests opening the account modification view
      */
     @Test
     public void testA_OnBtnModifyAccountPress() {
@@ -53,7 +54,7 @@ public class FXMLViewCompanyMainMenuControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of OnBtnWarehousePress method, of class FXMLCompanyMainMenuController.
+     * Tests opening the warehouse view
      */
     @Test
     public void testB_OnBtnWarehousePress() {
@@ -63,7 +64,7 @@ public class FXMLViewCompanyMainMenuControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of OnBtnLogOutPress method, of class FXMLCompanyMainMenuController.
+     * Tests logging out
      */
     @Test
     public void testC_OnBtnLogOutPress() {
@@ -93,12 +94,21 @@ public class FXMLViewCompanyMainMenuControllerIT extends ApplicationTest {
     }
 
     /**
-     * Tests the mnemonic for loggin out
+     * Tests the mnemonic for logging out
      */
     @Test
     public void testF_AltL() {
         press(KeyCode.ALT, KeyCode.L);
         verifyThat("#borderPaneLogin", isVisible());
+        close();
+    }
+    /**
+     * Tests that the date picker is usable
+     */
+    @Test
+    public void testG_DatePicker() {
+        clickOn("#datePicker");
+        verifyThat("#borderPaneLogin", isEnabled());
         close();
     }
 }

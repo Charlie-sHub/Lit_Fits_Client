@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -285,24 +287,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Getter for the stage of login
-     *
-     * @return Stage
-     */
-    public Stage getLogin() {
-        return previousStage;
-    }
-
-    /**
-     * Setter for the stage of login
-     *
-     * @param login
-     */
-    public void setLogin(Stage login) {
-        this.previousStage = login;
-    }
-
-    /**
      * Getter for the invalid email label
      *
      * @return Label
@@ -478,7 +462,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
-        undoneStrings = new ArrayList<>();
     }
 
     /**
@@ -486,13 +469,19 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      */
     private void setMnemonicParsing() {
         btnCancel.setText("_Cancel");
-        btnSubmit.setText("_Register");
+        btnSubmit.setText("_Submit");
         btnUndo.setText("_Undo");
         btnRedo.setText("_Redo");
         btnSubmit.setMnemonicParsing(true);
         btnCancel.setMnemonicParsing(true);
         btnUndo.setMnemonicParsing(true);
         btnRedo.setMnemonicParsing(true);
+        KeyCombination undoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+        Runnable undoRunnable = () -> undoManager.undo();
+        stage.getScene().getAccelerators().put(undoKeyCombination, undoRunnable);
+        KeyCombination redoKeyCombination = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        Runnable redoRunnable = () -> undoManager.redo();
+        stage.getScene().getAccelerators().put(redoKeyCombination, redoRunnable);
     }
 
     /**
@@ -537,7 +526,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     /**
      * Fills the array of text fields to check later if they're filled with text
      */
-    @Deprecated
     private void fillArray() {
         textFields.add(txtNif);
         textFields.add(txtFullName);
@@ -606,31 +594,35 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     public void onRegisterPress(ActionEvent event) {
         CompanyClientInterface companyClient = ClientFactory.getCompanyClient(uri);
         PublicKeyClientInterface publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        boolean success = true;
         try {
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             company = setCompanyData(publicKeyBytes);
-            if (company.getId() > 0) {
+            if (stage.getTitle().equals("Modification")) {
                 companyClient.edit(company);
             } else {
                 companyClient.create(company);
             }
-            try {
-                // Why does it open when an exception is thrown?
-                openCompanyMainMenu(company);
-                stage.hide();
-            } catch (IOException e) {
-                e.printStackTrace();
-                LOG.severe(e.getMessage());
-            }
         } catch (ClientErrorException e) {
+            success = false;
             createExceptionDialog(e);
             e.printStackTrace();
         } catch (Exception ex) {
+            success = false;
             createExceptionDialog(ex);
             ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
+        }
+        if (success) {
+            try {
+                openCompanyMainMenu(company);
+                stage.hide();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                createExceptionDialog(ex);
+            }
         }
     }
 
@@ -653,13 +645,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @throws IOException
      */
     private void openCompanyMainMenu(Company company) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
-        Parent root = (Parent) fxmlLoader.load();
-        Stage stageProgramMain = new Stage();
-        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
-        mainView.setCompany(company);
-        mainView.setLogin(previousStage);
-        mainView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
+        previousStage.show();
         stage.hide();
     }
 
@@ -730,6 +716,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         }
         return enableRegister;
     }
+
     /**
      * Sets up all the things related to undoing and redoing.
      *

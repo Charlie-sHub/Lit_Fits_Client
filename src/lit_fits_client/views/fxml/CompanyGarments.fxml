@@ -8,7 +8,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,13 +20,34 @@
     <center>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <children>
+                <MenuBar fx:id="menuBar" prefHeight="25.0">
+                    <menus>
+                        <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem fx:id="menuFileAdd" mnemonicParsing="false" text="Add" />
+                                <MenuItem fx:id="menuFileDelete" mnemonicParsing="false" text="Delete" />
+                            </items>
+                        </Menu>
+                        <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem fx:id="menuEditPromote" mnemonicParsing="false" text="Promote" />
+                                <MenuItem fx:id="menuEditModify" mnemonicParsing="false" text="Modify" />
+                            </items>
+                        </Menu>
+                        <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem fx:id="menuHelpOpenHelp" mnemonicParsing="false" text="Open Help Window" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
                 <AnchorPane>
-                    <children>                        
+                    <children>
                         <Button fx:id="btnAdd" layoutX="443.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
                         <Button fx:id="btnModify" layoutX="545.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
                         <Button fx:id="btnPromote" layoutX="645.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
-                        <Button fx:id="btnDelete" layoutX="745.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />                        
-                        <Button fx:id="btnCancel" layoutX="1187.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
+                        <Button fx:id="btnDelete" layoutX="745.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />              
+                        <Button fx:id="btnReport" layoutX="845.0" layoutY="594.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" /> 
                         <ScrollPane fitToHeight="true" layoutX="12.0" layoutY="12.0">
                             <content>
                                 <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">
@@ -48,16 +68,24 @@
                                     <contextMenu>
                                         <ContextMenu fx:id="contextMenuTable">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                                <MenuItem fx:id="menuItemAdd" mnemonicParsing="false" text="Unspecified Action" />
+                                                <MenuItem fx:id="menuItemModify" mnemonicParsing="false" text="Unspecified Action" />
+                                                <MenuItem fx:id="menuItemPromote" mnemonicParsing="false" text="Unspecified Action" />
+                                                <MenuItem fx:id="menuItemDelete" mnemonicParsing="false" text="Unspecified Action" />
                                             </items>
                                         </ContextMenu>
                                     </contextMenu>
                                 </TableView>
                             </content>
-                        </ScrollPane>
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </ScrollPane>                                              
+                        <Button fx:id="btnCancel" layoutX="1187.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
                     </children>
                 </AnchorPane>
             </children>
@@ -95,27 +123,4 @@
             </children>
         </HBox>
     </bottom>
-    <top>
-        <MenuBar fx:id="menuBar" prefHeight="25.0" BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File" fx:id="menuFile">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Add" fx:id="menuFileAdd"/>
-                        <MenuItem mnemonicParsing="false" text="Delete" fx:id="menuFileDelete"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit" fx:id="menuEdit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Promote" fx:id="menuEditPromote"/>
-                        <MenuItem mnemonicParsing="false" text="Modify" fx:id="menuEditModify"/>
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help" fx:id="menuHelp">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Open Help Window" fx:id="menuHelpOpenHelp"/>
-                    </items>
-                </Menu>
-            </menus>
-        </MenuBar>
-    </top>
 </BorderPane>

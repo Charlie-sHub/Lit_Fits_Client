@@ -1,6 +1,5 @@
 package lit_fits_client.views;
 
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
@@ -13,12 +12,6 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import lit_fits_client.ApplicationMain;
-import lit_fits_client.entities.BodyPart;
-import lit_fits_client.entities.Color;
-import lit_fits_client.entities.Garment;
-import lit_fits_client.entities.GarmentType;
-import lit_fits_client.entities.Material;
-import lit_fits_client.entities.Mood;
 import org.testfx.framework.junit5.ApplicationTest;
 
 /**
@@ -35,11 +28,12 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new ApplicationMain().start(stage);
         clickOn("#txtUsername");
-        write("111111111"); // Should create a company with this nif
+        write("A1111111A");
         clickOn("#fieldPassword");
-        write("abcd*1234"); // Should create a company with this password
+        write("abcd");
         clickOn("#btnLogin");
         clickOn("#btnWarehouse");
+        clickOn("#btnAdd");
     }
 
     @After
@@ -84,8 +78,22 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
         clickOn("#txtPrice");
         write("1");
         clickOn("#txtDesigner");
-        write("Some Guy");
-        // How to click on and choose something from the combo box
+        write("Ann Demeulemeester");
+        clickOn("#comboBodyPart");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboColors");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboGarmentType");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMaterials");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMood");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         verifyThat("#btnSubmit", isDisabled());
         close();
     }
@@ -96,34 +104,31 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
     @Test
     public void testD_AltR() {
         clickOn("#buttonAdd");
-        Garment garment = new Garment();
-        garment.setAvailable(true);
-        garment.setBarcode("11111111111");
-        garment.setBodyPart(BodyPart.TOP);
-        Set<Color> colors = null;
-        colors.add(new Color("Black"));
-        garment.setColors(colors);
-        garment.setDesigner("Some guy");
-        garment.setGarmentType(GarmentType.PANTS);
-        Long id = null;
-        garment.setId(id);
-        garment.setPictureName(null);
-        Set<Material> materials = null;
-        materials.add(new Material("Leather"));
-        garment.setMaterials(materials);
-        garment.setMood(Mood.SPORT);
-        garment.setPicture(picture);
         // Yet to implement adding a picture to the garment
         clickOn("#txtBarcode");
-        write(garment.getBarcode());
+        write("0123456789");
         clickOn("#txtPrice");
-        write(garment.getPrice().toString());
+        write("1,11$");
         clickOn("#txtDesigner");
-        write(garment.getDesigner());
-        // How to click on and choose something from the combo box
+        write("Rick Owens");
+        clickOn("#comboBodyPart");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboColors");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboGarmentType");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMaterials");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMood");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
         press(KeyCode.ALT, KeyCode.S);
         verifyThat("#borderPaneWarehouse", isVisible());
-        verifyThat(garment.getBarcode(), isVisible());
+        verifyThat("0123456789", isVisible());
         close();
     }
 
@@ -133,34 +138,31 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
     @Test
     public void testE_RegisterSuccess() {
         clickOn("#buttonAdd");
-        Garment garment = new Garment();
-        garment.setAvailable(true);
-        garment.setBarcode("11111111111");
-        garment.setBodyPart(BodyPart.TOP);
-        Set<Color> colors = null;
-        colors.add(new Color("Black"));
-        garment.setColors(colors);
-        garment.setDesigner("Some guy");
-        garment.setGarmentType(GarmentType.PANTS);
-        Long id = null;
-        garment.setId(id);
-        garment.setPictureName(null);
-        Set<Material> materials = null;
-        materials.add(new Material("Leather"));
-        garment.setMaterials(materials);
-        garment.setMood(Mood.SPORT);
-        garment.setPicture(picture);
         // Yet to implement adding a picture to the garment
         clickOn("#txtBarcode");
-        write(garment.getBarcode());
+        write("0123456789");
         clickOn("#txtPrice");
-        write(garment.getPrice().toString());
+        write("1,11$");
         clickOn("#txtDesigner");
-        write(garment.getDesigner());
-        // How to click on and choose something from the combo box
-        clickOn("#btnSubmit");
+        write("Rick Owens");
+        clickOn("#comboBodyPart");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboColors");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboGarmentType");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMaterials");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMood");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        press(KeyCode.ALT, KeyCode.S);
         verifyThat("#borderPaneWarehouse", isVisible());
-        verifyThat(garment.getBarcode(), isVisible());
+        verifyThat("0123456789", isVisible());
         close();
     }
 
@@ -170,32 +172,29 @@ public class FXMLViewGarmentCreationControllerIT extends ApplicationTest {
     @Test
     public void testF_GarmentExists() {
         clickOn("#buttonAdd");
-        Garment garment = new Garment();
-        garment.setAvailable(true);
-        garment.setBarcode("11111111111");
-        garment.setBodyPart(BodyPart.TOP);
-        Set<Color> colors = null;
-        colors.add(new Color("Black"));
-        garment.setColors(colors);
-        garment.setDesigner("Some guy");
-        garment.setGarmentType(GarmentType.PANTS);
-        Long id = null;
-        garment.setId(id);
-        garment.setPictureName(null);
-        Set<Material> materials = null;
-        materials.add(new Material("Leather"));
-        garment.setMaterials(materials);
-        garment.setMood(Mood.SPORT);
-        garment.setPicture(picture);
         // Yet to implement adding a picture to the garment
         clickOn("#txtBarcode");
-        write(garment.getBarcode());
+        write("0123456789");
         clickOn("#txtPrice");
-        write(garment.getPrice().toString());
+        write("1,11$");
         clickOn("#txtDesigner");
-        write(garment.getDesigner());
-        // How to click on and choose something from the combo box
-        clickOn("#btnSubmit");
+        write("Rick Owens");
+        clickOn("#comboBodyPart");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboColors");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboGarmentType");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMaterials");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("#comboMood");
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        press(KeyCode.ALT, KeyCode.S);
         verifyThat("#borderPaneWarehouse", isVisible());
         verifyThat("Create exception", isVisible());
         // Create exception or something like that

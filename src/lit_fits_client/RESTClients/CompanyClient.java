@@ -23,6 +23,7 @@ public class CompanyClient implements CompanyClientInterface {
 
     /**
      * Constructor of the Company client
+     *
      * @param baseUri
      */
     public CompanyClient(String baseUri) {
@@ -50,9 +51,10 @@ public class CompanyClient implements CompanyClientInterface {
      * @throws ClientErrorException
      */
     @Override
-    public void reestablishPassword(String nif) throws ClientErrorException {
+    public String reestablishPassword(String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("passwordReestablishment/{0}", new Object[]{nif}));
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
     /**

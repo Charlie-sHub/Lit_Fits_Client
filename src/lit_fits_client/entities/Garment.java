@@ -1,6 +1,8 @@
 package lit_fits_client.entities;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
@@ -9,9 +11,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.scene.image.Image;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Garment entity
@@ -80,7 +84,12 @@ public class Garment implements Serializable {
     /**
      * The picture of the garment
      */
-    private SimpleObjectProperty picture;
+    @XmlTransient
+    private SimpleObjectProperty pictureObject;
+    /**
+     * The picture in byte[] form
+     */
+    private byte[] picture;
 
     /**
      * Empty constructor
@@ -97,7 +106,7 @@ public class Garment implements Serializable {
         this.promoted = new SimpleBooleanProperty();
         this.colors = new SimpleSetProperty<Color>();
         this.materials = new SimpleSetProperty<Material>();
-        this.picture = new SimpleObjectProperty<File>();
+        this.pictureObject = new SimpleObjectProperty<File>();
     }
 
     /**
@@ -118,7 +127,7 @@ public class Garment implements Serializable {
      * @param materials
      * @param picture
      */
-    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, File picture) {
+    public Garment(String barcode, String designer, Double price, Mood mood, BodyPart bodyPart, GarmentType garmentType, boolean available, boolean promotionRequest, boolean promoted, String imagePath, Company company, Set<Color> colors, Set<Material> materials, File pictureObject, byte[] picture) {
         this.barcode = new SimpleStringProperty(barcode);
         this.designer = new SimpleStringProperty(designer);
         this.price = new SimpleDoubleProperty(price);
@@ -132,7 +141,8 @@ public class Garment implements Serializable {
         this.company = company;
         this.colors = new SimpleSetProperty<Color>((ObservableSet<Color>) colors);
         this.materials = new SimpleSetProperty<Material>((ObservableSet<Material>) materials);
-        this.picture = new SimpleObjectProperty<File>(picture);
+        this.pictureObject = new SimpleObjectProperty<File>(pictureObject);
+        this.picture = picture;
     }
 
     public long getId() {
@@ -236,7 +246,7 @@ public class Garment implements Serializable {
     }
 
     public void setColors(Set<Color> colors) {
-        this.colors.addAll(colors);
+        this.colors.setValue(FXCollections.observableSet(colors));
     }
 
     public Set<Material> getMaterials() {
@@ -244,15 +254,26 @@ public class Garment implements Serializable {
     }
 
     public void setMaterials(Set<Material> materials) {
-        this.materials.addAll(materials);
+        this.materials.setValue(FXCollections.observableSet(materials));
     }
 
-    public Image getPicture() {
-        return (Image) this.picture.get();
+    public Image getPictureObject() {
+        return (Image) this.pictureObject.get();
     }
 
-    public void setPicture(Image picture) {
-        this.picture.set(picture);
+    public void setPictureObject(Image picture) {
+        this.pictureObject.set(picture);
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        InputStream imageInputStream = new ByteInputStream(picture, picture.length);
+        Image image = new Image(imageInputStream);
+        this.setPictureObject(image);
+        this.picture = picture;
     }
 
     @Override

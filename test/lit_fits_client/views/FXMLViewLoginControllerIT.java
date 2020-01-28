@@ -11,8 +11,9 @@ import lit_fits_client.ApplicationMain;
 import org.testfx.framework.junit5.ApplicationTest;
 
 /**
+ * Test class for the login view
  *
- * @author Ander Rodriguez & Carlos Mendez
+ * @author Carlos Mendez
  */
 public class FXMLViewLoginControllerIT extends ApplicationTest {
     @Override
@@ -21,7 +22,7 @@ public class FXMLViewLoginControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of
+     * Tests the login button is disabled if no data has been entered
      */
     @Test
     public void testBtnLoginIsInitiallyDisabled() {
@@ -29,7 +30,7 @@ public class FXMLViewLoginControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of button register is initially enabled
+     * Tests the register button is enabled
      */
     @Test
     public void testBtnRegisterIsEnabled() {
@@ -37,72 +38,92 @@ public class FXMLViewLoginControllerIT extends ApplicationTest {
     }
 
     /**
-     * Test of
+     * Tests the login button gets enabled when entering correct data
      */
     @Test
     public void testBtnLoginGetsEnabled() {
         clickOn("#txtUsername");
-        write("Username");
+        write("A1111111A");
         clickOn("#fieldPassword");
-        write("abcd*1234");
+        write("abcd");
         verifyThat("#btnLogin", isEnabled());
     }
 
     /**
-     * Test of
+     * Tests that an actual login attempt is successful
      */
     @Test
     public void testBtnLoginAction() {
         clickOn("#txtUsername");
-        write("Ander");
+        write("A1111111A");
         clickOn("#fieldPassword");
-        write("abcd*1234");
+        write("abcd");
         clickOn("#btnLogin");
         verifyThat("#borderPaneMain", isVisible());
     }
 
     /**
-     * Test the action of button register do
+     * Tests that the register view of the company opens
      */
     @Test
-    public void testBtnRegisterAction() {
+    public void testCompanyBtnRegisterAction() {
+        clickOn("#rBtnCompany");
         clickOn("#btnRegister");
         verifyThat("#borderPaneRegister", isVisible());
     }
 
     /**
-     * Test of
+     * Tests that the register view of the expert opens
+     */
+    @Test
+    public void testExpertBtnRegisterAction() {
+        clickOn("#rBtnFashionExpert");
+        clickOn("#btnRegister");
+        verifyThat("#borderPaneRegister", isVisible());
+    }
+
+    /**
+     * Tests the mnemonic for the login
      */
     @Test
     public void testAltL() {
         clickOn("#txtUsername");
-        write("Ander");
+        write("A1111111A");
         clickOn("#fieldPassword");
-        write("abcd*1234");
+        write("abcd");
         press(KeyCode.ALT, KeyCode.L);
         verifyThat("#borderPaneMain", isVisible());
     }
 
     /**
-     * Test of
+     * Tests the mnemonic for the register
      */
     @Test
     public void testAltS() {
+        clickOn("#rBtnCompany");
         press(KeyCode.ALT, KeyCode.S);
         verifyThat("#borderPaneRegister", isVisible());
     }
 
+    /**
+     * Tests that the login button becomes disabled when entering data that's too long
+     */
     @Test
     public void testLength() {
         clickOn("#txtUsername");
-        write("test of lengthhhhhhhhhhhhhhhhhhh");
+        write("A111111111111111111111111111111111111111111111111111111111111111111111111");
+        clickOn("#txtPassword");
+        write("abcd");
         verifyThat("#btnLogin", isDisabled());
     }
-
+    /**
+     * Tests that redo is enabled after undoing
+     */
     @Test
     public void testUndo() {
         clickOn("#txtUsername");
         write("test of undo");
         clickOn("#btnUndo");
+        verifyThat("#btnRedo", isEnabled());
     }
 }

@@ -87,7 +87,7 @@ public interface CompanyClientInterface {
      * @param nif
      * @throws ClientErrorException
      */
-    void reestablishPassword(String nif) throws ClientErrorException;
+    String reestablishPassword(String nif) throws ClientErrorException;
 
     /**
      * Deletes the company with the given id

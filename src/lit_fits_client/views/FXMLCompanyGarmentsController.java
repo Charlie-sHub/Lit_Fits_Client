@@ -1,7 +1,9 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -25,10 +27,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -42,6 +44,13 @@ import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
 import lit_fits_client.miscellaneous.ImageViewCell;
 import lit_fits_client.views.themes.Theme;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * The "Warehouse" window for companies
@@ -209,6 +218,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     @FXML
     private MenuItem menuHelpOpenHelp;
+    /**
+     * Button to open the report view
+     */
+    @FXML
+    private Button btnReport;
     /**
      * The list of garments of the company
      */
@@ -409,7 +423,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             themeList = themes;
             setElements();
             choiceTheme.setValue(theme);
-            
         } catch (Exception e) {
             createExceptionDialog(e);
         }
@@ -449,6 +462,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
+        System.out.println("Trying to fill the table");
         GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
@@ -461,19 +475,35 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void setColumnFactories() {
         // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
         // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
-        tableColumnPicture.setCellFactory(new Callback<TableColumn<Garment, Image>, TableCell<Garment, Image>>() {
-            @Override
-            public TableCell<Garment, Image> call(TableColumn<Garment, Image> param) {
-                ImageViewCell imageViewCell = new ImageViewCell();
-                /*
-                imageViewCell.setOnMouseDragOver({
-                    // Open a window with the full sized image
-                });   
-                 */
-                return imageViewCell;
-            }
+        //tableColumnPicture.setCellFactory((TableColumn<Garment, Image> param) -> {
+        //    ImageViewCell imageViewCell = new ImageViewCell();
+        //    /*
+        //    imageViewCell.setOnMouseDragOver({
+        //    // Open a window with the full sized image
+        //    });
+        //     */
+        //    return imageViewCell;
+        //});
+        tableColumnPicture.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(50);
+            imageview.setFitWidth(50);
+            //Set up the Table
+            TableCell<Garment, Image> cell = new TableCell<Garment, Image>() {
+                @Override
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
         });
-        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("picture")); // Maybe set a listener to the table cell to show the image set in the cell
+        // Maybe set a listener to the table cell to show the image set in the cell
+        tableColumnPicture.setCellValueFactory(new PropertyValueFactory("pictureObject"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
         tableColumnDesigner.setCellValueFactory(new PropertyValueFactory("designer"));
@@ -499,6 +529,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnDelete.setText("_Delete");
         btnModify.setText("_Modify");
         btnPromote.setText("_Promote");
+        btnReport.setText("_Report");
     }
 
     /**
@@ -512,6 +543,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnModify.setTooltip(new Tooltip("Modify the data of a garment"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         tableGarments.setTooltip(new Tooltip("List of garments owned by the company"));
+        btnReport.setTooltip(new Tooltip("List of garments owned by the company in PDF form"));
     }
 
     /**
@@ -540,6 +572,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         menuEditPromote.setOnAction(this::onBtnPromotePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
+        btnReport.setOnAction(this::onBtnReportPress);
     }
 
     /**
@@ -556,7 +589,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             Garment newGarment = null;
             garmentCreationView.setGarment(newGarment);
             garmentCreationView.setCompany(company);
-            garmentCreationView.setStage(stage);
+            garmentCreationView.setPreviousStage(stage);
             garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageCreate, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);
@@ -629,11 +662,36 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         garmentClient.close();
     }
 
+    /**
+     * Enables or disables certain buttons depending on whether a garment has been selected
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     private void onSelectingAGarment(ObservableValue observable, Object oldValue, Object newValue) {
         if (newValue != null) {
             enableDisableButtons(false);
         } else {
             enableDisableButtons(true);
+        }
+    }
+
+    /**
+     * Opens the report view
+     *
+     * @param event
+     */
+    private void onBtnReportPress(ActionEvent event) {
+        try {
+            JasperReport garmentReport = JasperCompileManager.compileReport("src/lit_fits_client/reports/garmentsReport.jasper");
+            JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            createExceptionDialog(ex);
         }
     }
 }

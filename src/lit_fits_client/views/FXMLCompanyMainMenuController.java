@@ -1,6 +1,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -9,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
@@ -26,7 +29,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * the log out button
      */
     @FXML
-    private Button btnLogout;
+    private Button btnLogOut;
     /**
      * The warehouse button, to open the warehouse view
      */
@@ -48,6 +51,21 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     @FXML
     private MenuItem menuHelpOpenHelp;
     /**
+     * A pretty useless DatePicker
+     */
+    @FXML
+    private DatePicker datePicker;
+    /**
+     * An obnoxious label
+     */
+    @FXML
+    private Label lblPutDate;
+    /**
+     * The other of the obnoxious label
+     */
+    @FXML
+    private Label lblCorrect;
+    /**
      * The stage used by this view
      */
     private Stage stage;
@@ -64,15 +82,15 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     /**
      * @return the btnLogout
      */
-    public Button getBtnLogout() {
-        return btnLogout;
+    public Button getBtnLogOut() {
+        return btnLogOut;
     }
 
     /**
-     * @param btnLogout the btnLogout to set
+     * @param btnLogOut the btnLogout to set
      */
-    public void setBtnLogout(Button btnLogout) {
-        this.btnLogout = btnLogout;
+    public void setBtnLogOut(Button btnLogOut) {
+        this.btnLogOut = btnLogOut;
     }
 
     /**
@@ -179,6 +197,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the window
      *
      *
+     * @param themes
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
      * @param stage
@@ -191,15 +210,13 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Home");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
             stage.show();
             this.theme = theme;
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
             choiceTheme.setValue(theme);
-            btnLogout.setDisable(false);
+            btnLogOut.setDisable(false);
             stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
@@ -210,6 +227,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
      */
     private void setElements() {
+        lblCorrect.setVisible(false);
         fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
@@ -221,11 +239,12 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     private void setOnAction() {
         choiceTheme.setOnAction(this::onThemeChosen);
-        btnLogout.setOnAction(this::onBtnLogoutPress);
+        btnLogOut.setOnAction(this::onBtnLogoutPress);
         btnModifyAccount.setOnAction(this::onBtnModifyAccountPress);
         btnWarehouse.setOnAction(this::onBtnWarehousePress);
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
+        datePicker.setOnAction(this::onDatePicked);
     }
 
     /**
@@ -234,8 +253,9 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     private void setTooltips() {
         btnWarehouse.setTooltip(new Tooltip("Check the list of garments, add, delete or modify them too"));
         btnModifyAccount.setTooltip(new Tooltip("Open the window to modify the current account"));
-        btnLogout.setTooltip(new Tooltip("Log out of the program"));
+        btnLogOut.setTooltip(new Tooltip("Log out of the program"));
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
+        datePicker.setTooltip(new Tooltip("Pick a date to win a prize!"));
     }
 
     /**
@@ -244,8 +264,9 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     private void setFocusTraversable() {
         btnModifyAccount.setFocusTraversable(true);
         btnWarehouse.setFocusTraversable(true);
-        btnLogout.setFocusTraversable(true);
+        btnLogOut.setFocusTraversable(true);
         choiceTheme.setFocusTraversable(true);
+        datePicker.setFocusTraversable(true);
     }
 
     /**
@@ -270,7 +291,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             Parent root = (Parent) fxmlLoader.load();
             FXMLCompanyRegisterController modifyAccountView = ((FXMLCompanyRegisterController) fxmlLoader.getController());
             modifyAccountView.setCompany(company);
-            modifyAccountView.setLogin(stage);
+            modifyAccountView.setPreviousStage(stage);
             modifyAccountView.initStage(themeList, choiceTheme.getValue(), stageProgramMain, root, uri);
             stage.hide();
         } catch (IOException ex) {
@@ -279,7 +300,7 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     }
 
     /**
-     * Opens the warehouse(company garments) window and closes the current window
+     * Opens the warehouse(company garments) window and hides the current window
      *
      * @param event
      */
@@ -295,6 +316,17 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
             stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
+        }
+    }
+
+    /**
+     * It's some sad excuse to use the DatePicker
+     *
+     * @param event
+     */
+    public void onDatePicked(ActionEvent event) {
+        if(datePicker.getValue().equals(LocalDate.now())){
+            lblCorrect.setVisible(true);
         }
     }
 }
