@@ -26,6 +26,7 @@ import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
 
 /**
+ * 
  * The view controller in wich the admin can check 
  * the promotion requests for a garment and the 
  * garments that are already promoted.
