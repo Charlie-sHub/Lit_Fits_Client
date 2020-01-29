@@ -463,10 +463,12 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void fillTable() throws ClientErrorException {
         System.out.println("Trying to fill the table");
+        System.out.println(company.getNif());
         GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
         tableGarments.setItems(garmentList);
+        garmentClient.close();
     }
 
     /**

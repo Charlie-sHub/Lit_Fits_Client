@@ -873,8 +873,9 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         InputStream imageInputStream = new FileInputStream(garmentPictureFile);
         byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
         garment.setPicture(imageBytes);
-        garment.setPictureName(garmentPictureFile.getName().substring(0, 4));
-        System.out.println(garment.getPictureName());
+        System.out.println(garmentPictureFile.getName());
+        garment.setNamePicture(garmentPictureFile.getName());
+        System.out.println(garment.getNamePicture());
         List<Color> selectedColorsList = new ArrayList<>(comboColors.getCheckModel().getCheckedItems());
         Set<Color> selectedColorsSet = selectedColorsList.stream().collect(Collectors.toSet());
         garment.setColors(selectedColorsSet);
