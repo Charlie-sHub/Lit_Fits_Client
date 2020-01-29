@@ -114,7 +114,9 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
         fillChoiceBoxTheme();
         setOnAction();
@@ -122,7 +124,9 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
         setFocusTraversable();
         
     }
-
+    /**
+     * Implements the actions
+     */
     private void setOnAction() {
         btnLogout.setOnAction(this::onBtnLogoutPress);
         btnRecommendations.setOnAction(this::onBtnRecommendationPress);
@@ -172,7 +176,10 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             LOG.severe(ex.getMessage());
         }
     }
-    
+    /**
+     * This function opens the recommendations view
+     * @param event 
+     */
     private void onBtnRecommendationPress(ActionEvent event) {
         try {
             FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("fxml/ExpertEditRecommendations"));

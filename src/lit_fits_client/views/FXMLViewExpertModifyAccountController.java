@@ -336,7 +336,9 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
         fillChoiceBoxTheme();
         setTextFields();
@@ -349,7 +351,9 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         lblLength.setVisible(false);
     }
 
-    
+    /**
+     * Implements the actions
+     */
     private void setOnAction() {
         btnHelp.setOnAction(this::onHelpPressed);
         btnSubmit.setOnAction(this::onRegisterPress);

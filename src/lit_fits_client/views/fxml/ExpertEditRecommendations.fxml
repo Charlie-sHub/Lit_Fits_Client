@@ -7,7 +7,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewExpertEditRecommendationController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewExpertEditRecommendationController">
   <left>
     <VBox alignment="CENTER" prefHeight="373.0" prefWidth="319.0" BorderPane.alignment="CENTER">
       <children>
@@ -90,41 +89,23 @@
   <top>
     <Pane prefHeight="27.0" prefWidth="640.0" BorderPane.alignment="CENTER">
       <children>
-        <MenuBar prefHeight="25.0" prefWidth="640.0">
+        <MenuBar fx:id="menuBar" prefHeight="25.0" prefWidth="640.0">
           <menus>
-            <Menu mnemonicParsing="false" text="File">
+            <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" text="New" />
-                <MenuItem mnemonicParsing="false" text="Open…" />
-                <Menu mnemonicParsing="false" text="Open Recent" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Close" />
-                <MenuItem mnemonicParsing="false" text="Save" />
-                <MenuItem mnemonicParsing="false" text="Save As…" />
-                <MenuItem mnemonicParsing="false" text="Revert" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Preferences…" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Quit" />
+                <MenuItem fx:id="menuItemSave" mnemonicParsing="false" text="Save" />
+                        <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" text="Quit" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
+            <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
               <items>
-                <MenuItem mnemonicParsing="false" text="Undo" />
-                <MenuItem mnemonicParsing="false" text="Redo" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Cut" />
-                <MenuItem mnemonicParsing="false" text="Copy" />
-                <MenuItem mnemonicParsing="false" text="Paste" />
-                <MenuItem mnemonicParsing="false" text="Delete" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" text="Select All" />
-                <MenuItem mnemonicParsing="false" text="Unselect All" />
+                <MenuItem fx:id="menuItemSelectAll" mnemonicParsing="false" text="Select All" />
+                <MenuItem fx:id="menuItemUnSelectAll" mnemonicParsing="false" text="Unselect All" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Help">
+            <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
               <items>
-                <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                <MenuItem fx:id="menuItemHelp" mnemonicParsing="false" text="Open Help View" />
               </items>
             </Menu>
           </menus>

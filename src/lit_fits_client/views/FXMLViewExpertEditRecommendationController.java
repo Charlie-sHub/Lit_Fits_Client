@@ -18,6 +18,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -52,6 +55,24 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     private TableView<Material> tableMaterial;
     @FXML
     private TableColumn<Material, String> columnNameMaterial;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private Menu menuFile;
+    @FXML
+    private Menu menuEdit;
+    @FXML
+    private Menu menuHelp;
+    @FXML
+    private MenuItem menuItemSave;
+    @FXML
+    private MenuItem menuItemQuit;
+    @FXML
+    private MenuItem menuItemSelectAll;
+    @FXML
+    private MenuItem menuItemUnSelectAll;
+    @FXML
+    private MenuItem menuItemHelp;
     
     ObservableList<Color> colorList;
     ObservableList<Material> materialList;
@@ -231,6 +252,96 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         this.expert = expert;
     }
 
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public void setMenuBar(MenuBar menuBar) {
+        this.menuBar = menuBar;
+    }
+
+    public Menu getMenuFile() {
+        return menuFile;
+    }
+
+    public void setMenuFile(Menu menuFile) {
+        this.menuFile = menuFile;
+    }
+
+    public Menu getMenuEdit() {
+        return menuEdit;
+    }
+
+    public void setMenuEdit(Menu menuEdit) {
+        this.menuEdit = menuEdit;
+    }
+
+    public Menu getMenuHelp() {
+        return menuHelp;
+    }
+
+    public void setMenuHelp(Menu menuHelp) {
+        this.menuHelp = menuHelp;
+    }
+
+    public MenuItem getMenuItemSave() {
+        return menuItemSave;
+    }
+
+    public void setMenuItemSave(MenuItem menuItemSave) {
+        this.menuItemSave = menuItemSave;
+    }
+
+    public MenuItem getMenuItemQuit() {
+        return menuItemQuit;
+    }
+
+    public void setMenuItemQuit(MenuItem menuItemQuit) {
+        this.menuItemQuit = menuItemQuit;
+    }
+
+    public MenuItem getMenuItemSelectAll() {
+        return menuItemSelectAll;
+    }
+
+    public void setMenuItemSelectAll(MenuItem menuItemSelectAll) {
+        this.menuItemSelectAll = menuItemSelectAll;
+    }
+
+    public MenuItem getMenuItemUnSelectAll() {
+        return menuItemUnSelectAll;
+    }
+
+    public void setMenuItemUnSelectAll(MenuItem menuItemUnSelectAll) {
+        this.menuItemUnSelectAll = menuItemUnSelectAll;
+    }
+
+    public MenuItem getMenuItemHelp() {
+        return menuItemHelp;
+    }
+
+    public void setMenuItemHelp(MenuItem menuItemHelp) {
+        this.menuItemHelp = menuItemHelp;
+    }
+
+    public ContextMenu getContextMenuTableColors() {
+        return contextMenuTableColors;
+    }
+
+    public void setContextMenuTableColors(ContextMenu contextMenuTableColors) {
+        this.contextMenuTableColors = contextMenuTableColors;
+    }
+
+    public ContextMenu getContextMenuTableMaterials() {
+        return contextMenuTableMaterials;
+    }
+
+    public void setContextMenuTableMaterials(ContextMenu contextMenuTableMaterials) {
+        this.contextMenuTableMaterials = contextMenuTableMaterials;
+    }
+    
+    
+
     void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try{
             this.uri = uri;
@@ -260,6 +371,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         setSelectedReccomendations();
         fillTable();
         setOnAction();
+        setMenu();
+        setContextMenus();
         contextMenuTableColors.hide();
         contextMenuTableMaterials.hide();
         
@@ -270,6 +383,9 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         columnNameMaterial.setCellFactory(new PropertyValueFactory("material_name"));
     }
     
+    /**
+     * Function to preselect the recomended colors and materials
+     */
     private void setSelectedReccomendations() {
        List<Color> colorsSelected = expert.getRecommendedColors();
        colorsSelected.forEach((colorExpert) -> {
@@ -286,7 +402,9 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         });
         
     }
-    
+    /**
+     * Function to fill the table
+     */
     private void fillTable() {
         
         MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
@@ -299,7 +417,9 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         tableColor.setItems(colorList);   
         tableColor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
-
+    /**
+     * Implementation of the actions
+     */
     private void setOnAction() {
         btnSave.setOnAction(this::onSavePress);
         btnCancel.setOnAction(this::onCancelPress);
@@ -313,8 +433,18 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
                contextMenuTableMaterials.show(tableMaterial, event.getScreenX(), event.getScreenY());
            }
         });
+        
+        menuItemSave.setOnAction(this::onSavePress);
+        menuItemQuit.setOnAction(this::onCancelPress);
+        menuItemSelectAll.setOnAction(this::selectAllTable);
+        menuItemUnSelectAll.setOnAction(this::unSelectAllTable);
+        menuItemHelp.setOnAction(this::onHelpPressed);
     }
     
+    /**
+     * This function is for when the user clicks on save, first saves the data and the sends you to the main window
+     * @param event 
+     */
     private void onSavePress(ActionEvent event) {
         ExpertClient expertClient = ClientFactory.getExpertClient(uri);
         try {
@@ -325,7 +455,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             expert.setRecommendedMaterials(materialsSelected);
             
             expertClient.edit(expert);
-            openMainWindow();
+             openMainWindow();
         } catch (IOException ex) {
             Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
@@ -333,7 +463,10 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         }
         
     }
-    
+    /**
+     * This function is for when the user clicks on cancel send you the main window
+     * @param event 
+     */
     private void onCancelPress(ActionEvent event) {
         try {
             openMainWindow();
@@ -341,7 +474,26 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    /**
+     * This function select all values on the table
+     * @param event 
+     */
+    private void selectAllTable(ActionEvent event) {
+        tableColor.getSelectionModel().selectAll();
+        tableMaterial.getSelectionModel().selectAll();
+    }
+    /**
+     * This function unselect all selected values on the table
+     * @param event 
+     */
+    private void unSelectAllTable(ActionEvent event) {
+        tableColor.getSelectionModel().clearSelection();
+        tableMaterial.getSelectionModel().clearSelection();
+    }
+    /**
+     * This function opens the main window
+     * @throws IOException 
+     */
     private void openMainWindow() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenu.fxml"));
         Parent root = (Parent) fxmlLoader.load();
@@ -351,6 +503,22 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         mainView.setLoginStage(stageMainMenu);
         mainView.initStage(themeList, theme, stageProgramMain, root, uri);
         stage.hide();
+    }
+    /**
+     * This function set the menu bar with all the menus and menu items
+     */
+    private void setMenu() {
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuHelp);
+        menuFile.getItems().addAll(menuItemSave, menuItemQuit);
+        menuEdit.getItems().addAll(menuItemSelectAll, menuItemUnSelectAll);
+        menuHelp.getItems().addAll(menuItemHelp);
+    }
+    /**
+     * This function put the menu items in the contextMenu
+     */
+    private void setContextMenus() {
+        contextMenuTableColors.getItems().addAll(menuItemSave, menuItemHelp);
+        contextMenuTableMaterials.getItems().addAll(menuItemSave, menuItemHelp);
     }
 
 
