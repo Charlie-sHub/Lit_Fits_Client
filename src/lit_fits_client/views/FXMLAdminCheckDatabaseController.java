@@ -1,13 +1,11 @@
 package lit_fits_client.views;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,9 +18,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
@@ -30,9 +26,7 @@ import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.GarmentClient;
 import lit_fits_client.RESTClients.UserClient;
-import lit_fits_client.entities.Color;
 import lit_fits_client.entities.Garment;
-import lit_fits_client.entities.Material;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
 
@@ -49,6 +43,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private Stage previousStage;
     private String uri;
     
+    private ObservableList<String> entitiesList;
+    
     @FXML
     private Menu menuFile;
     @FXML
@@ -62,11 +58,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private Button btnBack;
     
     @FXML
-    private TreeView treeViewEntities;
-    @FXML
-    private TreeItem treeItemGarments;
-    @FXML
-    private TreeItem treeItemUsers;
+    private ChoiceBox choiceBoxEntities;
     
     // ------------------ Garment table ----------------------
     @FXML
@@ -107,10 +99,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private TableColumn<User, String> emailColumn;
     @FXML
     private TableColumn<User, Object> userTypeColumn;
-    @FXML
-    private TableColumn<User, Set<Material>> likedMaterialsColumn;
-    @FXML
-    private TableColumn<User, Set<Color>> likedColorsColumn;
+    //@FXML
+    //private TableColumn<User, Set<Material>> likedMaterialsColumn;
+    //@FXML
+    //private TableColumn<User, Set<Color>> likedColorsColumn;
     
     private ObservableList<User> userList;
     
@@ -157,11 +149,11 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     /**
      * The method that initiates the view.
      * 
-     * @param themes
-     * @param theme
-     * @param stage
-     * @param root 
-     * @param uri 
+     * @param themes All the themes that can be set to the view.
+     * @param theme The theme that was selected in the previous window.
+     * @param stage The stage that will be used for the view.
+     * @param root The root of the view.
+     * @param uri The uri for the clients.
      */
     public void initStage (List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         
@@ -187,7 +179,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * This method was created to group another 3 different methods. 
+     * This method was created to group another methods. 
      * That makes reading the code easier.
      */
     private void setElements() {
@@ -201,10 +193,51 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         this.setUserTableFactories();
         this.fillTableUser();
+        
+        this.setChoiceBoxEntities();
+    }
+
+    /**
+     * This method sets the entities that can be shown on the tables.
+     */
+    private void setChoiceBoxEntities () {
+        
+        this.entitiesList.add("Garments");
+        this.entitiesList.add("Users");
+        
+        this.choiceBoxEntities.setItems(entitiesList);
+        this.choiceBoxEntities.setOnAction(this::onEntitiesChosen);
     }
     
     /**
+     * This method changes the visibility of the tables when the choiceBox value changes.
      * 
+     * @param Event 
+     */
+    private void onEntitiesChosen (Event Event) {
+        
+        String selected = this.choiceBoxEntities.getSelectionModel().getSelectedItem().toString();
+        
+       switch (selected) {
+           case "Garments":
+               this.usersTable.setSelectionModel(null);
+               this.usersTable.setVisible(false);
+               this.garmentsTable.setVisible(true);
+               break;
+               
+           case "Users":
+               this.garmentsTable.setSelectionModel(null);
+               this.garmentsTable.setVisible(false);
+               this.usersTable.setVisible(true);
+               break;
+               
+           default:
+               break;
+        }
+    }
+    
+    /**
+     * Sets the factory for each column in garmentTable.
      */
     private void setGarmentTableFactories() {
         
@@ -222,6 +255,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
+     * Fills the garmentTable with data from the database.
      * 
      * @throws ClientErrorException 
      */
@@ -236,7 +270,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
     
     /**
-     * 
+     * Sets the factory for each column in userTable.
      */
     private void setUserTableFactories() {
         
@@ -280,12 +314,18 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         btnBack.setText("_Back");
     }
 
+    /**
+     * Sets the tooltip help for every button in the view.
+     */
     private void setTooltips() {
         
         btnDeleteItem.setTooltip(new Tooltip("Delete the selected item"));
         btnBack.setTooltip(new Tooltip("Go back"));
     }
 
+    /**
+     * Sets the actions for all the controllers on the view.
+     */
     private void setOnAction() {
         menuItemDeleteItem.setOnAction(this::onBtnDeleteItemPress);
         menuItemBack.setOnAction(this::onBtnBackPress);
@@ -300,8 +340,8 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      * @param event 
      */
     private void onBtnBackPress(ActionEvent event) {
-        this.previousStage.show();
-        this.stage.hide();
+        previousStage.show();
+        stage.hide();
     }
     
     /**
@@ -323,10 +363,12 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                     userClient.close();
                 }
             } else {
+                
                 this.nothingToDelete();
             }
             
         } else if (garmentsTable.isVisible()) {
+            
             Garment deleteGarment = garmentsTable.getSelectionModel().getSelectedItem();
             
             if (deleteGarment != null) {
@@ -337,6 +379,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                     garmentClient.remove(String.valueOf(deleteGarment.getId()));
                     garmentClient.close();
                 }
+                
             } else {
                 this.nothingToDelete();
             }
@@ -347,6 +390,11 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         }
     }
     
+    /**
+     * This method opens the dialog to confirm the delete operation.
+     * 
+     * @return A boolean. True if the admin selects Yes, false if not.
+     */
     private Boolean deleteConfirmation() {
         boolean delete;
         
@@ -368,6 +416,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         return delete;
     }
     
+    /**
+     * The error dialog that opens when nothing is selected and the
+     * <i>Delete item</i> button is pressed.
+     */
     private void nothingToDelete() {
         
         Alert nothingToDelete = new Alert(AlertType.ERROR);

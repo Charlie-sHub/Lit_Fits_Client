@@ -99,22 +99,6 @@
                   </TableView>
                </content>
             </ScrollPane>
-            <ScrollPane fitToHeight="true">
-               <content>
-                  <TableView fx:id="usersTable" prefHeight="536.0" prefWidth="985.0">
-                     <columns>
-                        <TableColumn fx:id="usernameColumn" maxWidth="-1.0" minWidth="168.0" prefWidth="168.0" text="Username" />
-                        <TableColumn fx:id="passwordColumn" maxWidth="-1.0" minWidth="208.0" prefWidth="208.0" text="Password" />
-                        <TableColumn fx:id="fullNameColumn" maxWidth="-1.0" minWidth="126.0" prefWidth="126.0" text="Full name" />
-                        <TableColumn fx:id="phoneNumberColumn" maxWidth="-1.0" minWidth="139.0" prefWidth="139.0" text="Phone number" />
-                        <TableColumn fx:id="emailColumn" maxWidth="-1.0" minWidth="59.0" prefWidth="59.0" text="Email" />
-                        <TableColumn fx:id="userTypeColumn" maxWidth="-1.0" minWidth="78.0" prefWidth="78.0" text="User type" />
-                        <TableColumn fx:id="likedMaterialsColumn" maxWidth="-1.0" minWidth="82.0" prefWidth="82.0" text="Liked materials" />
-                        <TableColumn fx:id="likedColorsColumn" maxWidth="-1.0" minWidth="124.0" prefWidth="124.0" text="Liked colors" />
-                     </columns>
-                  </TableView>
-               </content>
-            </ScrollPane>
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="10.0" top="20.0" />
