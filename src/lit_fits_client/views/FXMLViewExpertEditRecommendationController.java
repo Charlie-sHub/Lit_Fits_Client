@@ -74,8 +74,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private MenuItem menuItemHelp;
     
-    ObservableList<Color> colorList;
-    ObservableList<Material> materialList;
+    ObservableList<Color> colorList = null;
+    ObservableList<Material> materialList = null;
     
     /**
      * Context menu of the table of colors
@@ -350,8 +350,6 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             this.theme = theme;
             stage.setScene(scene);
             stage.setTitle("Edit recommendations");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
             stage.show();
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
@@ -368,8 +366,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     private void setElements() {
         fillChoiceBoxTheme();
         setColumnFactories();
-        setSelectedReccomendations();
         fillTable();
+        setSelectedReccomendations();
         setOnAction();
         setMenu();
         setContextMenus();
@@ -387,33 +385,50 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * Function to preselect the recomended colors and materials
      */
     private void setSelectedReccomendations() {
-       List<Color> colorsSelected = expert.getRecommendedColors();
-       colorsSelected.forEach((colorExpert) -> {
-           colorList.stream().filter((colorDB) -> (colorExpert.getName().equals(colorDB.getName()))).forEachOrdered((colorDB) -> {
-               tableColor.getSelectionModel().select(colorDB);
-           });
-        });
        
+       List<Color> colorsSelected = expert.getRecommendedColors();
+        if (colorsSelected.isEmpty()) {
+            tableColor.getSelectionModel().clearSelection();
+        }else{
+            colorsSelected.forEach((colorExpert) -> {
+                colorList.stream().filter((colorDB) -> (colorExpert.getName().equals(colorDB.getName()))).forEachOrdered((colorDB) -> {
+                    tableColor.getSelectionModel().select(colorDB);
+                });
+             });
+        }
        List<Material> materialsSelected = expert.getRecommendedMaterials();
-       materialsSelected.forEach((materialExpert) -> {
-           materialList.stream().filter((materialDB) -> (materialExpert.getName().equals(materialDB.getName()))).forEachOrdered((materialDB) -> {
-               tableMaterial.getSelectionModel().select(materialDB);
-           });
-        });
-        
+        if (materialsSelected.isEmpty()) {
+            tableMaterial.getSelectionModel().clearSelection();
+        }else{
+            materialsSelected.forEach((materialExpert) -> {
+                materialList.stream().filter((materialDB) -> (materialExpert.getName().equals(materialDB.getName()))).forEachOrdered((materialDB) -> {
+                    tableMaterial.getSelectionModel().select(materialDB);
+                });
+            });
+        }
     }
     /**
      * Function to fill the table
      */
     private void fillTable() {
         
-        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        //MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
+        Material red = new Material();
+        materialList = tableMaterial.getItems();
+        materialList.add(red);
+        Color blue = new Color();
+        /*
         materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType<List<Material>>(){
         }));
+        */
         tableMaterial.setItems(materialList);
-        ColorClient colorClient = ClientFactory.getColorClient(uri);
+        //ColorClient colorClient = ClientFactory.getColorClient(uri);
+        colorList = tableColor.getItems();
+        colorList.add(blue);
+        /*
         colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType<List<Color>>(){
         }));
+        */
         tableColor.setItems(colorList);   
         tableColor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }

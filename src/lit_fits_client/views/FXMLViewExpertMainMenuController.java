@@ -172,7 +172,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
      */
     private void onBtnRecommendationPress(ActionEvent event) {
         try {
-            FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("fxml/ExpertEditRecommendations"));
+            FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("fxml/ExpertEditRecommendations.fxml"));
             Stage stageMainProgram = new Stage();
             Parent root = (Parent) fXMLLoader.load();
             FXMLViewExpertEditRecommendationController editRecommendations = ((FXMLViewExpertEditRecommendationController) fXMLLoader.getController());
