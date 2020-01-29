@@ -354,7 +354,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     /**
      * Sets the properties for several elements of the window
      */
-    private void setElements() throws FileNotFoundException {
+    private void setElements() throws FileNotFoundException, ClientErrorException {
         fillChoiceBoxTheme();
         File placeholderFile = new File("placeholder.jpg");
         FileInputStream imageFileInput = new FileInputStream(placeholderFile);
