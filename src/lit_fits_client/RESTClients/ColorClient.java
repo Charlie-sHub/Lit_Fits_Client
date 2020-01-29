@@ -6,14 +6,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Jersey REST client generated for REST resource:ColorFacadeREST [litfitsserver.entities.color]<br>
- * USAGE:
- * <pre>
- *        ColorClient client = new ColorClient();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+ * Class that implements the ColorClientInterface
  *
  * @author Carlos Mendez
  */
@@ -31,26 +24,11 @@ public class ColorClient implements ColorClientInterface {
         webTarget = client.target(baseUri).path("litfitsserver.entities.color");
     }
 
-    /**
-     * Edits a given color
-     *
-     * @param requestEntity
-     * @throws ClientErrorException
-     */
     @Override
     public void edit(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Finds all the colors
-     *
-     * @param <T>
-     * @param responseType
-     * @param name
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T find(Class<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -58,12 +36,6 @@ public class ColorClient implements ColorClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Counts the amount of colors
-     *
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public String count() throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -71,45 +43,22 @@ public class ColorClient implements ColorClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    /**
-     * Creates a new color
-     *
-     * @param requestEntity
-     * @throws ClientErrorException
-     */
     @Override
     public void create(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Finds all the colors
-     *
-     * @param <T>
-     * @param responseType
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Deletes a color given its name
-     *
-     * @param name
-     * @throws ClientErrorException
-     */
     @Override
     public void remove(String name) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{name})).request().delete();
     }
 
-    /**
-     * Closes the client
-     */
     @Override
     public void close() {
         client.close();

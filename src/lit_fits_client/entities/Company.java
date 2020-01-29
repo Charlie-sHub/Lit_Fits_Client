@@ -9,9 +9,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Company class, has all the data required for the Use Cases of company type actors
+ * Company entity class
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @XmlRootElement
 public class Company implements Serializable {

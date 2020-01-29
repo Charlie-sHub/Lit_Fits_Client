@@ -4,7 +4,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Interface for the garment client
+ * Interface for the Garment client
  *
  * @author Carlos Mendez
  */
@@ -17,7 +17,7 @@ public interface GarmentClientInterface {
     /**
      * Counts the total amount of garments
      *
-     * @return
+     * @return String the amount of Garments
      * @throws ClientErrorException
      */
     String countREST() throws ClientErrorException;
@@ -44,7 +44,7 @@ public interface GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param id
-     * @return
+     * @return responseType should be a Garment
      * @throws ClientErrorException
      */
     <T> T findGarment(Class<T> responseType, String id) throws ClientErrorException;
@@ -54,7 +54,7 @@ public interface GarmentClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @return
+     * @return responseType should be a List of Garments
      * @throws ClientErrorException
      */
     <T> T findGarmentAll(GenericType<T> responseType) throws ClientErrorException;
@@ -65,7 +65,7 @@ public interface GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param barcode
-     * @return
+     * @return responseType should be a Garment
      * @throws ClientErrorException
      */
     <T> T findGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException;
@@ -76,7 +76,7 @@ public interface GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param nif
-     * @return
+     * @return responseType should be a List of Garments
      * @throws ClientErrorException
      */
     <T> T findGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException;
@@ -87,7 +87,7 @@ public interface GarmentClientInterface {
      * @param <T>
      * @param responseType
      * @param requested
-     * @return
+     * @return responseType should be a List of Garments
      * @throws ClientErrorException
      */
     <T> T findGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException;
@@ -106,11 +106,14 @@ public interface GarmentClientInterface {
     /**
      * Gets the picture of the garment
      *
+     * Deprecated since images are now embedded in the Garment
+     *
      * @param <T>
      * @param id
-     * @return
+     * @return responseType should be a InputStream
      * @throws ClientErrorException
      */
+    @Deprecated
     <T> T getImage(Class<T> responseType, String id) throws ClientErrorException;
 
     /**
@@ -120,6 +123,4 @@ public interface GarmentClientInterface {
      * @throws ClientErrorException
      */
     void remove(String id) throws ClientErrorException;
-    
-    
 }

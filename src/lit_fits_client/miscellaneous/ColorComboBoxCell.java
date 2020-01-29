@@ -8,6 +8,8 @@ import lit_fits_client.entities.Garment;
 /**
  * Custom ComboBox cell to show the colors of the garment as colors
  *
+ * A shame it wasn't implemented
+ *
  * @author Carlos Mendez
  */
 public class ColorComboBoxCell extends ComboBoxTableCell<Garment, Set<Color>> {

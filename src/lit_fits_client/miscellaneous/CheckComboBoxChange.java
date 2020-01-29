@@ -7,7 +7,7 @@ import org.reactfx.Change;
 /**
  * Class that extends the InputChange class to accommodate changes in Check Combo Boxes
  *
- * I shouldn't waste my time on this honestly
+ * I shouldn't waste my time on this honestly but whatever
  *
  * Following and adapting: https://github.com/FXMisc/UndoFX
  *

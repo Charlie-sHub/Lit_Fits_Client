@@ -18,9 +18,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Garment entity
+ * Garment entity class
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @XmlRootElement
 public class Garment implements Serializable {

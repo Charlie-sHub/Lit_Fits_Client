@@ -17,7 +17,7 @@ public interface MaterialClientInterface {
     /**
      * Counts the amount of materials
      *
-     * @return
+     * @return String amount of garments
      * @throws ClientErrorHException
      */
     String countREST() throws ClientErrorException;
@@ -44,7 +44,7 @@ public interface MaterialClientInterface {
      * @param <T>
      * @param responseType
      * @param name
-     * @return
+     * @return responseType should be a Material
      * @throws ClientErrorException
      */
     <T> T find(Class<T> responseType, String name) throws ClientErrorException;
@@ -54,7 +54,7 @@ public interface MaterialClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @return
+     * @return responseType should be a List of Materials
      * @throws ClientErrorException
      */
     <T> T findAll(GenericType<T> responseType) throws ClientErrorException;

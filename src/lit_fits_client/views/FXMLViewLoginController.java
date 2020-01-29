@@ -81,67 +81,26 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     @FXML
     private PasswordField fieldPassword;
+    /**
+     * ToggleGroup for the two radio buttons that select what kind of registering it will be done
+     */
     private ToggleGroup radioButtonGroup;
+    /**
+     * Stage to be used by this controller
+     */
     private Stage stage;
+    /**
+     * Register stage
+     */
     private Stage registerStage;
+    /**
+     * Main menu Stage
+     */
     private Stage mainStage;
+    /**
+     * Logger
+     */
     private static final Logger LOG = Logger.getLogger(FXMLViewLoginController.class.getName());
-
-    public Button getBtnLogin() {
-        return btnLogin;
-    }
-
-    public void setBtnLogin(Button btnLogin) {
-        this.btnLogin = btnLogin;
-    }
-
-    public Button getBtnRegister() {
-        return btnRegister;
-    }
-
-    public void setBtnRegister(Button btnRegister) {
-        this.btnRegister = btnRegister;
-    }
-
-    public Button getBtnReestablishPassword() {
-        return btnReestablishPassword;
-    }
-
-    public void setBtnReestablishPassword(Button btnReestablishPassword) {
-        this.btnReestablishPassword = btnReestablishPassword;
-    }
-
-    public RadioButton getrBtnCompany() {
-        return rBtnCompany;
-    }
-
-    public void setrBtnCompany(RadioButton rBtnCompany) {
-        this.rBtnCompany = rBtnCompany;
-    }
-
-    public RadioButton getrBtnFashionExpert() {
-        return rBtnFashionExpert;
-    }
-
-    public void setrBtnFashionExpert(RadioButton rBtnFashionExpert) {
-        this.rBtnFashionExpert = rBtnFashionExpert;
-    }
-
-    public TextField getTxtUsername() {
-        return txtUsername;
-    }
-
-    public void setTxtUsername(TextField txtUsername) {
-        this.txtUsername = txtUsername;
-    }
-
-    public PasswordField getFieldPassword() {
-        return fieldPassword;
-    }
-
-    public void setFieldPassword(PasswordField fieldPassword) {
-        this.fieldPassword = fieldPassword;
-    }
 
     public Stage getStage() {
         return stage;
@@ -171,7 +130,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * This function will initialize the window
      *
      * @param themes
-     * @param theme the path to the theme chosen
+     * @param theme
      * @param root
      * @param uri
      * @author Carlos Mendez
@@ -193,7 +152,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -400,11 +358,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.hide();
         } catch (IOException | ClientErrorException ex) {
             createExceptionDialog(ex);
-            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         } catch (Exception ex) {
             createExceptionDialog(ex);
-            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         }
     }
@@ -429,7 +385,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**
      * Login of the admin User
      *
-     * @return user Admin
+     * @return User admin
      * @throws ClientErrorException
      * @throws Exception
      * @author Carlos Mendez
@@ -553,7 +509,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             }
         } catch (IOException e) {
             LOG.severe(e.getMessage());
-            e.printStackTrace();
         }
     }
 

@@ -20,7 +20,7 @@ import lit_fits_client.entities.Company;
 import lit_fits_client.views.themes.Theme;
 
 /**
- * The main menu of the program for companies.
+ * The main menu of the program for Companies.
  *
  * @author Carlos Mendez
  */
@@ -80,20 +80,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
     private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
-     * @return the btnLogout
-     */
-    public Button getBtnLogOut() {
-        return btnLogOut;
-    }
-
-    /**
-     * @param btnLogOut the btnLogout to set
-     */
-    public void setBtnLogOut(Button btnLogOut) {
-        this.btnLogOut = btnLogOut;
-    }
-
-    /**
      * @return the stage
      */
     public Stage getStage() {
@@ -105,47 +91,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    /**
-     * @return the loginStage
-     */
-    public Stage getLogin() {
-        return loginStage;
-    }
-
-    /**
-     * @param loginStage the login to set
-     */
-    public void setLogin(Stage loginStage) {
-        this.loginStage = loginStage;
-    }
-
-    /**
-     * Returns the warehouse button
-     *
-     * @return Button
-     */
-    public Button getBtnWarehouse() {
-        return btnWarehouse;
-    }
-
-    /**
-     * Sets the button to be used as warehouse button
-     *
-     * @param btnWarehouse
-     */
-    public void setBtnWarehouse(Button btnWarehouse) {
-        this.btnWarehouse = btnWarehouse;
-    }
-
-    /**
-     * Returns the account modification button
-     *
-     * @return Button
-     */
-    public Button getBtnModifyAccount() {
-        return btnModifyAccount;
     }
 
     /**
@@ -164,15 +109,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      */
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    /**
-     * Sets the button to be used for account modification
-     *
-     * @param btnModifyAccount
-     */
-    public void setBtnModifyAccount(Button btnModifyAccount) {
-        this.btnModifyAccount = btnModifyAccount;
     }
 
     /**
@@ -195,7 +131,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
 
     /**
      * This method initializes the window
-     *
      *
      * @param themes
      * @param theme the chosen css theme
@@ -325,8 +260,10 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * @param event
      */
     public void onDatePicked(ActionEvent event) {
-        if(datePicker.getValue().equals(LocalDate.now())){
+        if (datePicker.getValue().equals(LocalDate.now())) {
             lblCorrect.setVisible(true);
+        } else {
+            lblCorrect.setVisible(false);
         }
     }
 }

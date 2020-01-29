@@ -14,11 +14,11 @@ public interface PublicKeyClientInterface {
     void close();
 
     /**
-     * Gets the public key
+     * Gets the public key from the server
      *
      * @param <T>
      * @param responseType
-     * @return
+     * @return responseType should be a InputStream
      * @throws ClientErrorException
      */
     <T> T getPublicKey(Class<T> responseType) throws ClientErrorException;
