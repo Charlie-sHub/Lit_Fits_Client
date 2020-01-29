@@ -73,18 +73,12 @@
                   <Button fx:id="btnRedo" layoutX="433.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="74.0" text="Redo" />
                   <Button fx:id="btnHelp" layoutX="521.0" layoutY="34.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="76.0" text="Help" />
                   <Label fx:id="lblInvalidMail" layoutX="596.0" layoutY="200.0" prefHeight="18.0" prefWidth="226.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
-                  <Label fx:id="lblPublication" layoutX="179.0" layoutY="239.0" prefHeight="18.0" prefWidth="172.0" text="Publication:">
+                  <Label fx:id="lblPhone" layoutX="178.0" layoutY="244.0" prefHeight="18.0" prefWidth="172.0" text="Phone Number:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPublication" layoutX="358.0" layoutY="235.0" prefHeight="25.0" prefWidth="228.0" />
-                  <Label fx:id="lblPhone" layoutX="178.0" layoutY="279.0" prefHeight="18.0" prefWidth="172.0" text="Phone Number:">
-                     <font>
-                        <Font name="Arial" size="15.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtPhone" layoutX="357.0" layoutY="275.0" prefHeight="25.0" prefWidth="228.0" />
+                  <TextField fx:id="txtPhone" layoutX="357.0" layoutY="240.0" prefHeight="25.0" prefWidth="228.0" />
                   <Label fx:id="lblInvalidUsername" layoutX="596.0" layoutY="120.0" prefHeight="18.0" prefWidth="226.0" text="Username cannot start by 'admin'" textAlignment="JUSTIFY" textFill="RED" />
                     </children>
                 </AnchorPane>

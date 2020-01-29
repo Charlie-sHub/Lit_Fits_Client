@@ -474,8 +474,6 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
                     !txtPhone.getText().equals(phone);
             if(verifyUser() & emailPatternCheck()){
                 onFieldFilled(btnSubmit);
-            }else{
-                btnSubmit.setDisable(true);
             }
             
             try {

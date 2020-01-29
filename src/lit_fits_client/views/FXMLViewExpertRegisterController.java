@@ -451,7 +451,8 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             expert = setExpertData(publicKeyBytes);
             expertClient.create(expert);
-            openLogin(expert);
+            System.out.println(expert.toString());
+            openMainWindow();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
             LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
@@ -518,7 +519,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      */
     
     public void lengthListener(ObservableValue observable, Number oldValue, Number newValue) {
-        lengthCheck(btnRegister);
+        
     }
     
     public void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
