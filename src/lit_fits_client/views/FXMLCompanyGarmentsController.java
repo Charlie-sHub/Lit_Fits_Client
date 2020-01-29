@@ -326,7 +326,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     /**
      * Sets the options for different elements of the window
      */
-    private void setElements() {
+    private void setElements() throws ClientErrorException{
         fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
