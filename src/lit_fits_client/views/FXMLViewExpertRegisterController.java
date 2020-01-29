@@ -5,25 +5,51 @@
  */
 package lit_fits_client.views;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
+import lit_fits_client.RESTClients.ClientFactory;
+import lit_fits_client.RESTClients.ExpertClient;
+import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.miscellaneous.Encryptor;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  *
- * @author 2dam
+ * @author Ander
  */
 public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInput {
+    /**
+     * Invalid username label
+     */
+    @FXML
+    private Label lblInvalidUsername;
     /**
      * Invalid email label
      */
@@ -73,7 +99,7 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
      * Label password mismatch
      */
     @FXML
-    private Label lblPassMismatch;
+    private Label lblPasswordMismatch;
     /**
      * Help button
      */
@@ -91,12 +117,27 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     
     private FashionExpert expert;
     
+    private boolean correctPatterns;
+    
     /**
      * Logger object
      */
     private static final Logger LOG = Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName());
 
-    
+    /**
+     * @return the lblLabel
+     */
+    public Label getLblLabel() {
+        return lblInvalidUsername;
+    }
+
+    /**
+     * @param lblInvalidUsername
+     */
+    public void setLblLabel(Label lblInvalidUsername) {
+        this.lblInvalidUsername = lblInvalidUsername;
+    }
+
         
 
     /**
@@ -226,17 +267,17 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     }
 
     /**
-     * @return the lblPassMismatch
+     * @return the lblPasswordMismatch
      */
     public Label getLblPassMismatch() {
-        return lblPassMismatch;
+        return lblPasswordMismatch;
     }
 
     /**
-     * @param lblPassMismatch the lblPassMismatch to set
+     * @param lblPassMismatch the lblPasswordMismatch to set
      */
     public void setLblPassMismatch(Label lblPassMismatch) {
-        this.lblPassMismatch = lblPassMismatch;
+        this.lblPasswordMismatch = lblPassMismatch;
     }
 
     /**
@@ -296,36 +337,276 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
     }
     
     
-        public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
-            this.setStage(stageProgramMain);
-            Scene scene = new Scene(root);
-            getStage().setScene(scene);
-            getStage().setTitle("Modify Account");
-            getStage().setMinWidth(1400);
-            getStage().setMinHeight(800);
-            getStage().show();
+            this.stage = stage;
+            Scene scene;
+            scene = new Scene(root);
+            this.theme = theme;
             setStylesheet(scene, theme.getThemeCssPath());
+            stage.setScene(scene);
             themeList = themes;
             setElements();
-            getStage().setOnCloseRequest(this::onClosing);
+            stage.setTitle("Register Account");
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
+            stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
     }
+    /**
+     * This method initializes the elements in the window, setting listeners or enabling/disabling elements.
+     */
+    private void setElements() {
+        fillChoiceBoxTheme();
+        setOnAction();
+        setMnemonicParsing();
+        setFocusTraversable();
+        setListeners();
+        textFields = new ArrayList<>();
+        fillArray();
+        setUndoRedo();        
+        undoneStrings = new ArrayList<>();
+        txtUsername.requestFocus();
+        lblInvalidMail.setVisible(false);
+        lblLength.setVisible(false);
+        lblPasswordMismatch.setVisible(false);
+        lblInvalidUsername.setVisible(false);
+    }
+    /**
+     * Sets the methods that will be called when actions are performed on different elements
+     */
+    private void setOnAction() {
+        choiceTheme.setOnAction(this::onThemeChosen);
+        btnRegister.setOnAction(this::onRegisterPress);
+        btnCancel.setOnAction(this::onCancelPress);
+        btnHelp.setOnAction(this::onHelpPressed);
+        btnHelp.setOnKeyPressed(this::onF1Pressed);
+        stage.setOnCloseRequest(this::onClosing);
+    }
+
+    /**
+     * Sets the mnemonic parsing for different elements
+     */
+    private void setMnemonicParsing() {
+        btnCancel.setText("_Cancel");
+        btnRegister.setText("_Register");
+        btnUndo.setText("_Undo");
+        btnRedo.setText("_Redo");
+        btnRegister.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        btnUndo.setMnemonicParsing(true);
+        btnRedo.setMnemonicParsing(true);
+    }
     
-    
-    
+    /**
+     * This method allows to change the focus between the elements of the window.
+     */
+    private void setFocusTraversable() {
+        txtUsername.setFocusTraversable(true);
+        txtFullName.setFocusTraversable(true);
+        txtEmail.setFocusTraversable(true);
+        txtPhone.setFocusTraversable(true);
+        txtPassword.setFocusTraversable(true);
+        txtRepeatPassword.setFocusTraversable(true);
+    }
+    /**
+     * Add listeners to all text inputs
+     */
+    private void setListeners() {
+        txtUsername.textProperty().addListener(this::onFieldChange);
+        txtFullName.textProperty().addListener(this::onFieldChange);
+        txtEmail.textProperty().addListener(this::onFieldChange);
+        txtPhone.textProperty().addListener(this::onFieldChange);
+        txtPassword.textProperty().addListener(this::onFieldChange);
+        txtRepeatPassword.textProperty().addListener(this::onFieldChange);
+        txtUsername.lengthProperty().addListener(this::lengthListener);
+        txtFullName.lengthProperty().addListener(this::lengthListener);
+        txtEmail.lengthProperty().addListener(this::lengthListener);
+        txtPhone.lengthProperty().addListener(this::lengthListener);        
+        txtPassword.lengthProperty().addListener(this::lengthListener);
+        txtRepeatPassword.lengthProperty().addListener(this::lengthListener);
+    }
+    /**
+     * Fills the array of text fields to check later if they're filled with text
+     */
+    @Deprecated
+    private void fillArray() {
+        textFields.add(txtUsername);
+        textFields.add(txtFullName);
+        textFields.add(txtEmail);
+        textFields.add(txtPhone);
+        textFields.add(txtPassword);
+        textFields.add(txtRepeatPassword);
+    }
+        
     @Override
     public void onRegisterPress(ActionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        try {
+            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+            expert = setExpertData(publicKeyBytes);
+            expertClient.create(expert);
+            System.out.println(expert.toString());
+            openMainWindow();
+        } catch (ClientErrorException e) {
+            createExceptionDialog(e);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+        } catch(Exception ex) {
+            createExceptionDialog(ex);
+            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
+        } finally {
+            expertClient.close();
+            publicKeyClient.close();
+        }
+    }
+    
+    protected void onCancelPress(ActionEvent event){
+        previousStage.show();
+        stage.hide();
+    }
+    
+        
+   
+    /**
+     * Opens the help window when the help button is pressed
+     *
+     * @param event
+     */
+    @Override
+    protected void onHelpPressed(ActionEvent event) {
+        try {
+            openHelpView();
+        } catch (IOException e) {
+            createExceptionDialog(e);
+        }
+    }
+    
+    @Override
+    protected void openHelpView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ViewHelp.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageHelp = new Stage();
+        FXMLHelpController helpView = ((FXMLHelpController) fxmlLoader.getController());
+        helpView.initStage(theme, stageHelp, root);
     }
 
-    private void setElements() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * Checks that the F1 key is pressed to open the help window
+     *
+     * @param event
+     */
+    private void onF1Pressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.F1) {
+            try {
+                openHelpView();
+            } catch (IOException e) {
+                createExceptionDialog(e);
+            }
+        }
+    }
+    
+    /**
+     * Simply calls the proper length listener method
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
+    
+    public void lengthListener(ObservableValue observable, Number oldValue, Number newValue) {
+        
+    }
+    
+    public void onFieldChange(ObservableValue observable, String oldValue, String newValue) {
+        if(verifyUser() & verifyEmail() & verifyPasswords()) {
+            onFieldFilled(btnRegister);
+        }else {
+            btnRegister.setDisable(true);
+        }
     }
 
+    private boolean verifyUser() {
+        boolean correctUser;
+        correctUser = !txtUsername.getText().startsWith("admin");
+        lblInvalidUsername.setVisible(!correctUser);
+        return correctUser;
+    }
+
+    private boolean verifyEmail() {
+        boolean correctEmail;
+        correctEmail = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        lblInvalidMail.setVisible(!correctEmail);
+        return correctEmail;
+    }
+
+    private boolean verifyPasswords() {
+        boolean correctPassword;
+        if(txtPassword.getText().trim().equals(txtRepeatPassword.getText().trim())){
+            correctPassword = true;
+            lblPasswordMismatch.setVisible(false);
+        } else{
+            correctPassword = false;
+            lblPasswordMismatch.setVisible(true);
+        }
+            return correctPassword;
+    }
+
+    private FashionExpert setExpertData(byte[] publicKey) throws Exception {
+        FashionExpert expertAUX = new FashionExpert();
+        expertAUX.setUsername(txtUsername.getText());
+        expertAUX.setFullName(txtFullName.getText());
+        expertAUX.setEmail(txtEmail.getText());
+        expertAUX.setPhoneNumber(txtPhone.getText());
+        expertAUX.setPassword(Encryptor.encryptText(txtPassword.getText(), publicKey));
+        return expertAUX;
+    }
+
+    private void openMainWindow() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/ExpertMainMenu.fxml"));
+        Parent root = (Parent) fxmlLoader.load();
+        Stage stageProgramMain = new Stage();
+        FXMLViewExpertMainMenuController mainView = ((FXMLViewExpertMainMenuController) fxmlLoader.getController());
+        mainView.setExpert(expert);
+        mainView.setLoginStage(previousStage);
+        mainView.initStage(themeList, theme, stageProgramMain, root, uri);
+        stage.hide();        
+    }
+
+    private void openLogin(FashionExpert expert1) {
+       previousStage.show();
+        stage.hide();
+    }
+    
+    
+    /**
+     * Sets up all the things related to undoing and redoing.
+    */
+    private void setUndoRedo() {
+        EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtRepeatPassword.textProperty()).map(textChange -> new TextChange(textChange, txtRepeatPassword));
+        inputChanges = merge(usernameChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
+    }
+
+
+
+    
     
 }

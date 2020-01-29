@@ -6,12 +6,14 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,13 +35,25 @@ import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
+import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  *
  * @author Ander
  */
+//TODO Comprobar si los campos estan vacios
 public class FXMLViewExpertModifyAccountController extends FXMLDocumentControllerInput{
+    /**
+     * Invalid username label
+     */
+    @FXML
+    private Label lblInvalidUsername;
     /**
      * Invalid email label
      */
@@ -85,11 +99,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
      */
     @FXML
     private PasswordField txtNewPassword;
-    /**
-     * Label password mismatch
-     */
-    @FXML
-    private Label lblPassMismatch;
+
     /**
      * Help button
      */
@@ -114,6 +124,19 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
 
     boolean change = false; 
     boolean passwordChange = false;
+    /**
+     * @return the lblLabel
+     */
+    public Label getLblLabel() {
+        return lblInvalidUsername;
+    }
+
+    /**
+     * @param lblInvalidUsername
+     */
+    public void setLblLabel(Label lblInvalidUsername) {
+        this.lblInvalidUsername = lblInvalidUsername;
+    }
     /**
      * @return the lblInvalidMail
      */
@@ -226,19 +249,6 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         this.txtNewPassword = txtNewPassword;
     }
 
-    /**
-     * @return the lblPassMismatch
-     */
-    public Label getLblPassMismatch() {
-        return lblPassMismatch;
-    }
-
-    /**
-     * @param lblPassMismatch the lblPassMismatch to set
-     */
-    public void setLblPassMismatch(Label lblPassMismatch) {
-        this.lblPassMismatch = lblPassMismatch;
-    }
 
     /**
      * @return the btnHelp
@@ -311,40 +321,54 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     
-    public void initStage(List<Theme> themes, Theme theme, Stage stageProgramMain, Parent root, String uri) {
+    public void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try {
             this.uri = uri;
-            this.stage = stageProgramMain;
+            this.stage = stage;
+            this.theme = theme;
             Scene scene = new Scene(root);
+            setStylesheet(scene, theme.getThemeCssPath());
             stage.setScene(scene);
             stage.setTitle("Modify Account");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
             stage.show();
-            setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
-            stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
-        setOnAction();
-        setTooltips();
-        setFocusTraversable();
+        fillChoiceBoxTheme();
         setTextFields();
+        setOnAction();
+        setFocusTraversable();
         setListeners();
-        fillArray();
+        setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
+        lblInvalidMail.setVisible(false);
+        lblLength.setVisible(false);
+        lblInvalidUsername.setVisible(false);
     }
 
-    private void setTooltips() {
-        
+    /**
+     * Implements the actions
+     */
+    private void setOnAction() {
+        btnHelp.setOnAction(this::onHelpPressed);
+        btnSubmit.setOnAction(this::onRegisterPress);
+        btnCancel.setOnAction(this::onBtnCancelPress);
+        btnHelp.setOnAction(this::onHelpPressed);
+        btnHelp.setOnKeyPressed(this::onF1Pressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
+
 
     private void setFocusTraversable() {
         txtUsername.setFocusTraversable(true);
@@ -355,19 +379,11 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         txtNewPassword.setFocusTraversable(true);
     }
 
-    private void setOnAction() {
-        btnHelp.setOnAction(this::onHelpPressed);
-        btnSubmit.setOnAction(this::onRegisterPress);
-        btnRedo.setOnAction(this::onRedoPress);
-        btnUndo.setOnAction(this::onUndoPress);
-        btnCancel.setOnAction(this::onBtnCancelPress);
-        btnHelp.setOnKeyPressed(this::onF1Pressed);
-    }
-
 
     private void setTextFields() {
         txtUsername.setText(expert.getUsername());
         txtUsername.setEditable(false);
+        txtUsername.setDisable(true);
         txtFullName.setText(expert.getFullName());
         txtEmail.setText(expert.getEmail());
         txtPhone.setText(expert.getPhoneNumber());
@@ -379,11 +395,11 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         txtFullName.textProperty().addListener(this::onFieldChange);
         txtEmail.textProperty().addListener(this::onFieldChange);
         txtPhone.textProperty().addListener(this::onFieldChange);
+        txtPassword.textProperty().addListener(this::onFieldChange);
+        txtNewPassword.textProperty().addListener(this::onFieldChange);        
         txtFullName.lengthProperty().addListener(this::lengthListener);
         txtEmail.lengthProperty().addListener(this::lengthListener);
-        txtPhone.lengthProperty().addListener(this::lengthListener);
-        txtPassword.textProperty().addListener(this::onFieldChange);
-        txtNewPassword.textProperty().addListener(this::onFieldChange);
+        txtPhone.lengthProperty().addListener(this::lengthListener);        
         txtPassword.lengthProperty().addListener(this::lengthListener);
         txtNewPassword.lengthProperty().addListener(this::lengthListener);
     }
@@ -425,14 +441,43 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             }
         }
     }
+    
+    @Override
+    public void onRegisterPress(ActionEvent event) {
+        try {
+            if(enableModify()){
+                ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+                try {
+                    byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+                    setExpertData(publicKeyBytes);
+                    expertClient.edit(expert);
+                    openMainWindow();
+                } catch (ClientErrorException e) {
+                    createExceptionDialog(e);
+                    LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+                } catch(Exception ex) {
+                    createExceptionDialog(ex);
+                    LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
+                } finally {
+                    expertClient.close();
+                    publicKeyClient.close();
+                }
+            } else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setContentText("You have written something wrongly");
+                alert.showAndWait();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private void fillArray() {
         textFields.add(txtPhone);
         textFields.add(txtEmail);
         textFields.add(txtFullName);
-        textFields.add(txtNewPassword);
-        textFields.add(txtPassword);
-        textFields.add(txtUsername);
     }
     
     /**
@@ -447,16 +492,25 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     }
 
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
+        
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         String fullName = expert.getFullName();
         String email = expert.getEmail();
-        String phone = expert.getPhoneNumber();        
+        String phone = expert.getPhoneNumber();
         change = !txtFullName.getText().equals(fullName) ||
                 !txtEmail.getText().equals(email) ||
-                !txtPhone.getText().equals(phone);     
+                !txtPhone.getText().equals(phone);
+        try {
+            passwordChange = comparePasswords(publicKeyBytes);
+        } catch (Exception ex) {
+            createExceptionDialog(ex);
+            
+        }
     }
     
     private void onBtnCancelPress(ActionEvent e){
-        if(change){
+        if(change || passwordChange){
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText(null);
             alert.setTitle("Confirmation");
@@ -470,45 +524,18 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
                     LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
                 }
             } 
-        }
-        try {
-            openMainWindow();
-        } catch (IOException ex) {
-            createExceptionDialog(ex);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
-        }
-    }
-    
-    @Override
-    public void onRegisterPress(ActionEvent event) {
-        if(change){
-            ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-            PublicKeyClient publicKetClient = ClientFactory.getPublicKeyClient(uri);
+        }else{
             try {
-                setExpertData(publicKetClient.getPublicKey(String.class));
-                expertClient.edit(expert);
                 openMainWindow();
-            } catch (ClientErrorException e) {
-                createExceptionDialog(e);
-                LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
-            } catch(Exception ex) {
+            } catch (IOException ex) {
                 createExceptionDialog(ex);
                 LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
-            } finally {
-                expertClient.close();
-                publicKetClient.close();
             }
-        } else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information");
-            alert.setContentText("Nothing has changed");
-            alert.showAndWait();
         }
-    
-    
     }
-
-    private void setExpertData(String publicKey) throws Exception {
+    
+    private void setExpertData(byte[] publicKey) throws Exception {
+        
         expert.setFullName(txtFullName.getText());
         expert.setEmail(txtEmail.getText());
         expert.setPhoneNumber(txtPhone.getText());
@@ -516,7 +543,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         if(txtNewPassword.getText().isEmpty()){
             expert.setPassword(expert.getPassword());
         }else if (passwordChange && !txtNewPassword.getText().isEmpty()){
-            expert.setPassword(Encryptor.encryptText(txtNewPassword.getText(), publicKey.getBytes()));
+            expert.setPassword(Encryptor.encryptText(txtNewPassword.getText(), publicKey));
         }else{
             expert.setPassword(expert.getPassword());
         }
@@ -533,11 +560,59 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         stage.hide();
     }
 
-     private void comparePasswords(String publicKey) throws Exception{
-         String passw = Encryptor.encryptText(txtPassword.getText(), publicKey.getBytes());
-         String passwordInDB = expert.getPassword();
+    private boolean comparePasswords(byte[] publicKey) throws Exception{
+        String passw = Encryptor.encryptText(txtPassword.getText(), publicKey);
+        String passwordInDB = expert.getPassword();
          
-         passwordChange = passw.equals(passwordInDB);
-     }
+        passwordChange = passw.trim().equals(passwordInDB.trim());
+        
+        return passwordChange;
+    }
+    
+    private boolean emailPatternCheck(){
+        boolean verifyEmail;
+        verifyEmail = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        return verifyEmail;
+    }
+    
+    private boolean enableModify() throws Exception{
+        boolean enableModify;
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+        
+        if(txtPassword.getText().isEmpty()){
+            enableModify = emailPatternCheck();
+        }else{
+            enableModify = emailPatternCheck() & comparePasswords(publicKeyBytes);
+        }
+        
+        return enableModify;
+    }
+
+    
+        /**
+     * Sets up all the things related to undoing and redoing.
+    */
+    private void setUndoRedo() {
+        EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtNewPassword.textProperty()).map(textChange -> new TextChange(textChange, txtNewPassword));
+        inputChanges = merge(usernameChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
+    }
+
+
+
          
 }
