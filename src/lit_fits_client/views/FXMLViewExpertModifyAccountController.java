@@ -330,12 +330,11 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             setStylesheet(scene, theme.getThemeCssPath());
             stage.setScene(scene);
             stage.setTitle("Modify Account");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
+            stage.setMinWidth(850);
+            stage.setMinHeight(650);
             stage.show();
             themeList = themes;
             setElements();
-            stage.setOnCloseRequest(this::onClosing);
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
@@ -355,6 +354,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         fillArray();
         lblInvalidMail.setVisible(false);
         lblLength.setVisible(false);
+        lblInvalidUsername.setVisible(false);
     }
 
     /**
@@ -363,10 +363,10 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     private void setOnAction() {
         btnHelp.setOnAction(this::onHelpPressed);
         btnSubmit.setOnAction(this::onRegisterPress);
-        btnRedo.setOnAction(this::onRedoPress);
-        btnUndo.setOnAction(this::onUndoPress);
         btnCancel.setOnAction(this::onBtnCancelPress);
+        btnHelp.setOnAction(this::onHelpPressed);
         btnHelp.setOnKeyPressed(this::onF1Pressed);
+        stage.setOnCloseRequest(this::onClosing);
     }
 
 
@@ -383,6 +383,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     private void setTextFields() {
         txtUsername.setText(expert.getUsername());
         txtUsername.setEditable(false);
+        txtUsername.setDisable(true);
         txtFullName.setText(expert.getFullName());
         txtEmail.setText(expert.getEmail());
         txtPhone.setText(expert.getPhoneNumber());
@@ -440,14 +441,43 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
             }
         }
     }
+    
+    @Override
+    public void onRegisterPress(ActionEvent event) {
+        try {
+            if(enableModify()){
+                ExpertClient expertClient = ClientFactory.getExpertClient(uri);
+                PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+                try {
+                    byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+                    setExpertData(publicKeyBytes);
+                    expertClient.edit(expert);
+                    openMainWindow();
+                } catch (ClientErrorException e) {
+                    createExceptionDialog(e);
+                    LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
+                } catch(Exception ex) {
+                    createExceptionDialog(ex);
+                    LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
+                } finally {
+                    expertClient.close();
+                    publicKeyClient.close();
+                }
+            } else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setContentText("You have written something wrongly");
+                alert.showAndWait();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     private void fillArray() {
         textFields.add(txtPhone);
         textFields.add(txtEmail);
         textFields.add(txtFullName);
-        textFields.add(txtNewPassword);
-        textFields.add(txtPassword);
-        textFields.add(txtUsername);
     }
     
     /**
@@ -463,27 +493,18 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
 
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
         
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+        String fullName = expert.getFullName();
+        String email = expert.getEmail();
+        String phone = expert.getPhoneNumber();
+        change = !txtFullName.getText().equals(fullName) ||
+                !txtEmail.getText().equals(email) ||
+                !txtPhone.getText().equals(phone);
         try {
-            PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
-            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
-            String fullName = expert.getFullName();
-            String email = expert.getEmail();
-            String phone = expert.getPhoneNumber();
-            change = !txtFullName.getText().equals(fullName) ||
-                    !txtEmail.getText().equals(email) ||
-                    !txtPhone.getText().equals(phone);
-            if(verifyUser() & emailPatternCheck()){
-                onFieldFilled(btnSubmit);
-            }
-            
-            try {
-                passwordChange = comparePasswords(publicKeyBytes);
-            } catch (Exception ex) {
-                createExceptionDialog(ex);
-                
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLViewExpertModifyAccountController.class.getName()).log(Level.SEVERE, null,ex);
+            passwordChange = comparePasswords(publicKeyBytes);
+        } catch (Exception ex) {
+            createExceptionDialog(ex);
             
         }
     }
@@ -503,45 +524,16 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
                     LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
                 }
             } 
-        }
-        try {
-            openMainWindow();
-        } catch (IOException ex) {
-            createExceptionDialog(ex);
-            LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
-        }
-    }
-    
-    @Override
-    public void onRegisterPress(ActionEvent event) {
-        if(enableModify()){
-            ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-            PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        }else{
             try {
-                byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
-                setExpertData(publicKeyBytes);
-                expertClient.edit(expert);
                 openMainWindow();
-            } catch (ClientErrorException e) {
-                createExceptionDialog(e);
-                LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{e.getMessage(), LocalDateTime.now()});
-            } catch(Exception ex) {
+            } catch (IOException ex) {
                 createExceptionDialog(ex);
                 LOG.log(Level.SEVERE, "{0} at: {1}", new Object[]{ex.getMessage(), LocalDateTime.now()});
-            } finally {
-                expertClient.close();
-                publicKeyClient.close();
             }
-        } else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information");
-            alert.setContentText("You have written something wrongly");
-            alert.showAndWait();
         }
-    
-    
     }
-
+    
     private void setExpertData(byte[] publicKey) throws Exception {
         
         expert.setFullName(txtFullName.getText());
@@ -583,17 +575,15 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         return verifyEmail;
     }
     
-    private boolean verifyUser() {
-        boolean correctUser;
-        correctUser = !txtUsername.getText().startsWith("admin");
-        lblInvalidUsername.setVisible(!correctUser);
-        return correctUser;
-    }
-     
-    private boolean enableModify(){
-        boolean enableModify = false;
-        if(verifyUser() & emailPatternCheck()){
-            enableModify = true;
+    private boolean enableModify() throws Exception{
+        boolean enableModify;
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
+        
+        if(txtPassword.getText().isEmpty()){
+            enableModify = emailPatternCheck();
+        }else{
+            enableModify = emailPatternCheck() & comparePasswords(publicKeyBytes);
         }
         
         return enableModify;

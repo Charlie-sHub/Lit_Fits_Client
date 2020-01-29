@@ -32,11 +32,7 @@
                       <TableColumn fx:id="columnNameColor" prefWidth="299.20001220703125" text="Name" />
                     </columns>
                      <contextMenu>
-                        <ContextMenu fx:id="contextMenuTableColors">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                          </items>
-                        </ContextMenu>
+                        <ContextMenu fx:id="contextMenuTableColors" />
                      </contextMenu>
                   </TableView>
           </children>
@@ -62,11 +58,7 @@
                       <TableColumn fx:id="columnNameMaterial" prefWidth="289.6000122070312" text="Name" />
                     </columns>
                      <contextMenu>
-                        <ContextMenu fx:id="contextMenuTableMaterials">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                          </items>
-                        </ContextMenu>
+                        <ContextMenu fx:id="contextMenuTableMaterials" />
                      </contextMenu>
                   </TableView>
           </children>
