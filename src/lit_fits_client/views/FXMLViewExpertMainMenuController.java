@@ -102,14 +102,14 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             this.theme = theme;
             stage.setScene(scene);
             stage.setTitle("Home");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
             stage.show();
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
+            e.printStackTrace();
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }

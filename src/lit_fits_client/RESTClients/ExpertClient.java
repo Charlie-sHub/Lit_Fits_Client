@@ -24,7 +24,7 @@ public class ExpertClient implements ExpertClientInterface {
      */
     public ExpertClient(String URL) {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(URL).path("litfitserver.entities.fashionexpert");
+        webTarget = client.target(URL).path("litfitsserver.entities.fashionexpert");
         
     }
     
@@ -53,7 +53,7 @@ public class ExpertClient implements ExpertClientInterface {
      */
     @Override
     public void edit(Object requestEntity) throws ClientErrorException {
-        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.TEXT_XML_TYPE));
+        webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
     /**
      * Finds and returns an expert by a given id
@@ -74,12 +74,14 @@ public class ExpertClient implements ExpertClientInterface {
      * Reestablishes the password of associated with the given username, sending an email with the new password
      *
      * @param username
+     * @return 
      * @throws ClientErrorException
      */
     @Override
-    public void reestablishPassword(String username) throws ClientErrorException {
+    public String reestablishPassword(String username) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("passwordReestablishment/{0}", new Object[]{username}));
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
     /**

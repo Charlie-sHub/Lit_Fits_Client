@@ -35,8 +35,13 @@ import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
+import org.fxmisc.undo.UndoManagerFactory;
+import org.reactfx.EventStream;
+import static org.reactfx.EventStreams.changesOf;
+import static org.reactfx.EventStreams.merge;
 
 /**
  *
@@ -345,6 +350,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         setOnAction();
         setFocusTraversable();
         setListeners();
+        setUndoRedo();
         textFields = new ArrayList<>();
         fillArray();
         lblInvalidMail.setVisible(false);
@@ -594,6 +600,30 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         
         return enableModify;
     }
+
+    
+        /**
+     * Sets up all the things related to undoing and redoing.
+    */
+    private void setUndoRedo() {
+        EventStream<TextChange> usernameChanges = changesOf(txtUsername.textProperty()).map(textChange -> new TextChange(textChange, txtUsername));
+        EventStream<TextChange> nameChanges = changesOf(txtFullName.textProperty()).map(textChange -> new TextChange(textChange, txtFullName));
+        EventStream<TextChange> emailChanges = changesOf(txtEmail.textProperty()).map(textChange -> new TextChange(textChange, txtEmail));
+        EventStream<TextChange> phoneChanges = changesOf(txtPhone.textProperty()).map(textChange -> new TextChange(textChange, txtPhone));
+        EventStream<TextChange> passwordChanges = changesOf(txtPassword.textProperty()).map(textChange -> new TextChange(textChange, txtPassword));
+        EventStream<TextChange> passwordConfirmChanges = changesOf(txtNewPassword.textProperty()).map(textChange -> new TextChange(textChange, txtNewPassword));
+        inputChanges = merge(usernameChanges, nameChanges, emailChanges, phoneChanges, passwordChanges, passwordConfirmChanges);
+        undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
+                inputChanges,
+                changes -> changes.invert(),
+                changes -> changes.redo(),
+                (previousChange, nextChange) -> previousChange.mergeWith(nextChange));
+        btnUndo.disableProperty().bind(undoManager.undoAvailableProperty().map(x -> !x));
+        btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
+        btnUndo.setOnAction(event -> undoManager.undo());
+        btnRedo.setOnAction(event -> undoManager.redo());
+    }
+
 
 
          

@@ -379,8 +379,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
 
     private void setColumnFactories() {
-        columnNameColor.setCellFactory(new PropertyValueFactory("color_name"));
-        columnNameMaterial.setCellFactory(new PropertyValueFactory("material_name"));
+        columnNameColor.setCellValueFactory(new PropertyValueFactory("name"));
+        columnNameMaterial.setCellValueFactory(new PropertyValueFactory("material_name"));
     }
     
     /**
