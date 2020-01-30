@@ -43,7 +43,6 @@ import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
 import lit_fits_client.views.themes.Theme;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -223,6 +222,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     @FXML
     private Button btnReport;
     /**
+     * Button to refresh the table
+     */
+    @FXML
+    private Button btnRefresh;
+    /**
      * The list of garments of the company
      */
     private ObservableList<Garment> garmentList;
@@ -238,7 +242,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Company logged in
      */
     private Company company;
-    private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
      * Getter of the stage in use by this window
@@ -368,25 +371,21 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the cell value factories for the table columns
      */
     private void setColumnFactories() {
-        tableColumnPicture.setCellFactory(param -> {
-            //Set up the ImageView
+        tableColumnPicture.setCellFactory(tableColumnParam -> {
             final ImageView imageview = new ImageView();
-            imageview.setFitHeight(50);
-            imageview.setFitWidth(50);
-            //Set up the Table
-            TableCell<Garment, Image> cell = new TableCell<Garment, Image>() {
+            imageview.setFitHeight(100);
+            imageview.setFitWidth(100);
+            TableCell<Garment, Image> tableCell = new TableCell<Garment, Image>() {
                 @Override
-                public void updateItem(Image item, boolean empty) {
-                    if (item != null) {
-                        imageview.setImage(item);
+                public void updateItem(Image garmentImage, boolean empty) {
+                    if (garmentImage != null) {
+                        imageview.setImage(garmentImage);
                     }
                 }
             };
-            // Attach the imageview to the cell
-            cell.setGraphic(imageview);
-            return cell;
+            tableCell.setGraphic(imageview);
+            return tableCell;
         });
-        // Maybe set a listener to the table cell to show the image set in the cell
         tableColumnPicture.setCellValueFactory(new PropertyValueFactory("pictureObject"));
         tableColumnAvailable.setCellValueFactory(new PropertyValueFactory("available"));
         tableColumnBarcode.setCellValueFactory(new PropertyValueFactory("barcode"));
@@ -413,6 +412,14 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         btnModify.setText("_Modify");
         btnPromote.setText("_Promote");
         btnReport.setText("_Report");
+        btnRefresh.setText("R_efresh");
+        btnAdd.setMnemonicParsing(true);
+        btnCancel.setMnemonicParsing(true);
+        btnDelete.setMnemonicParsing(true);
+        btnModify.setMnemonicParsing(true);
+        btnPromote.setMnemonicParsing(true);
+        btnRefresh.setMnemonicParsing(true);
+        btnReport.setMnemonicParsing(true);
     }
 
     /**
@@ -427,6 +434,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         choiceTheme.setTooltip(new Tooltip("Choose the theme you like the most"));
         tableGarments.setTooltip(new Tooltip("List of garments owned by the company"));
         btnReport.setTooltip(new Tooltip("List of garments owned by the company in PDF form"));
+        btnRefresh.setTooltip(new Tooltip("Refresh the Table of Garments"));
     }
 
     /**
@@ -456,6 +464,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
         btnReport.setOnAction(this::onBtnReportPress);
+        btnRefresh.setOnAction(this::onBtnRefreshPress );
     }
 
     /**
@@ -576,5 +585,16 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         } catch (Exception ex) {
             createExceptionDialog(ex);
         }
+    }
+    /**
+     * Refills the table of garments 
+     * @param event 
+     */
+    private void onBtnRefreshPress (ActionEvent event){
+        try {
+            fillTable();
+        } catch (ClientErrorException e) {
+            createExceptionDialog(e);
+        }        
     }
 }

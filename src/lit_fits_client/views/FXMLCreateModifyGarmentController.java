@@ -169,10 +169,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * The File of the picture chosen for the Garment
      */
     private File garmentPictureFile;
-    /**
-     * Logger object
-     */
-    private static final Logger LOG = Logger.getLogger(FXMLCreateModifyGarmentController.class.getName());
 
     /**
      * Getter for the stage of this view

@@ -44,7 +44,7 @@ public class FXMLDocumentController {
      * List of all the themes to choose from
      */
     protected List<Theme> themeList;
-    private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
+    protected static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
 
     public Theme getTheme() {
         return theme;

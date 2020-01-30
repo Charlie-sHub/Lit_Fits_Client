@@ -97,10 +97,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      * Main menu Stage
      */
     private Stage mainStage;
-    /**
-     * Logger
-     */
-    private static final Logger LOG = Logger.getLogger(FXMLViewLoginController.class.getName());
 
     public Stage getStage() {
         return stage;
@@ -151,7 +147,6 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
-            LOG.severe(e.getMessage());
         }
     }
 
@@ -358,10 +353,8 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             stage.hide();
         } catch (IOException | ClientErrorException ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         } catch (Exception ex) {
             createExceptionDialog(ex);
-            LOG.severe(ex.getMessage());
         }
     }
 
@@ -508,7 +501,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 createDialog("Please select what kind of registration you want");
             }
         } catch (IOException e) {
-            LOG.severe(e.getMessage());
+            createExceptionDialog(e);
         }
     }
 

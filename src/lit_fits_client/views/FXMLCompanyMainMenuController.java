@@ -77,7 +77,6 @@ public class FXMLCompanyMainMenuController extends FXMLDocumentController {
      * The company that logged in
      */
     private Company company;
-    private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
      * @return the stage

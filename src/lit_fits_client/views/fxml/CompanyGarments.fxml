@@ -43,11 +43,12 @@
                 </MenuBar>
                 <AnchorPane>
                     <children>
-                        <Button fx:id="btnAdd" layoutX="368.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Add" />
+                        <Button fx:id="btnAdd" layoutX="370.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Add" />
                         <Button fx:id="btnModify" layoutX="470.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
                         <Button fx:id="btnPromote" layoutX="570.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
-                        <Button fx:id="btnDelete" layoutX="670.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" />              
-                        <Button fx:id="btnReport" layoutX="770.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" /> 
+                        <Button fx:id="btnDelete" layoutX="670.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" /> 
+                        <Button fx:id="btnRefresh" layoutX="770.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Refresh" />             
+                        <Button fx:id="btnReport" layoutX="870.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" />
                         <ScrollPane fitToHeight="true" layoutX="12.0" layoutY="12.0">
                             <content>
                                 <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">

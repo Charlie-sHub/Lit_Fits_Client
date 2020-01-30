@@ -119,10 +119,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * created
      */
     private Company company;
-    /**
-     * Logger object
-     */
-    private static final Logger LOG = Logger.getLogger(FXMLCompanyRegisterController.class.getName());
 
     /**
      * Getter for the stage of this view
