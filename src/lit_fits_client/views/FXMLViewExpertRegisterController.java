@@ -451,7 +451,6 @@ public class FXMLViewExpertRegisterController extends FXMLDocumentControllerInpu
             byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             expert = setExpertData(publicKeyBytes);
             expertClient.create(expert);
-            System.out.println(expert.toString());
             openMainWindow();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);

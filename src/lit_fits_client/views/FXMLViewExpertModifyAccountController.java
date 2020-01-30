@@ -572,6 +572,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     private boolean emailPatternCheck(){
         boolean verifyEmail;
         verifyEmail = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        lblInvalidMail.setVisible(!verifyEmail);
         return verifyEmail;
     }
     
