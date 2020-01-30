@@ -293,7 +293,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private void fillTableUser() throws ClientErrorException {
         UserClient userClient = ClientFactory.getUserClient(uri);
         
-        userList = FXCollections.observableArrayList(userClient.findAllUser(new GenericType<List<User>>(){}));
+        userList = FXCollections.observableArrayList(userClient.findAll(new GenericType<List<User>>(){}));
         
         userClient.close();
                 
@@ -359,7 +359,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                 if (this.deleteConfirmation()){
                     
                     UserClient userClient = ClientFactory.getUserClient(uri);
-                    userClient.removeUser(deleteUser.getUsername());
+                    userClient.remove(deleteUser.getUsername());
                     userClient.close();
                 }
             } else {

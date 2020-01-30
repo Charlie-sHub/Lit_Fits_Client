@@ -4,30 +4,85 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**
- * The auto-generated interface for the UserClient.
- * 
- * @author Asier
+ * Interface for the User client
+ *
+ * @author Asier Vila Dominguez
  */
 public interface UserClientInterface {
+    /**
+     * Closes the instance of the client
+     */
+    void close();
 
-    void close ();
+    /**
+     * Returns the amount of users stored into the database.
+     *
+     * @return String The number of users.
+     * @throws ClientErrorException
+     */
+    String countREST() throws ClientErrorException;
 
-    <T> T countRESTUser (Class<T> responseType) throws ClientErrorException;
+    /**
+     * Inserts a new User into the database.
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
+    void create(Object requestEntity) throws ClientErrorException;
 
-    void createUser (Object requestEntity) throws ClientErrorException;
+    /**
+     * Receives the user with the new data. It will be updated into the database.
+     *
+     * @param requestEntity
+     * @throws ClientErrorException
+     */
+    void edit(Object requestEntity) throws ClientErrorException;
 
-    void editUser (Object requestEntity, String username) throws ClientErrorException;
+    /**
+     * Finds a user using the username and returns it with its full data.
+     *
+     * @param <T>
+     * @param responseType
+     * @param id
+     * @return Company
+     * @throws ClientErrorException
+     */
+    <T> T find(Class<T> responseType, String id) throws ClientErrorException;
 
-    <T> T findAllUser (GenericType<T> responseType) throws ClientErrorException;
+    /**
+     * Gets the data of all the users stored into the database.
+     *
+     * @param <T>
+     * @param responseType
+     * @return responseType A List with all the users.
+     * @throws ClientErrorException
+     */
+    <T> T findAll(GenericType<T> responseType) throws ClientErrorException;
 
-    <T> T findUser (Class<T> responseType, String username) throws ClientErrorException;
+    /**
+     * Gets all the data of a user if its password and username are both correct.
+     *
+     * @param <T>
+     * @param requestEntity
+     * @param responseType
+     * @return responseType A User with all its data.
+     * @throws ClientErrorException
+     */
+    <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException;
 
-    <T> T findUserByEmail (Class<T> responseType, String email) throws ClientErrorException;
+    /**
+     * Reestablishes the password for the user with the received username.
+     *
+     * @param username
+     * @throws ClientErrorException
+     */
+    String reestablishPassword(String username) throws ClientErrorException;
 
-    <T> T login (Object requestEntity, Class<T> responseType) throws ClientErrorException;
-
-    void reestablishPassword (String username) throws ClientErrorException;
-
-    void removeUser (String username) throws ClientErrorException;
-    
+    /**
+     * Deletes the user with the received username.
+     *
+     * @param username
+     * @throws ClientErrorException
+     */
+    void remove(String username) throws ClientErrorException;
 }

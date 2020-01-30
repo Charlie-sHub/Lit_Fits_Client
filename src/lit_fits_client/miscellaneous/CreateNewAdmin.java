@@ -36,7 +36,7 @@ public class CreateNewAdmin {
             
             admin = this.setUserData(publicKeyBytes);
             
-            userClient.createUser(admin);
+            userClient.create(admin);
 
         } catch (Exception ex) {
             
