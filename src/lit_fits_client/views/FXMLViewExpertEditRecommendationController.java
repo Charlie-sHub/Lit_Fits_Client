@@ -43,39 +43,89 @@ import lit_fits_client.views.themes.Theme;
  * @author Ander
  */
 public class FXMLViewExpertEditRecommendationController extends FXMLDocumentController {
+    /**
+     * Button Save
+     */
     @FXML
     private Button btnSave;
+    /**
+     * Button for cancel
+     */
     @FXML
     private Button btnCancel;
+    /**
+     * Table View of colors
+     */
     @FXML
     private TableView<Color> tableColor;
+    /**
+     * Table column name
+     */
     @FXML
     private TableColumn<Color, String> columnNameColor;
+    /**
+     * Table view of materials
+     */
     @FXML
     private TableView<Material> tableMaterial;
+    /**
+     * Table column material
+     */
     @FXML
     private TableColumn<Material, String> columnNameMaterial;
+    /**
+     * Menu Bar recommendations
+     */
     @FXML
     private MenuBar menuBar;
+    /**
+     * menu File
+     */
     @FXML
     private Menu menuFile;
+    /**
+     * Menu edit
+     */
     @FXML
     private Menu menuEdit;
+    /**
+     * Menu Help
+     */
     @FXML
     private Menu menuHelp;
+    /**
+     * Menu item Save
+     */
     @FXML
     private MenuItem menuItemSave;
+    /**
+     * Menu Item Quit
+     */
     @FXML
     private MenuItem menuItemQuit;
+    /**
+     * Menu Item Select All
+     */
     @FXML
     private MenuItem menuItemSelectAll;
+    /**
+     * Menu Item UnSelect All
+     */
     @FXML
     private MenuItem menuItemUnSelectAll;
+    /**
+     * Menu Item Help
+     */
     @FXML
     private MenuItem menuItemHelp;
-    
-    ObservableList<Color> colorList;
-    ObservableList<Material> materialList;
+    /**
+     * List of colors
+     */
+    public ObservableList<Color> colorList = FXCollections.observableArrayList();
+    /**
+     * List of Materials
+     */
+    public ObservableList<Material> materialList = FXCollections.observableArrayList();
     
     /**
      * Context menu of the table of colors
@@ -341,7 +391,15 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     }
     
     
-
+    /**
+     * This method initializes the window
+     * 
+     * @param themes
+     * @param theme
+     * @param stage
+     * @param root
+     * @param uri 
+     */
     void initStage(List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try{
             this.uri = uri;
@@ -356,6 +414,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
+            e.printStackTrace();
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
@@ -364,8 +423,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * Sets the options for different elements of the window
      */
     private void setElements() {
-        colorList = FXCollections.observableArrayList();
-        materialList = FXCollections.observableArrayList();
+        
         fillChoiceBoxTheme();
         setColumnFactories();
         fillTable();
@@ -377,10 +435,12 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         contextMenuTableMaterials.hide();
         
     }
-
+    /**
+     * Set the cell value Factory
+     */
     private void setColumnFactories() {
         columnNameColor.setCellValueFactory(new PropertyValueFactory("name"));
-        columnNameMaterial.setCellValueFactory(new PropertyValueFactory("material_name"));
+        columnNameMaterial.setCellValueFactory(new PropertyValueFactory("name"));
     }
     
     /**
@@ -408,29 +468,23 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
                 });
             });
         }
+        
     }
     /**
      * Function to fill the table
      */
     private void fillTable() {
         
-        //MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
-        Material red = new Material();
+        MaterialClient materialClient = ClientFactory.getMaterialClient(uri);
         materialList = tableMaterial.getItems();
-        materialList.add(red);
-        /*
         materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType<List<Material>>(){
         }));
-        */
         tableMaterial.setItems(materialList);
-        //ColorClient colorClient = ClientFactory.getColorClient(uri);
-        Color blue = new Color();
+        
+        ColorClient colorClient = ClientFactory.getColorClient(uri);
         colorList = tableColor.getItems();
-        colorList.add(blue);
-        /*
         colorList = FXCollections.observableArrayList(colorClient.findAll(new GenericType<List<Color>>(){
         }));
-        */
         tableColor.setItems(colorList);   
         tableColor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }

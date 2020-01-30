@@ -24,15 +24,32 @@ import lit_fits_client.views.themes.Theme;
  * @author Ander
  */
 public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
-    
+    /**
+     * Button Logout
+     */
     @FXML
     private Button btnLogOut;
+    /**
+     * Button Modify account
+     */
     @FXML
     private Button btnModify;
+    /**
+     * Button for edit recommendations
+     */
     @FXML
     private Button btnRecommendations;
+    /**
+     * The stage used by this view
+     */
     private Stage stage;
+    /**
+     * The stage used by this login view
+     */
     private Stage loginStage;
+    /**
+     * Expert that logged in
+     */
     private FashionExpert expert;
     private static final Logger LOG = Logger.getLogger(FXMLViewExpertMainMenuController.class.getName());
 
@@ -83,7 +100,16 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
     public void setExpert(FashionExpert expert) {
         this.expert = expert;
     }
-            
+
+    /**
+     * This method initializes the window
+     *
+     * @param themes
+     * @param theme the chosen css theme
+     * @param root The Parent used in previous windows
+     * @param stage
+     * @param uri
+     */  
     public void initStage (List<Theme> themes, Theme theme, Stage stage, Parent root, String uri) {
         try{
             this.uri = uri;
@@ -123,13 +149,17 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
         btnModify.setOnAction(this::onBtnModifyAccountPress);
         
     }
-
+    /**
+     * Sets the tooltips of different elements
+     */
     private void setTooltips() {
         btnLogOut.setTooltip(new Tooltip("Log out of the program"));
         btnRecommendations.setTooltip(new Tooltip("Edit your fashion recommendations"));
         btnModify.setTooltip(new Tooltip("Modify account data"));
     }
-
+    /**
+     * This method allows to change the focus between the elements of the window.
+     */
     private void setFocusTraversable() {
         btnModify.setFocusTraversable(true);
         btnRecommendations.setFocusTraversable(true);
