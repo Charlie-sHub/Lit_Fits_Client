@@ -122,6 +122,14 @@ public class FashionExpert implements Serializable {
             return false;
         return true;
     }
+    
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return this.username.get();
