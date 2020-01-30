@@ -9,38 +9,33 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="484.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
           <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem fx:id="menuItemCheckDatabase" mnemonicParsing="false" text="Check database" />
+                  <MenuItem fx:id="menuItemCheckPromotions" mnemonicParsing="false" text="Check promotions" />
                   <MenuItem fx:id="menuItemClose" mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem fx:id="menuItemCheckEntities" mnemonicParsing="false" text="CheckEntities" />
-                  <MenuItem fx:id="menuItemCheckPromotions" mnemonicParsing="false" text="CheckPromotions" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
    </top>
    <bottom>
-      <HBox alignment="CENTER" prefHeight="32.0" prefWidth="1280.0" spacing="140.0" BorderPane.alignment="CENTER_LEFT">
+      <HBox alignment="CENTER" spacing="60.0" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <ChoiceBox fx:id="choiceTheme" prefWidth="150.0" />
+            <ChoiceBox fx:id="choiceTheme" minWidth="150.0" />
             <Label text="Alt + F = File" />
-            <Label text="Alt + E = Edit" />
-            <Label text="Alt + S = Save" />
-            <Label text="Alt + B = Back" />
+            <Label text="Alt + D = Check database" />
+            <Label text="Alt + P = Check promotions" />
+            <Label text="Alt + C = Close" />
          </children>
          <BorderPane.margin>
-            <Insets />
+            <Insets bottom="10.0" />
          </BorderPane.margin>
       </HBox>
    </bottom>
@@ -56,8 +51,7 @@
                   <Label fx:id="lblAdmin" text="Admin" />
                </children>
             </HBox>
-            <Pane fx:id="paneLitFitsLogo" maxHeight="240.0" maxWidth="240.0" minHeight="240.0" minWidth="240.0" prefHeight="240.0" prefWidth="240.0" />
-            <Button fx:id="btnCheckEntities" maxHeight="25.0" maxWidth="125.0" minHeight="25.0" minWidth="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Check entities" />
+            <Button fx:id="btnCheckDatabase" maxHeight="25.0" maxWidth="125.0" minHeight="25.0" minWidth="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Check database" />
             <Button fx:id="btnCheckPromotions" maxHeight="25.0" maxWidth="125.0" minHeight="25.0" minWidth="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Check promotions" />
             <Button fx:id="btnClose" maxHeight="25.0" maxWidth="125.0" minHeight="25.0" minWidth="125.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="125.0" text="Close" />
          </children>
