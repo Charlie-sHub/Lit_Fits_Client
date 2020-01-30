@@ -414,8 +414,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
-            e.printStackTrace();
-            createExceptionDialog(e);
+            
             LOG.severe(e.getMessage());
         }
     }
