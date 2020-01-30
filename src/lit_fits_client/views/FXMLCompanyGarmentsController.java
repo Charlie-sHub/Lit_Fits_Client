@@ -368,17 +368,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the cell value factories for the table columns
      */
     private void setColumnFactories() {
-        // How to set the correct image if instead of showing the image directly  the image was shown when hovering over the cell?
-        // https://riptutorial.com/javafx/example/8814/customizing-tablecell-look-depending-on-item
-        //tableColumnPicture.setCellFactory((TableColumn<Garment, Image> param) -> {
-        //    ImageViewCell imageViewCell = new ImageViewCell();
-        //    /*
-        //    imageViewCell.setOnMouseDragOver({
-        //    // Open a window with the full sized image
-        //    });
-        //     */
-        //    return imageViewCell;
-        //});
         tableColumnPicture.setCellFactory(param -> {
             //Set up the ImageView
             final ImageView imageview = new ImageView();
@@ -404,7 +393,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnDesigner.setCellValueFactory(new PropertyValueFactory("designer"));
         tableColumnPromoted.setCellValueFactory(new PropertyValueFactory("promoted"));
         tableColumnRequested.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
-        tableColumnPrice.setCellFactory(new PropertyValueFactory("price"));
+        tableColumnPrice.setCellValueFactory(new PropertyValueFactory("price"));
         tableColumnMood.setCellValueFactory(new PropertyValueFactory("mood"));
         tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
@@ -504,7 +493,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             FXMLCreateModifyGarmentController garmentCreationView = ((FXMLCreateModifyGarmentController) fxmlLoader.getController());
             garmentCreationView.setGarment(((Garment) tableGarments.getSelectionModel().getSelectedItem()));
             garmentCreationView.setCompany(company);
-            garmentCreationView.setStage(stage);
+            garmentCreationView.setPreviousStage(stage);
             garmentCreationView.initStage(themeList, choiceTheme.getValue(), stageModify, root, uri);
         } catch (IOException ex) {
             createExceptionDialog(ex);

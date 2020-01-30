@@ -429,7 +429,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         Parent root = (Parent) fxmlLoader.load();
         FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
         mainView.setCompany(company);
-        mainView.setLoginStage(this.stage);
+        mainView.setLoginStage(previousStage);
         mainView.initStage(themeList, theme, stageCompanyMainMenu, root, uri);
         stage.hide();
     }
