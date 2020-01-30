@@ -364,8 +364,6 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * Sets the options for different elements of the window
      */
     private void setElements() {
-        colorList = FXCollections.observableArrayList();
-        materialList = FXCollections.observableArrayList();
         fillChoiceBoxTheme();
         setColumnFactories();
         fillTable();
@@ -373,6 +371,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         setOnAction();
         setMenu();
         setContextMenus();
+        colorList = FXCollections.observableArrayList();
+        materialList = FXCollections.observableArrayList();
         contextMenuTableColors.hide();
         contextMenuTableMaterials.hide();
         

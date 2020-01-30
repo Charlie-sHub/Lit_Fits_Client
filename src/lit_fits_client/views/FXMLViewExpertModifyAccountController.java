@@ -493,6 +493,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
 
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
         
+        PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
+        byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         String fullName = expert.getFullName();
         String email = expert.getEmail();
         String phone = expert.getPhoneNumber();
@@ -500,8 +502,6 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
                 !txtEmail.getText().equals(email) ||
                 !txtPhone.getText().equals(phone);
         try {
-            PublicKeyClient publicKeyClient = ClientFactory.getPublicKeyClient(uri);
-            byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
             passwordChange = comparePasswords(publicKeyBytes);
         } catch (Exception ex) {
             createExceptionDialog(ex);
