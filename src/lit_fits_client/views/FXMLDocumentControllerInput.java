@@ -13,7 +13,7 @@ import org.reactfx.EventStream;
 /**
  * Document Controller with methods to validate input fields common to all views with inputs
  *
- * @author Ander Rodriguez & Carlos Mendez
+ * @author Ander Rodriguez and Carlos Mendez
  */
 public abstract class FXMLDocumentControllerInput extends FXMLDocumentController {
     /**

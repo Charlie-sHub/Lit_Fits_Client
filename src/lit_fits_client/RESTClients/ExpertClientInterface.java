@@ -39,7 +39,7 @@ public interface ExpertClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @param id
+     * @param username
      * @return FashionExpert
      * @throws ClientErrorException
      */

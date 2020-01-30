@@ -43,7 +43,7 @@ import static org.reactfx.EventStreams.merge;
 /**
  * Controller for the Login view
  *
- * @author Ander & Carlos Mendez
+ * @author Ander and Carlos Mendez
  */
 public class FXMLViewLoginController extends FXMLDocumentControllerInput {
     /**

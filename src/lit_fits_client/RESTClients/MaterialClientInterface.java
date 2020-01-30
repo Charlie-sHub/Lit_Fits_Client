@@ -18,7 +18,7 @@ public interface MaterialClientInterface {
      * Counts the amount of materials
      *
      * @return String amount of garments
-     * @throws ClientErrorHException
+     * @throws ClientErrorException
      */
     String countREST() throws ClientErrorException;
 

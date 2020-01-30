@@ -578,13 +578,13 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnReportPress(ActionEvent event) {
         try {
-            JasperReport garmentReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("/lit_fits_client/reports/garmentsReport.jrxml"));
+            JasperReport garmentReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("garmentsReport.jrxml"));
             JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
             Map<String, Object> parameters = new HashMap<>();
             JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-        } catch (JRException ex) {
+        } catch (Exception ex) {
             createExceptionDialog(ex);
         }
     }

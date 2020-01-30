@@ -24,7 +24,7 @@ import lit_fits_client.views.themes.Theme;
 /**
  * Core of the document controllers from which all other document controllers inherit
  *
- * @author Ander & Carlos Mendez
+ * @author Ander and Carlos Mendez
  */
 public class FXMLDocumentController {
     /**

@@ -34,7 +34,7 @@ public class FXMLHelpController extends FXMLDocumentController {
     /**
      * Initializes the register window
      *
-     * @param mode It will receive a boolean that says if it is happy or not
+     * @param theme
      * @param stage The stage to be used
      * @param root The Parent created in the previous window
      */
