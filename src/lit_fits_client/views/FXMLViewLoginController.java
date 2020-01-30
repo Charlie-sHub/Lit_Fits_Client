@@ -36,6 +36,7 @@ import lit_fits_client.RESTClients.UserClientInterface;
 import lit_fits_client.entities.Company;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.User;
+import lit_fits_client.miscellaneous.CreateNewAdmin;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
 import org.controlsfx.control.CheckComboBox;
@@ -194,6 +195,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             setElements();
             choiceTheme.setValue(theme);
             stage.show();
+            
+            CreateNewAdmin createNewAdmin = new CreateNewAdmin(uri);
+            createNewAdmin.createNewAdmin();
         } catch (Exception e) {
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
