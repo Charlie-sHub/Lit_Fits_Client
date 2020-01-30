@@ -89,7 +89,7 @@
         </HBox>
     </center>
     <bottom>
-        <HBox alignment="CENTER" prefHeight="28.0" prefWidth="800.0" BorderPane.alignment="BOTTOM_CENTER">
+        <HBox alignment="CENTER" prefHeight="37.0" prefWidth="1000.0" BorderPane.alignment="BOTTOM_CENTER">
             <children>
                 <ChoiceBox fx:id="choiceTheme" prefWidth="200.0" />
                 <Label fx:id="lblCtrlR" alignment="CENTER" prefHeight="17.0" prefWidth="200.0" text="Alt + S = Submit">

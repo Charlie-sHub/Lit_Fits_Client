@@ -62,8 +62,8 @@
                         <ComboBox fx:id="comboMood" layoutX="272.0" layoutY="221.0" prefHeight="26.0" prefWidth="240.0" />
                         <ComboBox fx:id="comboBodyPart" layoutX="272.0" layoutY="261.0" prefHeight="26.0" prefWidth="240.0" />                              
                         <ComboBox fx:id="comboGarmentType" layoutX="273.0" layoutY="301.0" prefHeight="26.0" prefWidth="240.0" />
-                        <CheckComboBox fx:id="comboColors" layoutX="273.0" layoutY="341.0" prefHeight="26.0" prefWidth="240.0" />
-                        <CheckComboBox fx:id="comboMaterials" layoutX="273.0" layoutY="381.0" prefHeight="26.0" prefWidth="240.0" />                        
+                        <CheckComboBox fx:id="checkComboColors" layoutX="273.0" layoutY="341.0" prefHeight="26.0" prefWidth="240.0" />
+                        <CheckComboBox fx:id="checkComboMaterials" layoutX="273.0" layoutY="381.0" prefHeight="26.0" prefWidth="240.0" />                        
                         <Button id="btnRegister" fx:id="btnSubmit" layoutX="432.0" layoutY="464.0" mnemonicParsing="false" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
