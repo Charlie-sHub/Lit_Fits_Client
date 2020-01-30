@@ -36,7 +36,7 @@ import static org.reactfx.EventStreams.changesOf;
 import static org.reactfx.EventStreams.merge;
 
 /**
- * This is the Document Controller class for the registration view of the program.
+ * This is the Document Controller class for the Company registration view of the program.
  *
  * @author Carlos Rafael Mendez Gonzalez
  */
@@ -125,150 +125,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     private static final Logger LOG = Logger.getLogger(FXMLCompanyRegisterController.class.getName());
 
     /**
-     * Getter for btnCancel
-     *
-     * @return Button
-     */
-    public Button getBtnCancel() {
-        return btnCancel;
-    }
-
-    /**
-     * Setter for btnCancel
-     *
-     * @param btnCancel
-     */
-    public void setBtnCancel(Button btnCancel) {
-        this.btnCancel = btnCancel;
-    }
-
-    /**
-     * Getter for btnSubmit
-     *
-     * @return Button
-     */
-    public Button getBtnRegister() {
-        return btnSubmit;
-    }
-
-    /**
-     * Setter for btnSubmit
-     *
-     * @param btnSubmit
-     */
-    public void setBtnRegister(Button btnSubmit) {
-        this.btnSubmit = btnSubmit;
-    }
-
-    /**
-     * Getter for txtPassword
-     *
-     * @return PasswordField
-     */
-    public PasswordField getTxtPassword() {
-        return txtPassword;
-    }
-
-    /**
-     * Setter for txtPassword
-     *
-     * @param txtPassword
-     */
-    public void setTxtPassword(PasswordField txtPassword) {
-        this.txtPassword = txtPassword;
-    }
-
-    /**
-     * Getter for txtRepeatPassword
-     *
-     * @return PasswordField
-     */
-    public PasswordField getTxtRepeatPassword() {
-        return txtRepeatPassword;
-    }
-
-    /**
-     * Setter for txtRepeatPassword
-     *
-     * @param txtRepeatPassword
-     */
-    public void setTxtRepeatPassword(PasswordField txtRepeatPassword) {
-        this.txtRepeatPassword = txtRepeatPassword;
-    }
-
-    /**
-     * Getter for txtFullName
-     *
-     * @return TextField
-     */
-    public TextField getTxtFullName() {
-        return txtFullName;
-    }
-
-    /**
-     * Setter for txtFullName
-     *
-     * @param txtFullName
-     */
-    public void setTxtFullName(TextField txtFullName) {
-        this.txtFullName = txtFullName;
-    }
-
-    /**
-     * Getter for the txtEmail
-     *
-     * @return TextField
-     */
-    public TextField getTxtEmail() {
-        return txtEmail;
-    }
-
-    /**
-     * Setter for the txtEmail
-     *
-     * @param txtEmail
-     */
-    public void setTxtEmail(TextField txtEmail) {
-        this.txtEmail = txtEmail;
-    }
-
-    /**
-     * Getter for the txtUsername
-     *
-     * @return TextField
-     */
-    public TextField getTxtNif() {
-        return txtNif;
-    }
-
-    /**
-     * Setter for the txtUsername
-     *
-     * @param txtNif
-     */
-    public void setTxtNif(TextField txtNif) {
-        this.txtNif = txtNif;
-    }
-
-    /**
-     * Getter for the lblPassMismatch
-     *
-     * @return Label
-     */
-    public Label getLblPassMismatch() {
-        return lblPassMismatch;
-    }
-
-    /**
-     * Setter for the lblPassMismatch
-     *
-     * @param lblPassMismatch
-     */
-    public void setLblPassMismatch(Label lblPassMismatch) {
-        this.lblPassMismatch = lblPassMismatch;
-    }
-
-    /**
      * Getter for the stage of this view
      *
      * @return Stage
@@ -284,60 +140,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      */
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    /**
-     * Getter for the invalid email label
-     *
-     * @return Label
-     */
-    public Label getLblInvalidMail() {
-        return lblInvalidMail;
-    }
-
-    /**
-     * Setter for the invalid email label
-     *
-     * @param lblInvalidMail
-     */
-    public void setLblInvalidMail(Label lblInvalidMail) {
-        this.lblInvalidMail = lblInvalidMail;
-    }
-
-    /**
-     * Getter for the phone text field
-     *
-     * @return TextField
-     */
-    public TextField getTxtPhone() {
-        return txtPhone;
-    }
-
-    /**
-     * Setter for the phone text field
-     *
-     * @param txtPhone
-     */
-    public void setTxtPhone(TextField txtPhone) {
-        this.txtPhone = txtPhone;
-    }
-
-    /**
-     * Getter for the help button
-     *
-     * @return Button
-     */
-    public Button getBtnHelp() {
-        return btnHelp;
-    }
-
-    /**
-     * Setter for the help button
-     *
-     * @param btnHelp
-     */
-    public void setBtnHelp(Button btnHelp) {
-        this.btnHelp = btnHelp;
     }
 
     /**
@@ -377,24 +179,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
     }
 
     /**
-     * Gets the invalid nif label
-     *
-     * @return Label
-     */
-    public Label getLblInvalidNIF() {
-        return lblInvalidNIF;
-    }
-
-    /**
-     * Sets the invalid nif label
-     *
-     * @param lblInvalidNIF
-     */
-    public void setLblInvalidNIF(Label lblInvalidNIF) {
-        this.lblInvalidNIF = lblInvalidNIF;
-    }
-
-    /**
      * Initializes the register window
      *
      * @param themes
@@ -423,13 +207,11 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
                 company = new Company();
             }
             stage.setOnCloseRequest(this::onClosing);
-            //pretty sure these dimensions will have to change
             stage.setMinWidth(850);
             stage.setMinHeight(650);
             stage.show();
         } catch (Exception e) {
             createExceptionDialog(e);
-            e.printStackTrace();
         }
     }
 
@@ -460,7 +242,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         setFocusTraversable();
         setListeners();
         setUndoRedo();
-        textFields = new ArrayList<>();
         fillArray();
     }
 
@@ -527,6 +308,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * Fills the array of text fields to check later if they're filled with text
      */
     private void fillArray() {
+        textFields = new ArrayList<>();
         textFields.add(txtNif);
         textFields.add(txtFullName);
         textFields.add(txtEmail);
@@ -606,11 +388,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
         } catch (ClientErrorException e) {
             success = false;
             createExceptionDialog(e);
-            e.printStackTrace();
         } catch (Exception ex) {
             success = false;
             createExceptionDialog(ex);
-            ex.printStackTrace();
         } finally {
             companyClient.close();
             publicKeyClient.close();
@@ -620,7 +400,6 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
                 openCompanyMainMenu(company);
                 stage.hide();
             } catch (IOException ex) {
-                ex.printStackTrace();
                 createExceptionDialog(ex);
             }
         }
@@ -645,7 +424,13 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @throws IOException
      */
     private void openCompanyMainMenu(Company company) throws IOException {
-        previousStage.show();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/CompanyMainMenu.fxml"));
+        Stage stageCompanyMainMenu = new Stage();
+        Parent root = (Parent) fxmlLoader.load();
+        FXMLCompanyMainMenuController mainView = ((FXMLCompanyMainMenuController) fxmlLoader.getController());
+        mainView.setCompany(company);
+        mainView.setLoginStage(this.stage);
+        mainView.initStage(themeList, theme, stageCompanyMainMenu, root, uri);
         stage.hide();
     }
 

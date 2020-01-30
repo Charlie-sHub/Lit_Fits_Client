@@ -6,9 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Defines the different materials a garment can be made out of
+ * Material entity class
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @XmlRootElement
 public class Material implements Serializable {

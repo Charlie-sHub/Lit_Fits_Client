@@ -18,9 +18,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Garment entity
+ * Garment entity class
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @XmlRootElement
 public class Garment implements Serializable {
@@ -68,7 +68,7 @@ public class Garment implements Serializable {
     /**
      * Path in the database to the picture of the garment
      */
-    private String pictureName;
+    private String namePicture;
     /**
      * Company that sells the garment
      */
@@ -137,7 +137,7 @@ public class Garment implements Serializable {
         this.available = new SimpleBooleanProperty(available);
         this.promotionRequest = new SimpleBooleanProperty(promotionRequest);
         this.promoted = new SimpleBooleanProperty(promoted);
-        this.pictureName = imagePath;
+        this.namePicture = imagePath;
         this.company = company;
         this.colors = new SimpleSetProperty<Color>((ObservableSet<Color>) colors);
         this.materials = new SimpleSetProperty<Material>((ObservableSet<Material>) materials);
@@ -225,12 +225,12 @@ public class Garment implements Serializable {
         this.promoted.set(promoted);
     }
 
-    public String getPictureName() {
-        return pictureName;
+    public String getNamePicture() {
+        return namePicture;
     }
 
-    public void setPictureName(String pictureName) {
-        this.pictureName = pictureName;
+    public void setNamePicture(String namePicture) {
+        this.namePicture = namePicture;
     }
 
     public Company getCompany() {
@@ -289,7 +289,7 @@ public class Garment implements Serializable {
         hash = 59 * hash + Objects.hashCode(this.available);
         hash = 59 * hash + Objects.hashCode(this.promotionRequest);
         hash = 59 * hash + Objects.hashCode(this.promoted);
-        hash = 59 * hash + Objects.hashCode(this.pictureName);
+        hash = 59 * hash + Objects.hashCode(this.namePicture);
         hash = 59 * hash + Objects.hashCode(this.company);
         hash = 59 * hash + Objects.hashCode(this.colors);
         hash = 59 * hash + Objects.hashCode(this.materials);
@@ -326,7 +326,7 @@ public class Garment implements Serializable {
         if (!Objects.equals(this.designer, other.designer)) {
             return false;
         }
-        if (!Objects.equals(this.pictureName, other.pictureName)) {
+        if (!Objects.equals(this.namePicture, other.namePicture)) {
             return false;
         }
         if (!Objects.equals(this.price, other.price)) {
@@ -352,6 +352,6 @@ public class Garment implements Serializable {
 
     @Override
     public String toString() {
-        return "Garment{" + "id=" + id + ", barcode=" + barcode + ", designer=" + designer + ", price=" + price + ", mood=" + mood + ", bodyPart=" + bodyPart + ", garmentType=" + garmentType + ", available=" + available + ", promotionRequest=" + promotionRequest + ", promoted=" + promoted + ", imagePath=" + pictureName + ", company=" + company + ", colors=" + colors + ", materials=" + materials + '}';
+        return "Garment{" + "id=" + id + ", barcode=" + barcode + ", designer=" + designer + ", price=" + price + ", mood=" + mood + ", bodyPart=" + bodyPart + ", garmentType=" + garmentType + ", available=" + available + ", promotionRequest=" + promotionRequest + ", promoted=" + promoted + ", imagePath=" + namePicture + ", company=" + company + ", colors=" + colors + ", materials=" + materials + '}';
     }
 }

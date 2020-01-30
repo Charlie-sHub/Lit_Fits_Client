@@ -5,14 +5,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:PublicKeyFacadeREST [litfitsserver.encryption.publicKey]<br>
- * USAGE:
- * <pre>
- *        PublicKeyClient client = new PublicKeyClient();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+ * Class that implements the PublicKeyInterface
  *
  * @author Carlos Mendez
  */
@@ -21,8 +14,9 @@ public class PublicKeyClient implements PublicKeyClientInterface {
     private Client client;
 
     /**
+     * Constructor
      *
-     * @param baseUri
+     * @param baseUri address of the service
      */
     public PublicKeyClient(String baseUri) {
         client = javax.ws.rs.client.ClientBuilder.newClient();

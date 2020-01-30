@@ -6,14 +6,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Jersey REST client generated for REST resource:MaterialFacadeREST [litfitsserver.entities.material]<br>
- * USAGE:
- * <pre>
- *        MaterialClient client = new MaterialClient();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+ * Class that implements the MaterialClientInterface
  *
  * @author Carlos Mendez
  */
@@ -23,6 +16,7 @@ public class MaterialClient implements MaterialClientInterface {
 
     /**
      * Constructor of the material client
+     *
      * @param baseUri
      */
     public MaterialClient(String baseUri) {
@@ -30,12 +24,6 @@ public class MaterialClient implements MaterialClientInterface {
         webTarget = client.target(baseUri).path("litfitsserver.entities.material");
     }
 
-    /**
-     * Counts the amount of materials
-     *
-     * @return
-     * @throws ClientErrorHException
-     */
     @Override
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -43,26 +31,11 @@ public class MaterialClient implements MaterialClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    /**
-     * Edits a given material
-     *
-     * @param requestEntity
-     * @throws ClientErrorException
-     */
     @Override
     public void edit(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Finds all the materials
-     *
-     * @param <T>
-     * @param responseType
-     * @param name
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T find(Class<T> responseType, String name) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -81,34 +54,17 @@ public class MaterialClient implements MaterialClientInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Finds all the materials
-     *
-     * @param <T>
-     * @param responseType
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Deletes a material given its name
-     *
-     * @param name
-     * @throws ClientErrorException
-     */
     @Override
     public void remove(String name) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{name})).request().delete();
     }
 
-    /**
-     * Closes the client
-     */
     @Override
     public void close() {
         client.close();

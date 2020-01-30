@@ -12,6 +12,7 @@ import lit_fits_client.views.themes.Theme;
 
 /**
  * Controller for the help window
+ *
  * @author Carlos Mendez
  */
 public class FXMLHelpController extends FXMLDocumentController {

@@ -1,0 +1,19 @@
+/* 
+    Created on : 30-oct-2019, 8:33:50
+    Author     : Carlos Rafael Mendez Gonzalez
+*/
+.root {
+    -fx-background-color: blue;
+}
+.button {
+    -fx-background-color: lightblue;
+    -fx-text-fill: darkblue;
+}
+.label {
+    -fx-font-family: "helvetica";
+    -fx-text-fill: cyan;
+}
+.text-field, .password-field {
+    -fx-text-fill: seagreen;
+    -fx-border-color: bisque;
+}

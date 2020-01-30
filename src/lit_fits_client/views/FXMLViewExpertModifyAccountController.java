@@ -493,7 +493,6 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
 
     private void onFieldChange(ObservableValue observable, String oldValue, String newValue){
         
-        
         String fullName = expert.getFullName();
         String email = expert.getEmail();
         String phone = expert.getPhoneNumber();

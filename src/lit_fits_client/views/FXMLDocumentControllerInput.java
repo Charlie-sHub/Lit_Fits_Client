@@ -53,30 +53,6 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      */
     protected ArrayList<TextField> textFields;
 
-    public Label getLblLength() {
-        return lblLength;
-    }
-
-    public void setLblLength(Label lblLength) {
-        this.lblLength = lblLength;
-    }
-
-    public Button getBtnUndo() {
-        return btnUndo;
-    }
-
-    public void setBtnUndo(Button btnUndo) {
-        this.btnUndo = btnUndo;
-    }
-
-    public Button getBtnRedo() {
-        return btnRedo;
-    }
-
-    public void setBtnRedo(Button btnRedo) {
-        this.btnRedo = btnRedo;
-    }
-
     public UndoManager<InputChange<?>> getUndoManager() {
         return undoManager;
     }
@@ -93,10 +69,12 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
         this.inputChanges = inputChanges;
     }
 
+    @Deprecated
     public ArrayList<String> getUndoneStrings() {
         return undoneStrings;
     }
 
+    @Deprecated
     public void setUndoneStrings(ArrayList<String> undoneStrings) {
         this.undoneStrings = undoneStrings;
     }
@@ -113,13 +91,13 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * This function will verify if all the fields are filled
      *
      * @author Carlos Mendez
-     * @param btn
+     * @param button The login or register button to be disabled or enabled
      */
-    public void onFieldFilled(Button btn) {
+    public void onFieldFilled(Button button) {
         if (textFields.stream().filter(textField -> textField.getText().trim().isEmpty()).count() > 0) {
-            btn.setDisable(true);
+            button.setDisable(true);
         } else {
-            lengthCheck(btn);
+            lengthCheck(button);
         }
     }
 
@@ -128,14 +106,14 @@ public abstract class FXMLDocumentControllerInput extends FXMLDocumentController
      * the button to send them will be disabled
      *
      * @author Carlos Rafael Mendez Gonzalez
-     * @param btn The login or register button to be disabled or enabled
+     * @param button The login or register button to be disabled or enabled
      */
-    public void lengthCheck(Button btn) {
+    public void lengthCheck(Button button) {
         if (textFields.stream().filter(textField -> textField.getText().trim().length() > 30).count() > 0) {
             lblLength.setVisible(true);
-            btn.setDisable(true);
+            button.setDisable(true);
         } else {
-            btn.setDisable(false);
+            button.setDisable(false);
         }
     }
 

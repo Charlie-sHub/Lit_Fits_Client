@@ -55,24 +55,6 @@ public class FXMLDocumentController {
     }
 
     /**
-     * Returns the choice box used to choose the theme
-     *
-     * @return ChoiceBox
-     */
-    public ChoiceBox getChoiceTheme() {
-        return choiceTheme;
-    }
-
-    /**
-     * Sets the choice box for the theme
-     *
-     * @param choiceBox
-     */
-    public void setChoiceTheme(ChoiceBox choiceBox) {
-        this.choiceTheme = choiceBox;
-    }
-
-    /**
      * Gets the address of the server used by the controller
      *
      * @return
@@ -129,7 +111,6 @@ public class FXMLDocumentController {
      * @param e exception to be handled
      */
     public void createExceptionDialog(Exception e) {
-        e.printStackTrace();
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("There's been an error while running the program: " + e.getMessage());
@@ -153,7 +134,6 @@ public class FXMLDocumentController {
     /**
      * Creates a dialog to confirm if the user wants to continue
      *
-     *
      * @return boolean
      * @author Carlos Mendez
      */
@@ -174,7 +154,7 @@ public class FXMLDocumentController {
      * program is opened the mode stays.
      *
      * @author Carlos Rafael Mendez Gonzalez
-     * @param event makes the method a handler
+     * @param event 
      */
     public void onClosing(WindowEvent event) {
         OutputStream out = null;
@@ -197,7 +177,7 @@ public class FXMLDocumentController {
     }
 
     /**
-     * Open the help window
+     * Opens the help window
      *
      * @throws IOException
      * @author Carlos Mendez

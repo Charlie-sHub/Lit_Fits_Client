@@ -6,7 +6,7 @@ import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
 /**
- * Class with the method to Encrypt given messages
+ * Class with the method to Encrypt given messages with a given public key
  *
  * @author Carlos Mendez
  */

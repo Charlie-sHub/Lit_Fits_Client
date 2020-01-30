@@ -1,8 +1,6 @@
 package lit_fits_client.views;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,7 +9,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -28,7 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -38,7 +34,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import lit_fits_client.RESTClients.ClientFactory;
@@ -114,12 +109,12 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * Combo box of colors
      */
     @FXML
-    private CheckComboBox comboColors;
+    private CheckComboBox checkComboColors;
     /**
      * Combo box of materials
      */
     @FXML
-    private CheckComboBox comboMaterials;
+    private CheckComboBox checkComboMaterials;
     /**
      * Label for the price text field
      */
@@ -145,16 +140,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     @FXML
     private ImageView imageViewGarmentPicture;
-    /**
-     * Button to add or remove the selected Color
-     */
-    @FXML
-    private Button btnAddRemoveColor;
-    /**
-     * Button to add or remove the selected Material
-     */
-    @FXML
-    private Button btnAddRemoveMaterial;
     /**
      * Stage to be used by the current controller
      */
@@ -190,78 +175,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     private static final Logger LOG = Logger.getLogger(FXMLCreateModifyGarmentController.class.getName());
 
     /**
-     * Getter for btnCancel
-     *
-     * @return Button
-     */
-    public Button getBtnCancel() {
-        return btnCancel;
-    }
-
-    /**
-     * Setter for btnCancel
-     *
-     * @param btnCancel
-     */
-    public void setBtnCancel(Button btnCancel) {
-        this.btnCancel = btnCancel;
-    }
-
-    /**
-     * Getter for btnSubmit
-     *
-     * @return Button
-     */
-    public Button getBtnRegister() {
-        return btnSubmit;
-    }
-
-    /**
-     * Setter for btnSubmit
-     *
-     * @param btnSubmit
-     */
-    public void setBtnRegister(Button btnSubmit) {
-        this.btnSubmit = btnSubmit;
-    }
-
-    /**
-     * Getter for txtFullName
-     *
-     * @return TextField
-     */
-    public TextField getTxtDesigner() {
-        return txtDesigner;
-    }
-
-    /**
-     * Setter for txtFullName
-     *
-     * @param txtDesigner
-     */
-    public void setTxtDesigner(TextField txtDesigner) {
-        this.txtDesigner = txtDesigner;
-    }
-
-    /**
-     * Getter for the txtUsername
-     *
-     * @return TextField
-     */
-    public TextField getTxtBarcode() {
-        return txtBarcode;
-    }
-
-    /**
-     * Setter for the txtUsername
-     *
-     * @param txtBarcode
-     */
-    public void setTxtBarcode(TextField txtBarcode) {
-        this.txtBarcode = txtBarcode;
-    }
-
-    /**
      * Getter for the stage of this view
      *
      * @return Stage
@@ -277,24 +190,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    /**
-     * Getter for the help button
-     *
-     * @return Button
-     */
-    public Button getBtnHelp() {
-        return btnHelp;
-    }
-
-    /**
-     * Setter for the help button
-     *
-     * @param btnHelp
-     */
-    public void setBtnHelp(Button btnHelp) {
-        this.btnHelp = btnHelp;
     }
 
     /**
@@ -334,186 +229,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Getter for the submit button
-     *
-     * @return Button
-     */
-    public Button getBtnSubmit() {
-        return btnSubmit;
-    }
-
-    /**
-     * Setter for the submit button
-     *
-     * @param btnSubmit
-     */
-    public void setBtnSubmit(Button btnSubmit) {
-        this.btnSubmit = btnSubmit;
-    }
-
-    /**
-     * Getter for the mood combo box
-     *
-     * @return ComboBox
-     */
-    public ComboBox getComboMood() {
-        return comboMood;
-    }
-
-    /**
-     * Setter for the mood combo box
-     *
-     * @param comboMood
-     */
-    public void setComboMood(ComboBox comboMood) {
-        this.comboMood = comboMood;
-    }
-
-    /**
-     * Getter for the body part combo box
-     *
-     * @return ComboBox
-     */
-    public ComboBox getComboBodyPart() {
-        return comboBodyPart;
-    }
-
-    /**
-     * Setter for the body parts combo box
-     *
-     * @param comboBodyPart
-     */
-    public void setComboBodyPart(ComboBox comboBodyPart) {
-        this.comboBodyPart = comboBodyPart;
-    }
-
-    /**
-     * Getter for the garment type combo box
-     *
-     * @return ComboBox
-     */
-    public ComboBox getComboGarmentType() {
-        return comboGarmentType;
-    }
-
-    /**
-     * Setter for the garment type combo box
-     *
-     * @param comboGarmentType
-     */
-    public void setComboGarmentType(ComboBox comboGarmentType) {
-        this.comboGarmentType = comboGarmentType;
-    }
-
-    /**
-     * Getter for the colors combo box
-     *
-     * @return ComboBox
-     */
-    public CheckComboBox getComboColors() {
-        return comboColors;
-    }
-
-    /**
-     * Setter for the colors combo box
-     *
-     * @param comboColors
-     */
-    public void setComboColors(CheckComboBox comboColors) {
-        this.comboColors = comboColors;
-    }
-
-    /**
-     * Getter for the materials combo box
-     *
-     * @return ComboBox
-     */
-    public CheckComboBox getComboMaterials() {
-        return comboMaterials;
-    }
-
-    /**
-     * Setter for the materials combo box
-     *
-     * @param comboMaterials
-     */
-    public void setComboMaterials(CheckComboBox comboMaterials) {
-        this.comboMaterials = comboMaterials;
-    }
-
-    /**
-     * Getter for the price label
-     *
-     * @return Label
-     */
-    public Label getLblPrice() {
-        return lblPrice;
-    }
-
-    /**
-     * Setter for the price label
-     *
-     * @param lblPrice
-     */
-    public void setLblPrice(Label lblPrice) {
-        this.lblPrice = lblPrice;
-    }
-
-    /**
-     * Getter for the price text field
-     *
-     * @return TextField
-     */
-    public TextField getTxtPrice() {
-        return txtPrice;
-    }
-
-    /**
-     * Setter for the price text field
-     *
-     * @param txtPrice
-     */
-    public void setTxtPrice(TextField txtPrice) {
-        this.txtPrice = txtPrice;
-    }
-
-    /**
-     * Getter for the invalid price label
-     *
-     * @return Label
-     */
-    public Label getLblInvalidPrice() {
-        return lblInvalidPrice;
-    }
-
-    /**
-     * Setter for the invalid price label
-     *
-     * @param lblInvalidPrice
-     */
-    public void setLblInvalidPrice(Label lblInvalidPrice) {
-        this.lblInvalidPrice = lblInvalidPrice;
-    }
-
-    /**
-     * Getter for the invalid barcode label
-     *
-     * @return Label
-     */
-    public Label getLblInvalidBarcode() {
-        return lblInvalidBarcode;
-    }
-
-    /**
-     * Setter for the invalid barcode label
-     *
-     * @param lblInvalidBarcode
-     */
-    public void setLblInvalidBarcode(Label lblInvalidBarcode) {
-        this.lblInvalidBarcode = lblInvalidBarcode;
-    }
-
-    /**
      * Getter of the company
      *
      * @return Company
@@ -529,24 +244,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    /**
-     * Getter for the ImageView
-     *
-     * @return ImageView
-     */
-    public ImageView getImageViewGarmentPicture() {
-        return imageViewGarmentPicture;
-    }
-
-    /**
-     * Setter for the ImageView
-     *
-     * @param imageViewGarmentPicture
-     */
-    public void setImageViewGarmentPicture(ImageView imageViewGarmentPicture) {
-        this.imageViewGarmentPicture = imageViewGarmentPicture;
     }
 
     /**
@@ -568,42 +265,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     }
 
     /**
-     * Getter of the add/remove colors button
-     *
-     * @return Button
-     */
-    public Button getBtnAddRemoveColor() {
-        return btnAddRemoveColor;
-    }
-
-    /**
-     * Setter of the add/remove colors button
-     *
-     * @param btnAddRemoveColor
-     */
-    public void setBtnAddRemoveColor(Button btnAddRemoveColor) {
-        this.btnAddRemoveColor = btnAddRemoveColor;
-    }
-
-    /**
-     * Getter of the add/remove materials button
-     *
-     * @return Button
-     */
-    public Button getBtnAddRemoveMaterial() {
-        return btnAddRemoveMaterial;
-    }
-
-    /**
-     * Setter of the add/remove materials button
-     *
-     * @param btnAddRemoveMaterial
-     */
-    public void setBtnAddRemoveMaterial(Button btnAddRemoveMaterial) {
-        this.btnAddRemoveMaterial = btnAddRemoveMaterial;
-    }
-
-    /**
      * Getter of the file of the picture of the garment
      *
      * @return File
@@ -619,6 +280,24 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     public void setGarmentPictureFile(File garmentPictureFile) {
         this.garmentPictureFile = garmentPictureFile;
+    }
+
+    /**
+     * getter for the ArrayList of CheckComboBoxes
+     *
+     * @return ArrayList of CheckComboBoxes
+     */
+    public ArrayList<CheckComboBox> getCheckComboBoxes() {
+        return checkComboBoxes;
+    }
+
+    /**
+     * Setter for the ArrayList of CheckComboBoxes
+     *
+     * @param checkComboBoxes
+     */
+    public void setCheckComboBoxes(ArrayList<CheckComboBox> checkComboBoxes) {
+        this.checkComboBoxes = checkComboBoxes;
     }
 
     /**
@@ -675,7 +354,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
     /**
      * Sets the properties for several elements of the window
      */
-    private void setElements() throws FileNotFoundException {
+    private void setElements() throws FileNotFoundException, ClientErrorException {
         fillChoiceBoxTheme();
         File placeholderFile = new File("placeholder.jpg");
         FileInputStream imageFileInput = new FileInputStream(placeholderFile);
@@ -705,18 +384,12 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * @throws ClientErrorException
      */
     private void fillComboBoxes() throws ClientErrorException {
-        /*
-        comboColors.setItems(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
-        })));
-        comboMaterials.setItems(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
-        })));
-         */
         ColorClientInterface colorClient = ClientFactory.getColorClient(uri);
-        comboColors.getItems().addAll(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
+        checkComboColors.getItems().addAll(FXCollections.observableArrayList(colorClient.findAll(new GenericType<Set<Color>>() {
         })));
         colorClient.close();
         MaterialClientInterface materialClient = ClientFactory.getMaterialClient(uri);
-        comboMaterials.getItems().addAll(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
+        checkComboMaterials.getItems().addAll(FXCollections.observableArrayList(materialClient.findAll(new GenericType<Set<Material>>() {
         })));
         materialClient.close();
         comboBodyPart.getItems().setAll(BodyPart.values());
@@ -733,8 +406,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBoxes.add(comboGarmentType);
         comboBoxes.add(comboMood);
         checkComboBoxes = new ArrayList<>();
-        checkComboBoxes.add(comboColors);
-        checkComboBoxes.add(comboMaterials);
+        checkComboBoxes.add(checkComboColors);
+        checkComboBoxes.add(checkComboMaterials);
     }
 
     /**
@@ -750,10 +423,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBodyPart.setTooltip(new Tooltip("Choose where the garment is worn"));
         comboGarmentType.setTooltip(new Tooltip("Erases everything"));
         comboMood.setTooltip(new Tooltip("Erases everything"));
-        comboColors.setTooltip(new Tooltip("Choose the colors of the garment"));
-        comboMaterials.setTooltip(new Tooltip("Choose the materials of the garment"));
-        btnAddRemoveColor.setTooltip(new Tooltip("Add the selected Color or remove it if it was already added"));
-        btnAddRemoveMaterial.setTooltip(new Tooltip("Add the selected Material or remove it if it was already added"));
+        checkComboColors.setTooltip(new Tooltip("Choose the colors of the garment"));
+        checkComboMaterials.setTooltip(new Tooltip("Choose the materials of the garment"));
     }
 
     /**
@@ -789,8 +460,6 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         choiceTheme.setOnAction(this::onThemeChosen);
         btnCancel.setOnAction(this::onBtnCancelPress);
         btnSubmit.setOnAction(this::onRegisterPress);
-        // btnAddRemoveColor.setOnAction(this::onAddRemoveColorPress);
-        // btnAddRemoveMaterial.setOnAction(this::onAddRemoveMaterialPress);
         btnHelp.setOnAction(this::onHelpPressed);
         imageViewGarmentPicture.setOnMouseClicked(this::onImageViewClicked);
         imageViewGarmentPicture.setOnKeyPressed(this::onImageViewKeyPressed);
@@ -815,16 +484,14 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         txtPrice.setFocusTraversable(true);
         btnCancel.setFocusTraversable(true);
         btnSubmit.setFocusTraversable(true);
-        btnAddRemoveColor.setFocusTraversable(true);
-        btnAddRemoveMaterial.setFocusTraversable(true);
         btnRedo.setFocusTraversable(true);
         btnUndo.setFocusTraversable(true);
         imageViewGarmentPicture.setFocusTraversable(true);
         choiceTheme.setFocusTraversable(true);
         comboBodyPart.setFocusTraversable(true);
-        comboColors.setFocusTraversable(true);
+        checkComboColors.setFocusTraversable(true);
         comboGarmentType.setFocusTraversable(true);
-        comboMaterials.setFocusTraversable(true);
+        checkComboMaterials.setFocusTraversable(true);
         comboMood.setFocusTraversable(true);
     }
 
@@ -841,10 +508,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboBodyPart.onActionProperty().addListener(this::onItemChosen);
         comboGarmentType.onActionProperty().addListener(this::onItemChosen);
         comboMood.onActionProperty().addListener(this::onItemChosen);
-        // comboColors.onActionProperty().addListener(this::onItemChosen);
-        // comboMaterials.onActionProperty().addListener(this::onItemChosen);
-        comboColors.onMouseClickedProperty().addListener(this::onItemChosen);
-        comboMaterials.onMouseClickedProperty().addListener(this::onItemChosen);
+        checkComboColors.onMouseClickedProperty().addListener(this::onItemChosen);
+        checkComboMaterials.onMouseClickedProperty().addListener(this::onItemChosen);
     }
 
     /**
@@ -928,11 +593,11 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         InputStream imageInputStream = new FileInputStream(garmentPictureFile);
         byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
         garment.setPicture(imageBytes);
-        garment.setPictureName(garmentPictureFile.getName().substring(0, 4));
-        List<Color> selectedColorsList = new ArrayList<>(comboColors.getCheckModel().getCheckedItems());
+        garment.setNamePicture(garmentPictureFile.getName());
+        List<Color> selectedColorsList = new ArrayList<>(checkComboColors.getCheckModel().getCheckedItems());
         Set<Color> selectedColorsSet = selectedColorsList.stream().collect(Collectors.toSet());
         garment.setColors(selectedColorsSet);
-        List<Material> selectedMaterialsList = new ArrayList<>(comboMaterials.getCheckModel().getCheckedItems());
+        List<Material> selectedMaterialsList = new ArrayList<>(checkComboMaterials.getCheckModel().getCheckedItems());
         Set<Material> selectedMaterialsSet = selectedMaterialsList.stream().collect(Collectors.toSet());
         garment.setMaterials(selectedMaterialsSet);
     }
@@ -1045,8 +710,8 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         EventStream<ComboBoxChange> moodChanges = changesOf(comboMood.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboMood));
         EventStream<ComboBoxChange> bodyPartChanges = changesOf(comboBodyPart.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboBodyPart));
         EventStream<ComboBoxChange> garmentTypeChanges = changesOf(comboGarmentType.valueProperty()).map(comboBoxChange -> new ComboBoxChange((Change<Object>) comboBoxChange, comboGarmentType));
-        EventStream<CheckComboBoxChange> colorsChanges = changesOf(comboColors.checkModelProperty()).map(checkComboBoxChange -> new CheckComboBoxChange((Change<Object>) checkComboBoxChange, comboColors));
-        EventStream<CheckComboBoxChange> materialsChanges = changesOf(comboMaterials.checkModelProperty()).map(checkComboBoxChange -> new CheckComboBoxChange((Change<Object>) checkComboBoxChange, comboMaterials));
+        EventStream<CheckComboBoxChange> colorsChanges = changesOf(checkComboColors.checkModelProperty()).map(checkComboBoxChange -> new CheckComboBoxChange((Change<Object>) checkComboBoxChange, checkComboColors));
+        EventStream<CheckComboBoxChange> materialsChanges = changesOf(checkComboMaterials.checkModelProperty()).map(checkComboBoxChange -> new CheckComboBoxChange((Change<Object>) checkComboBoxChange, checkComboMaterials));
         inputChanges = merge(barcodeChange, designerChange, priceChange, moodChanges, bodyPartChanges, garmentTypeChanges, colorsChanges, materialsChanges);
         undoManager = UndoManagerFactory.unlimitedHistorySingleChangeUM(
                 inputChanges,
@@ -1058,32 +723,4 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         btnUndo.setOnAction(event -> undoManager.undo());
         btnRedo.setOnAction(event -> undoManager.redo());
     }
-    /**
-     * Adds or Removes the selected Color
-     *
-     * @param event
-     */
-    /*
-    private void onAddRemoveColorPress(ActionEvent event) {
-        if (garment.getColors().contains(comboColors.getValue())) {
-            garment.getColors().remove((Color) comboColors.getValue());
-        } else {
-            garment.getColors().add((Color) comboColors.getValue());
-        }
-    }
-     */
-    /**
-     * Adds or Removes the selected Material
-     *
-     * @param event
-     */
-    /*
-    private void onAddRemoveMaterialPress(ActionEvent event) {
-        if (garment.getMaterials().contains(comboMaterials.getValue())) {
-            garment.getMaterials().remove((Material) comboMaterials.getValue());
-        } else {
-            garment.getMaterials().add((Material) comboMaterials.getValue());
-        }
-    }
-     */
 }

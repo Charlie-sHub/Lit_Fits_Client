@@ -4,7 +4,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Interface for the CompanyClient
+ * Interface for the Company client
  *
  * @author Carlos Mendez
  */
@@ -17,7 +17,7 @@ public interface CompanyClientInterface {
     /**
      * Counts the amount of companies in the database
      *
-     * @return String
+     * @return String the amount of Companies
      * @throws ClientErrorException
      */
     String countREST() throws ClientErrorException;
@@ -54,7 +54,7 @@ public interface CompanyClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @return
+     * @return responseType should be a List of Companies
      * @throws ClientErrorException
      */
     <T> T findAll(GenericType<T> responseType) throws ClientErrorException;
@@ -65,7 +65,7 @@ public interface CompanyClientInterface {
      * @param <T>
      * @param responseType
      * @param nif
-     * @return
+     * @return responseType should be a Company
      * @throws ClientErrorException
      */
     <T> T findCompanyByNif(Class<T> responseType, String nif) throws ClientErrorException;
@@ -76,7 +76,7 @@ public interface CompanyClientInterface {
      * @param <T>
      * @param requestEntity
      * @param responseType
-     * @return
+     * @return responseType should be a Company
      * @throws ClientErrorException
      */
     <T> T login(Object requestEntity, Class<T> responseType) throws ClientErrorException;
