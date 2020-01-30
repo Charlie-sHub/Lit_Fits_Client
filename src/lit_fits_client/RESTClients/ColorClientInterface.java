@@ -4,7 +4,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Interface for the color client
+ * Interface for the Color client
  *
  * @author Carlos Mendez
  */
@@ -17,7 +17,7 @@ public interface ColorClientInterface {
     /**
      * Counts the amount of colors
      *
-     * @return
+     * @return String the amount of Colors
      * @throws ClientErrorException
      */
     String count() throws ClientErrorException;
@@ -44,7 +44,7 @@ public interface ColorClientInterface {
      * @param <T>
      * @param responseType
      * @param name
-     * @return
+     * @return responseType should be a Color
      * @throws ClientErrorException
      */
     <T> T find(Class<T> responseType, String name) throws ClientErrorException;
@@ -54,7 +54,7 @@ public interface ColorClientInterface {
      *
      * @param <T>
      * @param responseType
-     * @return
+     * @return responseType should be a List of Colors
      * @throws ClientErrorException
      */
     <T> T findAll(GenericType<T> responseType) throws ClientErrorException;

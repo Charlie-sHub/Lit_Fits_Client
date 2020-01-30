@@ -8,14 +8,7 @@ import javax.ws.rs.core.MediaType;
 import lit_fits_client.RESTClients.GarmentClientInterface;
 
 /**
- * Jersey REST client generated for REST resource:GarmentFacadeREST [litfitsserver.entities.garment]<br>
- * USAGE:
- * <pre>
- *        GarmentClient client = new GarmentClient();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+ * Class that implements the GarmentClientInterface
  *
  * @author Carlos Mendez
  */
@@ -25,6 +18,7 @@ public class GarmentClient implements GarmentClientInterface {
 
     /**
      * Constructor of the Garment client
+     *
      * @param baseUri
      */
     public GarmentClient(String baseUri) {
@@ -32,15 +26,6 @@ public class GarmentClient implements GarmentClientInterface {
         webTarget = client.target(baseUri).path("litfitsserver.entities.garment");
     }
 
-    /**
-     * Finds the garment with the given barcode
-     *
-     * @param <T>
-     * @param responseType
-     * @param barcode
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarmentByBarcode(Class<T> responseType, String barcode) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -48,15 +33,6 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Finds all the garments with or without requested promotions
-     *
-     * @param <T>
-     * @param responseType
-     * @param requested
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarmentsByRequest(GenericType<T> responseType, String requested) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -64,34 +40,16 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Creates a new garment
-     *
-     * @param requestEntity
-     * @throws ClientErrorException
-     */
     @Override
     public void createGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Updates a garment with the data send
-     *
-     * @param requestEntity
-     * @throws ClientErrorException
-     */
     @Override
     public void editGarment(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    /**
-     * Counts the total amount of garments
-     *
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -99,15 +57,6 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    /**
-     * Finds a garment by id
-     *
-     * @param <T>
-     * @param responseType
-     * @param id
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarment(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -115,29 +64,12 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Finds all garments
-     *
-     * @param <T>
-     * @param responseType
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarmentAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Finds all promoted garments
-     *
-     * @param <T>
-     * @param responseType
-     * @param promoted
-     * @return
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarmentsPromoted(GenericType<T> responseType, String promoted) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -145,15 +77,6 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Finds all the garments of a given company
-     *
-     * @param <T>
-     * @param responseType
-     * @param nif
-     * @return responseType
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T findGarmentsByCompany(GenericType<T> responseType, String nif) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -161,15 +84,6 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    /**
-     * Gets the picture of the garment
-     *
-     * @param <T>
-     * @param responseType
-     * @param id
-     * @return responseType
-     * @throws ClientErrorException
-     */
     @Override
     public <T> T getImage(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
@@ -177,12 +91,6 @@ public class GarmentClient implements GarmentClientInterface {
         return resource.request(MediaType.APPLICATION_OCTET_STREAM).get(responseType);
     }
 
-    /**
-     * Deletes the garment associated with the given id
-     *
-     * @param id
-     * @throws ClientErrorException
-     */
     @Override
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();

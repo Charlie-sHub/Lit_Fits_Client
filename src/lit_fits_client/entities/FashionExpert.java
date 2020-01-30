@@ -35,6 +35,12 @@ public class FashionExpert implements Serializable {
     private List<Color> recommendedColors;
 
     public FashionExpert() {
+        this.username = new SimpleStringProperty();
+        this.password =  new SimpleStringProperty();
+        this.phoneNumber =  new SimpleStringProperty();
+        this.fullName =  new SimpleStringProperty();
+        this.email =  new SimpleStringProperty();
+        this.publication =  new SimpleStringProperty();
     }
 
     public FashionExpert(SimpleStringProperty username, SimpleStringProperty password, SimpleStringProperty phoneNumber, SimpleStringProperty fullName, SimpleStringProperty email, SimpleStringProperty publication, Date lastPasswordChange, Date lastAccess, List<Material> recommendedMaterials, List<Color> recommendedColors) {

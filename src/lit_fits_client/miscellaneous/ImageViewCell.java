@@ -3,7 +3,11 @@ package lit_fits_client.miscellaneous;
 import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
+/**
+ * (Attempt at a) Class that creates cells with ImageViews
+ * @author Carlos Mendez
+ * @param <T> 
+ */
 public class ImageViewCell<T> extends TableCell<T, Image> {
     private final ImageView imageView;
 

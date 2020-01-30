@@ -24,7 +24,6 @@ public abstract class InputChange<T> {
     public abstract InputChange<T> invert();
 
     public Optional<InputChange<?>> mergeWith(InputChange<?> other) {
-        // don't merge changes by default
         return Optional.empty();
     }
 

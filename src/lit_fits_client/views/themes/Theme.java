@@ -6,6 +6,9 @@ package lit_fits_client.views.themes;
  * @author Carlos Mendez
  */
 public class Theme {
+    /**
+     * The relative path of the theme, example: "themes/[theme name].css"
+     */
     private String themeCssPath;
 
     public Theme() {

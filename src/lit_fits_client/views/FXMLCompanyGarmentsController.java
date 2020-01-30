@@ -42,7 +42,6 @@ import lit_fits_client.entities.Garment;
 import lit_fits_client.entities.GarmentType;
 import lit_fits_client.entities.Material;
 import lit_fits_client.entities.Mood;
-import lit_fits_client.miscellaneous.ImageViewCell;
 import lit_fits_client.views.themes.Theme;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -242,109 +241,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private static final Logger LOG = Logger.getLogger(FXMLCompanyMainMenuController.class.getName());
 
     /**
-     * Getter of the promote button
-     *
-     * @return Button
-     */
-    public Button getBtnPromote() {
-        return btnPromote;
-    }
-
-    /**
-     * Setter for the promote button
-     *
-     * @param btnPromote
-     */
-    public void setBtnPromote(Button btnPromote) {
-        this.btnPromote = btnPromote;
-    }
-
-    /**
-     * Getter of the add button
-     *
-     * @return Button
-     */
-    public Button getBtnAdd() {
-        return btnAdd;
-    }
-
-    /**
-     * Setter for the add button
-     *
-     * @param btnAdd
-     */
-    public void setBtnAdd(Button btnAdd) {
-        this.btnAdd = btnAdd;
-    }
-
-    public Button getBtnDelete() {
-        return btnDelete;
-    }
-
-    /**
-     * Setter for the delete button
-     *
-     * @param btnDelete
-     */
-    public void setBtnDelete(Button btnDelete) {
-        this.btnDelete = btnDelete;
-    }
-
-    /**
-     * Getter of the modify button
-     *
-     * @return Button
-     */
-    public Button getBtnModify() {
-        return btnModify;
-    }
-
-    /**
-     * Setter for the modify button
-     *
-     * @param btnModify
-     */
-    public void setBtnModify(Button btnModify) {
-        this.btnModify = btnModify;
-    }
-
-    /**
-     * Getter for the cancel button
-     *
-     * @return Button
-     */
-    public Button getBtnCancel() {
-        return btnCancel;
-    }
-
-    /**
-     * Setter for the cancel button
-     *
-     * @param btnCancel
-     */
-    public void setBtnCancel(Button btnCancel) {
-        this.btnCancel = btnCancel;
-    }
-
-    /**
-     * Getter of the table of garments
-     *
-     * @return TableView
-     */
-    public TableView getTableGarments() {
-        return tableGarments;
-    }
-
-    /**
-     * Setter of the table of garments
-     *
-     * @param tableGarments
-     */
-    public void setTableGarments(TableView tableGarments) {
-        this.tableGarments = tableGarments;
-    }
-
-    /**
      * Getter of the stage in use by this window
      *
      * @return Stage
@@ -404,7 +300,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @param themes
      * @param theme the chosen css theme
      * @param root The Parent used in previous windows
-     *
      * @param stage
      * @param uri
      */
@@ -431,7 +326,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     /**
      * Sets the options for different elements of the window
      */
-    private void setElements() {
+    private void setElements() throws ClientErrorException{
         fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
@@ -462,8 +357,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
-        System.out.println("Trying to fill the table");
-        System.out.println(company.getNif());
         GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
@@ -518,7 +411,6 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMaterials.setCellFactory((TableColumn<Garment, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
         tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
         tableColumnColors.setCellFactory((TableColumn<Garment, Set<Color>> tableColumnParam) -> new ComboBoxTableCell());
-        // Yet to implement the value factory for the colors, meaning it shows the colors as backgrounds of cells of a ComboBox
         tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
     }
 

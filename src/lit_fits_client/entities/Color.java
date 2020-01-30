@@ -6,9 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Color Class
+ * Color entity class
  *
- * @author Charlie
+ * @author Carlos Mendez
  */
 @XmlRootElement
 public class Color implements Serializable {

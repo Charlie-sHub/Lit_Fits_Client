@@ -26,24 +26,22 @@ import lit_fits_client.views.themes.Theme;
 public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
     
     @FXML
-    private Button btnLogout;
+    private Button btnLogOut;
     @FXML
     private Button btnModify;
     @FXML
     private Button btnRecommendations;
-    @FXML
-    private Button btnBlog;
     private Stage stage;
     private Stage loginStage;
     private FashionExpert expert;
     private static final Logger LOG = Logger.getLogger(FXMLViewExpertMainMenuController.class.getName());
 
-    public Button getBtnLogout() {
-        return btnLogout;
+    public Button getBtnLogOut() {
+        return btnLogOut;
     }
 
     public void setBtnLogout(Button btnLogout) {
-        this.btnLogout = btnLogout;
+        this.btnLogOut = btnLogout;
     }
 
     public Button getBtnModify() {
@@ -60,14 +58,6 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
 
     public void setBtnRecommendations(Button btnRecommendations) {
         this.btnRecommendations = btnRecommendations;
-    }
-
-    public Button getBtnBlog() {
-        return btnBlog;
-    }
-
-    public void setBtnBlog(Button btnBlog) {
-        this.btnBlog = btnBlog;
     }
 
     public Stage getStage() {
@@ -99,36 +89,43 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             this.uri = uri;
             this.stage = stage;
             Scene scene = new Scene(root);
+            this.theme = theme;
             stage.setScene(scene);
             stage.setTitle("Home");
-            stage.setMinWidth(1400);
-            stage.setMinHeight(800);
             stage.show();
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
+            choiceTheme.setValue(theme);
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
+            e.printStackTrace();
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
     }
-
+    /**
+     * Sets the options for different elements of the window
+     */
     private void setElements() {
+        fillChoiceBoxTheme();
         setOnAction();
         setTooltips();
         setFocusTraversable();
+        
     }
-
+    /**
+     * Implements the actions
+     */
     private void setOnAction() {
-        btnLogout.setOnAction(this::onBtnLogoutPress);
+        btnLogOut.setOnAction(this::onBtnLogoutPress);
         btnRecommendations.setOnAction(this::onBtnRecommendationPress);
         btnModify.setOnAction(this::onBtnModifyAccountPress);
         
     }
 
     private void setTooltips() {
-        btnLogout.setTooltip(new Tooltip("Log out of the program"));
+        btnLogOut.setTooltip(new Tooltip("Log out of the program"));
         btnRecommendations.setTooltip(new Tooltip("Edit your fashion recommendations"));
         btnModify.setTooltip(new Tooltip("Modify account data"));
     }
@@ -136,7 +133,7 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
     private void setFocusTraversable() {
         btnModify.setFocusTraversable(true);
         btnRecommendations.setFocusTraversable(true);
-        btnLogout.setFocusTraversable(true);
+        btnLogOut.setFocusTraversable(true);
     }
     /**
      * This method makes a logout for the current user. It also closes the window and returns to the login one
@@ -169,10 +166,13 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             LOG.severe(ex.getMessage());
         }
     }
-    
+    /**
+     * This function opens the recommendations view
+     * @param event 
+     */
     private void onBtnRecommendationPress(ActionEvent event) {
         try {
-            FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("fxml/ExpertEditRecommendations"));
+            FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("fxml/ExpertEditRecommendations.fxml"));
             Stage stageMainProgram = new Stage();
             Parent root = (Parent) fXMLLoader.load();
             FXMLViewExpertEditRecommendationController editRecommendations = ((FXMLViewExpertEditRecommendationController) fXMLLoader.getController());

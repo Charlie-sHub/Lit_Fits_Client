@@ -49,9 +49,10 @@ public interface ExpertClientInterface {
      * Reestablishes the password of associated Expert with the given username, sending an email with the new password
      *
      * @param username
+     * @return 
      * @throws ClientErrorException
      */
-    void reestablishPassword(String username) throws ClientErrorException;
+    String reestablishPassword(String username) throws ClientErrorException;
     
     /**
      * Deletes the Expert with the given id
