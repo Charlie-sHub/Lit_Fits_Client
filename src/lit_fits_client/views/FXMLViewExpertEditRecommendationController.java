@@ -74,8 +74,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private MenuItem menuItemHelp;
     
-    ObservableList<Color> colorList = null;
-    ObservableList<Material> materialList = null;
+    ObservableList<Color> colorList;
+    ObservableList<Material> materialList;
     
     /**
      * Context menu of the table of colors
@@ -371,6 +371,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         setOnAction();
         setMenu();
         setContextMenus();
+        colorList = FXCollections.observableArrayList();
+        materialList = FXCollections.observableArrayList();
         contextMenuTableColors.hide();
         contextMenuTableMaterials.hide();
         
@@ -416,13 +418,13 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         Material red = new Material();
         materialList = tableMaterial.getItems();
         materialList.add(red);
-        Color blue = new Color();
         /*
         materialList = FXCollections.observableArrayList(materialClient.findAll(new GenericType<List<Material>>(){
         }));
         */
         tableMaterial.setItems(materialList);
         //ColorClient colorClient = ClientFactory.getColorClient(uri);
+        Color blue = new Color();
         colorList = tableColor.getItems();
         colorList.add(blue);
         /*
@@ -448,7 +450,6 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
                contextMenuTableMaterials.show(tableMaterial, event.getScreenX(), event.getScreenY());
            }
         });
-        
         menuItemSave.setOnAction(this::onSavePress);
         menuItemQuit.setOnAction(this::onCancelPress);
         menuItemSelectAll.setOnAction(this::selectAllTable);
@@ -535,6 +536,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         contextMenuTableColors.getItems().addAll(menuItemSave, menuItemHelp);
         contextMenuTableMaterials.getItems().addAll(menuItemSave, menuItemHelp);
     }
+
 
 
     
