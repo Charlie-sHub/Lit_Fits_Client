@@ -346,7 +346,16 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             if (nifPatternCheck(txtUsername.getText())) {
                 openCompanyMainMenu(loginCompany());
             } else if (txtUsername.getText().startsWith("admin")) {
-                openAdminMainMenu(adminLogin());
+                
+                // Asier modification to login as admin
+                
+                //openAdminMainMenu(adminLogin());
+                User admin = new User();
+                admin.setUsername("admin");
+                admin.setFullName("Lit Fits Admin");
+                admin.setPassword(fieldPassword.getText());
+                openAdminMainMenu(admin);
+                
             } else {
                 openExpertMainMenu(expertLogin());
             }

@@ -1,10 +1,12 @@
 package lit_fits_client.views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,15 +44,11 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private Stage previousStage;
     private String uri;
     
-//    @FXML
-//    private Button btnSave;
     @FXML
     private Button btnBack;
     
     @FXML
     private Menu menuFile;
-//    @FXML
-//    private MenuItem menuItemSave;
     @FXML
     private MenuItem menuItemBack;
     @FXML
@@ -64,6 +62,8 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     
     @FXML
     private ChoiceBox choiceBoxFilterBy;
+    
+    private ArrayList<String> filterByList;
     
     // ----------------- Garments Table ----------------------
     
@@ -79,8 +79,6 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private TableColumn<Garment, Object> bodyPartColumn;
     @FXML
     private TableColumn<Garment, Object> moodColumn;
-    @FXML
-    private TableColumn<Garment, Double> priceColumn;
     @FXML
     private TableColumn<Garment, Boolean> availableColumn;
     @FXML
@@ -166,14 +164,15 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.stage.show();
         
         this.setStylesheet(scene, this.theme.getThemeCssPath());
-        this.setElements();
         this.choiceTheme.setValue(theme);
+        this.setElements();
         
         stage.setOnCloseRequest(this::onClosing);
     }
     
     /**
      * Fills the table of garments that is shown in the view.
+     * It will also be used to refresh the table.
      * 
      * @throws ClientErrorException 
      */
@@ -195,13 +194,9 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         garmentTypeColumn.setCellValueFactory(new PropertyValueFactory("garmentType"));
         bodyPartColumn.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         moodColumn.setCellValueFactory(new PropertyValueFactory("mood"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory("price"));
         availableColumn.setCellValueFactory(new PropertyValueFactory("available"));
         promotedColumn.setCellValueFactory(new PropertyValueFactory("promoted"));
         promotionRequestColumn.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
-        
-        // Materials
-        // Colors
     }
     
     /**
@@ -214,8 +209,49 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         this.setTooltips();
         this.setOnAction();
         
-        this.setColumnFactories();
-        this.fillTable();
+        this.fillChoiceBoxTheme();
+        this.setChoiceBoxEntities();
+        
+        // The method to fill the table. It does not work
+        //this.setColumnFactories();
+        //this.fillTable();
+    }
+    
+    /**
+     * This method sets the entities that can be shown on the tables.
+     */
+    private void setChoiceBoxEntities () {
+        filterByList = new ArrayList<String>();
+        
+        filterByList.add("Promoted");
+        filterByList.add("Promotion request");
+        
+        choiceBoxFilterBy.setItems(FXCollections.observableArrayList(filterByList));
+        choiceBoxFilterBy.setOnAction(this::onFilterChosen);
+    }
+    
+    /**
+     * The event that will happen when an option is selected in the 
+     * <i>Filter By</i> choice box.
+     * @param event 
+     */
+    private void onFilterChosen (Event event) {
+        
+        String selected = this.choiceBoxFilterBy.getSelectionModel().getSelectedItem().toString();
+        
+       switch (selected) {
+           case "Promoted":
+               // Fill the table with only the promoted garments.
+            break;
+               
+           case "Promotion request":
+               // Fill the table with only the garments that request a promotion.
+            break;
+               
+           default:
+               
+            break;
+        }
     }
     
     /**
@@ -225,15 +261,20 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
     private void setMnemonicText() {
         
         menuFile.setText("_File");
-        //menuItemSave.setText("_Save");
+        menuFile.setMnemonicParsing(true);
         menuItemBack.setText("_Back");
+        menuItemBack.setMnemonicParsing(true);
         menuEdit.setText("_Edit");
+        menuEdit.setMnemonicParsing(true);
         menuItemPromote.setText("_Promote");
+        menuItemPromote.setMnemonicParsing(true);
         menuItemDeletePromotion.setText("_Delete promotion");
+        menuItemDeletePromotion.setMnemonicParsing(true);
         menuItemCancelRequest.setText("_Cancel request");
+        menuItemCancelRequest.setMnemonicParsing(true);
         
-        //btnSave.setText("_Save");
         btnBack.setText("_Back");
+        btnBack.setMnemonicParsing(true);
     }
     
     /**
@@ -241,7 +282,6 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
      */
     private void setTooltips() {
         
-        //btnSave.setTooltip(new Tooltip("Save the changes"));
         btnBack.setTooltip(new Tooltip("Go to the previous window"));
     }
     
@@ -252,24 +292,15 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         
         choiceTheme.setOnAction(this::onThemeChosen);
         
-        //menuItemSave.setOnAction(this::onBtnSavePress);
         menuItemBack.setOnAction(this::onBtnBackPress);
         menuItemPromote.setOnAction(this::onMenuItemPromotePress);
         menuItemDeletePromotion.setOnAction(this::onMenuItemDeletePromotionPress);
         menuItemCancelRequest.setOnAction(this::onMenuItemCancelRequestPress);
         
-        //btnSave.setOnAction(this::onBtnSavePress);
         btnBack.setOnAction(this::onBtnBackPress);
+        
+        choiceTheme.setOnAction(this::onThemeChosen);
     }
-    
-    /**
-     * The event that will happen when the <i>Save</i> button is pressed.
-     * 
-     * @param event The action event of the view.
-     */
-//    private void onBtnSavePress(ActionEvent event) {
-        // This method was finally deleted because all the actions use the client directly.
-//    }
     
     /**
      * The event that will happen when the <i>Back</i> button is pressed.
@@ -295,6 +326,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         garmentClient.editGarment(promoteGarment);
         garmentClient.close();
+        this.fillTable();
     }
     
     /**
@@ -310,6 +342,7 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         garmentClient.editGarment(deletePromoteGarment);
         garmentClient.close();
+        this.fillTable();
     }
     
     /**
@@ -325,5 +358,6 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
         garmentClient.editGarment(cancelPromoteGarment);
         garmentClient.close();
+        this.fillTable();
     }
 }

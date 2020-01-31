@@ -1,5 +1,6 @@
 package lit_fits_client.views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javafx.collections.FXCollections;
@@ -41,9 +42,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private User admin;
     private Stage stage;
     private Stage previousStage;
+    
     private String uri;
     
-    private ObservableList<String> entitiesList;
+    private ArrayList<String> entitiesList;
     
     @FXML
     private Menu menuFile;
@@ -62,7 +64,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     
     // ------------------ Garment table ----------------------
     @FXML
-    private TableView<Garment> garmentsTable;
+    private TableView<Garment> tableViewGarment;
     @FXML
     private TableColumn<Garment, String> barcodeColumn;
     @FXML
@@ -74,19 +76,20 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private TableColumn<Garment, Object> moodColumn;
     @FXML
-    private TableColumn<Garment, Double> priceColumn;
-    @FXML
     private TableColumn<Garment, Boolean> availableColumn;
     @FXML
     private TableColumn<Garment, Boolean> promotedColumn;
     @FXML
     private TableColumn<Garment, Boolean> promotionRequestColumn;
     
+    /**
+     * The list of garments that will be loaded into the table.
+     */
     private ObservableList<Garment> garmentList;
     
     // ------------------ User table ----------------------
     @FXML
-    private TableView<User> usersTable;
+    private TableView<User> tableViewUser;
     @FXML
     private TableColumn<User, String> usernameColumn;
     @FXML
@@ -99,16 +102,17 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private TableColumn<User, String> emailColumn;
     @FXML
     private TableColumn<User, Object> userTypeColumn;
-    //@FXML
-    //private TableColumn<User, Set<Material>> likedMaterialsColumn;
-    //@FXML
-    //private TableColumn<User, Set<Color>> likedColorsColumn;
     
+    /**
+     * The list of users that will be loaded into the table.
+     */
     private ObservableList<User> userList;
     
     // ---------------- Getters and Setters --------------------
     
     /**
+     * Gets the admin that is logged.
+     * 
      * @return the admin
      */
     public User getAdmin () {
@@ -116,30 +120,45 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
 
     /**
-     * @param admin the admin to set
+     * Sets the admin that is logged.
+     * 
+     * @param admin The admin to set
      */
     public void setAdmin (User admin) {
         this.admin = admin;
     }
 
     /**
-     * @return the stage
+     * Gets the actual stage.
+     * 
+     * @return The stage.
      */
     public Stage getStage () {
         return stage;
     }
 
     /**
+     * Sets the actual stage.
+     * 
      * @param stage the stage to set
      */
     public void setStage (Stage stage) {
         this.stage = stage;
     }
     
+    /**
+     * Sets the previous stage.
+     * 
+     * @param previousStage The previous stage to set.
+     */
     public void setPreviousStage(Stage previousStage) {
         this.previousStage = previousStage;
     }
     
+    /**
+     * Gets the previous stage.
+     * @return The previous stage.
+     */
     public Stage getPreviousStage() {
         return this.previousStage;
     }
@@ -164,10 +183,10 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         Scene scene = new Scene(root);
         this.stage.setScene(scene);
-        this.stage.setTitle("Administrator - Check promotion requests");
+        this.stage.setTitle("Administrator - Check database");
         
-        this.usersTable.setVisible(false);
-        this.garmentsTable.setVisible(false);
+        this.tableViewUser.setVisible(false);
+        this.tableViewGarment.setVisible(false);
         
         this.stage.show();
         
@@ -187,14 +206,17 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         this.setMnemonicText();
         this.setTooltips();
         this.setOnAction();
-         
-        this.setGarmentTableFactories();
-        this.fillTableGarment();
-        
-        this.setUserTableFactories();
-        this.fillTableUser();
         
         this.setChoiceBoxEntities();
+        this.fillChoiceBoxTheme();
+        
+        // The methods to fill the tables. They dont work
+        
+        //this.setGarmentTableFactories();
+        //this.fillTableGarment();
+        
+        //this.setUserTableFactories();
+        //this.fillTableUser();
     }
 
     /**
@@ -202,11 +224,11 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      */
     private void setChoiceBoxEntities () {
         
-        this.entitiesList.add("Garments");
-        this.entitiesList.add("Users");
+        entitiesList = new ArrayList<String>();
+        entitiesList.add("Garments");
+        entitiesList.add("Users");
         
-        this.choiceBoxEntities.setItems(entitiesList);
-        this.choiceBoxEntities.setOnAction(this::onEntitiesChosen);
+        choiceBoxEntities.setItems(FXCollections.observableArrayList(entitiesList));
     }
     
     /**
@@ -220,19 +242,20 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
        switch (selected) {
            case "Garments":
-               this.usersTable.setSelectionModel(null);
-               this.usersTable.setVisible(false);
-               this.garmentsTable.setVisible(true);
-               break;
+               this.tableViewUser.setSelectionModel(null);
+               this.tableViewUser.setVisible(false);
+               this.tableViewGarment.setVisible(true);
+            break;
                
            case "Users":
-               this.garmentsTable.setSelectionModel(null);
-               this.garmentsTable.setVisible(false);
-               this.usersTable.setVisible(true);
-               break;
+               this.tableViewGarment.setSelectionModel(null);
+               this.tableViewGarment.setVisible(false);
+               this.tableViewUser.setVisible(true);
+            break;
                
            default:
-               break;
+               
+            break;
         }
     }
     
@@ -246,12 +269,9 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         garmentTypeColumn.setCellValueFactory(new PropertyValueFactory("garmentType"));
         bodyPartColumn.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         moodColumn.setCellValueFactory(new PropertyValueFactory("mood"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory("price"));
         availableColumn.setCellValueFactory(new PropertyValueFactory("available"));
         promotedColumn.setCellValueFactory(new PropertyValueFactory("promoted"));
         promotionRequestColumn.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
-        // Materials
-        // Colors
     }
     
     /**
@@ -266,7 +286,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         garmentClient.close();
         
-        garmentsTable.setItems(garmentList);
+        tableViewGarment.setItems(garmentList);
     }
     
     /**
@@ -280,9 +300,6 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         phoneNumberColumn.setCellValueFactory(new PropertyValueFactory("phoneNumber"));
         emailColumn.setCellValueFactory(new PropertyValueFactory("email"));
         userTypeColumn.setCellValueFactory(new PropertyValueFactory("userType"));
-        //likedMaterialsColumn.setCellFactory((TableColumn<User, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
-        //likedMaterialsColumn.setCellValueFactory((TableColumn.CellDataFeatures<User, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getLikedMaterials());
-        //likedColorsColumn.setCellValueFactory(new PropertyValueFactory("likedColors"));
     }
     
     /**
@@ -297,7 +314,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         userClient.close();
                 
-        usersTable.setItems(userList);
+        tableViewUser.setItems(userList);
     }
     
     /**
@@ -307,11 +324,16 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private void setMnemonicText() {
         
         menuFile.setText("_File");
+        menuFile.setMnemonicParsing(true);
         menuItemDeleteItem.setText("_Delete item");
+        menuItemDeleteItem.setMnemonicParsing(true);
         menuItemBack.setText("_Back");
+        menuItemBack.setMnemonicParsing(true);
         
         btnDeleteItem.setText("_Delete item");
+        btnDeleteItem.setMnemonicParsing(true);
         btnBack.setText("_Back");
+        btnBack.setMnemonicParsing(true);
     }
 
     /**
@@ -332,6 +354,9 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         btnDeleteItem.setOnAction(this::onBtnDeleteItemPress);
         btnBack.setOnAction(this::onBtnBackPress);
+        
+        choiceTheme.setOnAction(this::onThemeChosen);
+        this.choiceBoxEntities.setOnAction(this::onEntitiesChosen);
     }
     
     /**
@@ -351,35 +376,28 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
      */
     private void onBtnDeleteItemPress (ActionEvent event) {
         
-        if (usersTable.isVisible()) {
-            User deleteUser = usersTable.getSelectionModel().getSelectedItem();
-            
+        if (tableViewUser.isVisible()) {
+            User deleteUser = tableViewUser.getSelectionModel().getSelectedItem();
             if (deleteUser != null) {
                 
                 if (this.deleteConfirmation()){
-                    
                     UserClient userClient = ClientFactory.getUserClient(uri);
                     userClient.removeUser(deleteUser.getUsername());
                     userClient.close();
                 }
             } else {
-                
                 this.nothingToDelete();
             }
             
-        } else if (garmentsTable.isVisible()) {
-            
-            Garment deleteGarment = garmentsTable.getSelectionModel().getSelectedItem();
-            
+        } else if (tableViewGarment.isVisible()) {
+            Garment deleteGarment = tableViewGarment.getSelectionModel().getSelectedItem();
             if (deleteGarment != null) {
                 
                 if (this.deleteConfirmation()) {
-                    
                     GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
                     garmentClient.remove(String.valueOf(deleteGarment.getId()));
                     garmentClient.close();
                 }
-                
             } else {
                 this.nothingToDelete();
             }
@@ -407,9 +425,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         if (result.get() == ButtonType.OK){
             delete = true;
-            
         } else {
-            
             delete = false;
         }
         
