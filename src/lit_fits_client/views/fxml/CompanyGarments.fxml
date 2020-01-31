@@ -43,28 +43,28 @@
                 </MenuBar>
                 <AnchorPane>
                     <children>
-                        <Button fx:id="btnAdd" layoutX="370.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Add" />
-                        <Button fx:id="btnModify" layoutX="470.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
-                        <Button fx:id="btnPromote" layoutX="570.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
-                        <Button fx:id="btnDelete" layoutX="670.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" /> 
-                        <Button fx:id="btnRefresh" layoutX="770.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Refresh" />             
-                        <Button fx:id="btnReport" layoutX="870.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" />
+                        <Button fx:id="btnAdd" layoutX="319.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Add" />
+                        <Button fx:id="btnModify" layoutX="419.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Modify" />
+                        <Button fx:id="btnPromote" layoutX="519.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Promote" />
+                        <Button fx:id="btnDelete" layoutX="619.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" text="Delete" /> 
+                        <Button fx:id="btnRefresh" layoutX="719.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Refresh" />             
+                        <Button fx:id="btnReport" layoutX="819.0" layoutY="593.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="142.0" text="Garment Report" />
                         <ScrollPane fitToHeight="true" layoutX="12.0" layoutY="12.0">
                             <content>
                                 <TableView fx:id="tableGarments" prefHeight="560.0" prefWidth="1247.0">
                                     <columns>
-                                        <TableColumn fx:id="tableColumnPicture" maxWidth="142.39999961853027" minWidth="100.0" prefWidth="142.39999961853027" text="Picture" />
-                                        <TableColumn fx:id="tableColumnBarcode" maxWidth="95.20001983642578" minWidth="57.600006103515625" prefWidth="57.600006103515625" text="Barcode" />
-                                        <TableColumn fx:id="tableColumnDesigner" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Designer" />
+                                        <TableColumn fx:id="tableColumnPicture" maxWidth="142.39999961853027" minWidth="100.0" prefWidth="129.60000324249268" text="Picture" />
+                                        <TableColumn fx:id="tableColumnBarcode" maxWidth="95.20001983642578" minWidth="57.600006103515625" prefWidth="85.60003662109375" text="Barcode" />
+                                        <TableColumn fx:id="tableColumnDesigner" maxWidth="95.19999694824219" minWidth="85.59999084472656" prefWidth="85.59999084472656" text="Designer" />
                                         <TableColumn fx:id="tableColumnMood" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Mood" />
                                         <TableColumn fx:id="tableColumnType" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Type" />
                                         <TableColumn fx:id="tableColumnPart" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Part" />
-                                        <TableColumn fx:id="tableColumnRequested" maxWidth="-1.0" minWidth="100.0" prefWidth="137.33331298828125" text="Requested Promotion" />
-                                        <TableColumn fx:id="tableColumnPromoted" maxWidth="-1.0" minWidth="62.66668701171875" prefWidth="62.66668701171875" text="Promoted" />
-                                        <TableColumn fx:id="tableColumnAvailable" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Available" />
-                                        <TableColumn fx:id="tableColumnColors" maxWidth="-1.0" minWidth="100.0" prefWidth="-1.0" text="Color(s)" />
-                                        <TableColumn fx:id="tableColumnMaterials" maxWidth="-1.0" minWidth="100.0" prefWidth="143.7333984375" text="Material(s)" />
-                                        <TableColumn fx:id="tableColumnPrice" prefWidth="75.0" text="Price" />
+                                        <TableColumn fx:id="tableColumnRequested" maxWidth="138.4000244140625" minWidth="100.0" prefWidth="138.4000244140625" text="Requested Promotion" />
+                                        <TableColumn fx:id="tableColumnPromoted" maxWidth="104.0" minWidth="62.66668701171875" prefWidth="94.39996337890625" text="Promoted" />
+                                        <TableColumn fx:id="tableColumnAvailable" maxWidth="145.60003662109375" minWidth="76.79998779296875" prefWidth="104.0" text="Available" />
+                                        <TableColumn fx:id="tableColumnColors" maxWidth="168.0" minWidth="95.199951171875" prefWidth="112.0" text="Color(s)" />
+                                        <TableColumn fx:id="tableColumnMaterials" maxWidth="211.19989013671875" minWidth="100.0" prefWidth="116.7999267578125" text="Material(s)" />
+                                        <TableColumn fx:id="tableColumnPrice" prefWidth="80.800048828125" text="Price" />
                                     </columns>
                                     <contextMenu>
                                         <ContextMenu fx:id="contextMenuTable">
@@ -86,7 +86,7 @@
                                 </ContextMenu>
                             </contextMenu>
                         </ScrollPane>                                              
-                        <Button fx:id="btnCancel" layoutX="1187.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
+                        <Button fx:id="btnCancel" layoutX="1187.0" layoutY="593.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Cancel" />
                     </children>
                 </AnchorPane>
             </children>

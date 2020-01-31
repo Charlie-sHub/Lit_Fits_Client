@@ -1,14 +1,18 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -140,7 +144,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * The columns for the Colors
      */
     @FXML
-    private TableColumn<Garment, Set<Color>> tableColumnColors;
+    private TableColumn<Garment, List<Color>> tableColumnColors;
     /**
      * The columns for the Materials
      */
@@ -329,7 +333,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     /**
      * Sets the options for different elements of the window
      */
-    private void setElements() throws ClientErrorException{
+    private void setElements() throws ClientErrorException {
         fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
@@ -397,9 +401,19 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnPart.setCellValueFactory(new PropertyValueFactory("bodyPart"));
         tableColumnType.setCellValueFactory(new PropertyValueFactory("garmentType"));
         tableColumnMaterials.setCellFactory((TableColumn<Garment, Set<Material>> tableColumnParam) -> new ComboBoxTableCell());
-        tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
-        tableColumnColors.setCellFactory((TableColumn<Garment, Set<Color>> tableColumnParam) -> new ComboBoxTableCell());
-        tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
+        // tableColumnMaterials.setCellValueFactory((CellDataFeatures<Garment, Set<Material>> cellDataParameter) -> (ObservableValue<Set<Material>>) cellDataParameter.getValue().getMaterials());
+        tableColumnMaterials.setCellValueFactory(new PropertyValueFactory("materials"));
+        tableColumnColors.setCellFactory((TableColumn<Garment, List<Color>> tableColumnParam) -> new ComboBoxTableCell());
+        // tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
+        // tableColumnColors.setCellValueFactory(new PropertyValueFactory("colors"));
+        tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, List<Color>> cellDataParameter) -> {
+            Set<Color> colors = cellDataParameter.getValue().getColors();
+            List<Color> auxList = new ArrayList<>(colors);
+            ObservableList<Color> auxObservableList = FXCollections.observableArrayList(auxList);
+            ObservableValue<List<Color>> observable = new SimpleObjectProperty(auxList);
+            return observable;
+        });
+        
     }
 
     /**
@@ -464,7 +478,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         menuHelpOpenHelp.setOnAction(this::onHelpPressed);
         stage.setOnCloseRequest(this::onClosing);
         btnReport.setOnAction(this::onBtnReportPress);
-        btnRefresh.setOnAction(this::onBtnRefreshPress );
+        btnRefresh.setOnAction(this::onBtnRefreshPress);
     }
 
     /**
@@ -586,15 +600,17 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             createExceptionDialog(ex);
         }
     }
+
     /**
-     * Refills the table of garments 
-     * @param event 
+     * Refills the table of garments
+     *
+     * @param event
      */
-    private void onBtnRefreshPress (ActionEvent event){
+    private void onBtnRefreshPress(ActionEvent event) {
         try {
             fillTable();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
-        }        
+        }
     }
 }

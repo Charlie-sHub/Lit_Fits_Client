@@ -373,6 +373,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         mainView.setAdmin(user);
         mainView.setPreviousStage(this.stage);
         mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
+        stage.hide();
     }
 
     /**
@@ -411,6 +412,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         mainView.setExpert(fashionExpert);
         mainView.setLoginStage(this.stage);
         mainView.initStage(themeList, theme, stageExpertMainMenu, root, uri);
+        stage.hide();
     }
 
     /**
@@ -449,6 +451,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         mainView.setCompany(company);
         mainView.setLoginStage(this.stage);
         mainView.initStage(themeList, theme, stageCompanyMainMenu, root, uri);
+        stage.hide();
     }
 
     /**

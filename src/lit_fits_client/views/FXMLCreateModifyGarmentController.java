@@ -577,7 +577,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     private void setGarmentData() throws FileNotFoundException, IOException {
         garment.setBarcode(txtBarcode.getText());
-        garment.setPrice(Double.valueOf(txtPrice.getText().substring(0, 1)));
+        garment.setPrice(Double.valueOf(txtPrice.getText().substring(0, txtPrice.getText().length() - 1)));
         garment.setDesigner(txtDesigner.getText());
         garment.setCompany(company);
         garment.setAvailable(true);
@@ -660,7 +660,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      */
     private boolean pricePatternCheck() {
         boolean enableRegister;
-        enableRegister = Pattern.matches("[0-9]+,[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim());
+        enableRegister = Pattern.matches("[0-9]+.[0-9]{2}[$€£¥]{1}", txtPrice.getText().trim());
         lblInvalidPrice.setVisible(!enableRegister);
         return enableRegister;
     }
