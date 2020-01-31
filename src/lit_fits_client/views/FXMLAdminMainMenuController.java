@@ -138,8 +138,6 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         this.setElements();
         this.choiceTheme.setValue(theme);
         this.lblAdmin.setText(this.admin.getFullName());
-        
-        // The paneLitFitsLogo should get the image
     }
     
     /**

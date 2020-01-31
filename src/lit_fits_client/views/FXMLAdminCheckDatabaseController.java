@@ -42,6 +42,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     private User admin;
     private Stage stage;
     private Stage previousStage;
+    
     private String uri;
     
     private ArrayList<String> entitiesList;
@@ -81,6 +82,9 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private TableColumn<Garment, Boolean> promotionRequestColumn;
     
+    /**
+     * The list of garments that will be loaded into the table.
+     */
     private ObservableList<Garment> garmentList;
     
     // ------------------ User table ----------------------
@@ -99,11 +103,16 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     @FXML
     private TableColumn<User, Object> userTypeColumn;
     
+    /**
+     * The list of users that will be loaded into the table.
+     */
     private ObservableList<User> userList;
     
     // ---------------- Getters and Setters --------------------
     
     /**
+     * Gets the admin that is logged.
+     * 
      * @return the admin
      */
     public User getAdmin () {
@@ -111,30 +120,45 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
     }
 
     /**
-     * @param admin the admin to set
+     * Sets the admin that is logged.
+     * 
+     * @param admin The admin to set
      */
     public void setAdmin (User admin) {
         this.admin = admin;
     }
 
     /**
-     * @return the stage
+     * Gets the actual stage.
+     * 
+     * @return The stage.
      */
     public Stage getStage () {
         return stage;
     }
 
     /**
+     * Sets the actual stage.
+     * 
      * @param stage the stage to set
      */
     public void setStage (Stage stage) {
         this.stage = stage;
     }
     
+    /**
+     * Sets the previous stage.
+     * 
+     * @param previousStage The previous stage to set.
+     */
     public void setPreviousStage(Stage previousStage) {
         this.previousStage = previousStage;
     }
     
+    /**
+     * Gets the previous stage.
+     * @return The previous stage.
+     */
     public Stage getPreviousStage() {
         return this.previousStage;
     }
@@ -162,7 +186,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         this.stage.setTitle("Administrator - Check database");
         
         this.tableViewUser.setVisible(false);
-        this.tableViewGarment.setVisible(true);
+        this.tableViewGarment.setVisible(false);
         
         this.stage.show();
         
@@ -193,8 +217,6 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         //this.setUserTableFactories();
         //this.fillTableUser();
-        
-        
     }
 
     /**
@@ -223,16 +245,17 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
                this.tableViewUser.setSelectionModel(null);
                this.tableViewUser.setVisible(false);
                this.tableViewGarment.setVisible(true);
-               break;
+            break;
                
            case "Users":
                this.tableViewGarment.setSelectionModel(null);
                this.tableViewGarment.setVisible(false);
                this.tableViewUser.setVisible(true);
-               break;
+            break;
                
            default:
-               break;
+               
+            break;
         }
     }
     
@@ -355,33 +378,26 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         if (tableViewUser.isVisible()) {
             User deleteUser = tableViewUser.getSelectionModel().getSelectedItem();
-            
             if (deleteUser != null) {
                 
                 if (this.deleteConfirmation()){
-                    
                     UserClient userClient = ClientFactory.getUserClient(uri);
                     userClient.removeUser(deleteUser.getUsername());
                     userClient.close();
                 }
             } else {
-                
                 this.nothingToDelete();
             }
             
         } else if (tableViewGarment.isVisible()) {
-            
             Garment deleteGarment = tableViewGarment.getSelectionModel().getSelectedItem();
-            
             if (deleteGarment != null) {
                 
                 if (this.deleteConfirmation()) {
-                    
                     GarmentClient garmentClient = ClientFactory.getGarmentClient(uri);
                     garmentClient.remove(String.valueOf(deleteGarment.getId()));
                     garmentClient.close();
                 }
-                
             } else {
                 this.nothingToDelete();
             }
@@ -409,9 +425,7 @@ public class FXMLAdminCheckDatabaseController extends FXMLDocumentController {
         
         if (result.get() == ButtonType.OK){
             delete = true;
-            
         } else {
-            
             delete = false;
         }
         

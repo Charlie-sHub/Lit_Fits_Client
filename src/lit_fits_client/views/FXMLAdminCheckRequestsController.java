@@ -197,9 +197,6 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         availableColumn.setCellValueFactory(new PropertyValueFactory("available"));
         promotedColumn.setCellValueFactory(new PropertyValueFactory("promoted"));
         promotionRequestColumn.setCellValueFactory(new PropertyValueFactory("promotionRequest"));
-        
-        // Materials
-        // Colors
     }
     
     /**
@@ -233,8 +230,28 @@ public class FXMLAdminCheckRequestsController extends FXMLDocumentController{
         choiceBoxFilterBy.setOnAction(this::onFilterChosen);
     }
     
+    /**
+     * The event that will happen when an option is selected in the 
+     * <i>Filter By</i> choice box.
+     * @param event 
+     */
     private void onFilterChosen (Event event) {
         
+        String selected = this.choiceBoxFilterBy.getSelectionModel().getSelectedItem().toString();
+        
+       switch (selected) {
+           case "Promoted":
+               // Fill the table with only the promoted garments.
+            break;
+               
+           case "Promotion request":
+               // Fill the table with only the garments that request a promotion.
+            break;
+               
+           default:
+               
+            break;
+        }
     }
     
     /**
