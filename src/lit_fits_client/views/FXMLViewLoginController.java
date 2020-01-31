@@ -397,18 +397,25 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
             if (nifPatternCheck(txtUsername.getText())) {
                 openCompanyMainMenu(loginCompany());
             } else if (txtUsername.getText().startsWith("admin")) {
-                openAdminMainMenu(adminLogin());
+                
+                // Asier modification to login as admin
+                
+                //openAdminMainMenu(adminLogin());
+                User admin = new User();
+                admin.setUsername("admin");
+                admin.setFullName("Lit Fits Admin");
+                admin.setPassword(fieldPassword.getText());
+                openAdminMainMenu(admin);
+                
             } else {
                 openExpertMainMenu(expertLogin());
             }
             stage.hide();
         } catch (IOException | ClientErrorException ex) {
             createExceptionDialog(ex);
-            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         } catch (Exception ex) {
             createExceptionDialog(ex);
-            ex.printStackTrace();
             LOG.severe(ex.getMessage());
         }
     }
@@ -428,6 +435,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         mainView.setAdmin(user);
         mainView.setPreviousStage(this.stage);
         mainView.initStage(themeList, theme, stageAdminMainMenu, root, uri);
+        stage.hide();
     }
 
     /**

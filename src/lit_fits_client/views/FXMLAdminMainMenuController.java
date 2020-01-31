@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lit_fits_client.entities.User;
 import lit_fits_client.views.themes.Theme;
@@ -40,14 +39,9 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
     @FXML
     private MenuItem menuItemClose;
     @FXML
-    private Menu menuEdit;
-    @FXML
-    private MenuItem menuItemCheckEntities;
+    private MenuItem menuItemCheckDatabase;
     @FXML
     private MenuItem menuItemCheckPromotions;
-    
-//    @FXML
-//    private Pane paneLitFItsLogo;
     
     @FXML
     private Button btnClose;
@@ -157,6 +151,7 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         this.setMnemonicText();
         this.setTooltips();
         this.setOnAction();
+        this.fillChoiceBoxTheme();
     }
     
     /**
@@ -165,14 +160,20 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
      */
     private void setMnemonicText() {
         menuFile.setText("_File");
+        menuFile.setMnemonicParsing(true);
         menuItemClose.setText("_Close");
-        menuEdit.setText("_Edit");
-        menuItemCheckEntities.setText("Check _database");
+        menuItemClose.setMnemonicParsing(true);
+        menuItemCheckDatabase.setText("Check _database");
+        menuItemCheckDatabase.setMnemonicParsing(true);
         menuItemCheckPromotions.setText("Check _promotions");
+        menuItemCheckPromotions.setMnemonicParsing(true);
         
         btnClose.setText("_Close");
+        btnClose.setMnemonicParsing(true);
         btnCheckPromotions.setText("Check _promotions");
+        btnCheckPromotions.setMnemonicParsing(true);
         btnCheckDatabase.setText("Check _database");
+        btnCheckDatabase.setMnemonicParsing(true);
     }
     
     /**
@@ -193,12 +194,13 @@ public class FXMLAdminMainMenuController extends FXMLDocumentController {
         choiceTheme.setOnAction(this::onThemeChosen);
         
         menuItemClose.setOnAction(this::onBtnClosePress);
-        menuItemCheckEntities.setOnAction(this::onBtnCheckDatabasePress);
+        menuItemCheckDatabase.setOnAction(this::onBtnCheckDatabasePress);
         menuItemCheckPromotions.setOnAction(this::onBtnCheckPromotionsPress);
         
         btnClose.setOnAction(this::onBtnClosePress);
         btnCheckDatabase.setOnAction(this::onBtnCheckDatabasePress);
         btnCheckPromotions.setOnAction(this::onBtnCheckPromotionsPress);
+        choiceTheme.setOnAction(this::onThemeChosen);
     }
     
     /**
