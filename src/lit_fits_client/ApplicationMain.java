@@ -32,6 +32,7 @@ public class ApplicationMain extends Application {
         try {
             launch();
         } catch (Exception e) {
+            e.printStackTrace();
             LOG.severe(e.getMessage());
         }
     }

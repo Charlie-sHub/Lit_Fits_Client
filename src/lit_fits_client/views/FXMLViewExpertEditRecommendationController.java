@@ -429,7 +429,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         fillTable();
         setSelectedReccomendations();
         setOnAction();
-        setMenu();
+        //setMenu();
         setContextMenus();
         contextMenuTableColors.hide();
         contextMenuTableMaterials.hide();
@@ -449,6 +449,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     private void setSelectedReccomendations() {
        
        List<Color> colorsSelected = expert.getRecommendedColors();
+       if(colorsSelected != null){
         if (colorsSelected.isEmpty()) {
             tableColor.getSelectionModel().clearSelection();
         }else{
@@ -458,8 +459,13 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
                 });
              });
         }
+       }
+     
        List<Material> materialsSelected = expert.getRecommendedMaterials();
-        if (materialsSelected.isEmpty()) {
+        if (materialsSelected != null) {
+            
+        
+       if (materialsSelected.isEmpty()) {
             tableMaterial.getSelectionModel().clearSelection();
         }else{
             materialsSelected.forEach((materialExpert) -> {
@@ -468,7 +474,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
                 });
             });
         }
-        
+        }
     }
     /**
      * Function to fill the table
@@ -487,6 +493,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         }));
         tableColor.setItems(colorList);   
         tableColor.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableMaterial.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
     /**
      * Implementation of the actions
@@ -525,7 +532,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             expert.setRecommendedMaterials(materialsSelected);
             
             expertClient.edit(expert);
-             openMainWindow();
+            openMainWindow();
         } catch (IOException ex) {
             Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
         } finally{

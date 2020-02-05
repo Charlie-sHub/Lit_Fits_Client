@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -105,7 +107,8 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
      */
     @FXML
     private Button btnHelp;
-    
+    @FXML
+    private ListView listColors;
     /**
      * Stage to be used by the current controller
      */
@@ -350,6 +353,7 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         setFocusTraversable();
         setListeners();
         setUndoRedo();
+        setList();
         textFields = new ArrayList<>();
         fillArray();
         lblInvalidMail.setVisible(false);
@@ -611,6 +615,12 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         btnRedo.disableProperty().bind(undoManager.redoAvailableProperty().map(x -> !x));
         btnUndo.setOnAction(event -> undoManager.undo());
         btnRedo.setOnAction(event -> undoManager.redo());
+    }
+
+    private void setList() {
+        if(expert.getRecommendedColors() != null){
+            listColors.setItems((ObservableList) expert.getRecommendedColors());
+        }
     }
 
 
