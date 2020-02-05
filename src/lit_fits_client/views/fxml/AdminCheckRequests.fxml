@@ -21,6 +21,7 @@
           <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
             <items>
                   <MenuItem fx:id="menuItemBack" mnemonicParsing="false" text="Back" />
+                  <MenuItem fx:id="menuItemCreateTestGarments" mnemonicParsing="false" text="Create test garments" />
             </items>
           </Menu>
           <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
