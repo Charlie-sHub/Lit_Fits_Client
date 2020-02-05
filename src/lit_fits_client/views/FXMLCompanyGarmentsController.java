@@ -6,13 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -246,6 +243,10 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Company logged in
      */
     private Company company;
+    /**
+     * The interface of the GarmentClient
+     */
+    private GarmentClientInterface garmentClient;
 
     /**
      * Getter of the stage in use by this window
@@ -324,9 +325,10 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
-            choiceTheme.setValue(theme);
+            choiceTheme.setValue(theme);            
         } catch (Exception e) {
             createExceptionDialog(e);
+            e.printStackTrace();
         }
     }
 
@@ -334,6 +336,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * Sets the options for different elements of the window
      */
     private void setElements() throws ClientErrorException {
+        garmentClient = ClientFactory.getGarmentClient(uri);
         fillChoiceBoxTheme();
         contextMenuTable.hide();
         enableDisableButtons(true);
@@ -364,11 +367,9 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
-        GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
         tableGarments.setItems(garmentList);
-        garmentClient.close();
     }
 
     /**
@@ -531,13 +532,11 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void onBtnDeletePress(ActionEvent event) {
         if (createConfirmationDialog()) {
             Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-            GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
             try {
                 garmentClient.remove(Long.toString(garment.getId()));
             } catch (ClientErrorException e) {
                 createExceptionDialog(e);
             }
-            garmentClient.close();
         }
     }
 
@@ -558,14 +557,12 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
-        GarmentClientInterface garmentClient = ClientFactory.getGarmentClient(uri);
         try {
             garment.setPromoted(true);
             garmentClient.editGarment(garment);
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
         }
-        garmentClient.close();
     }
 
     /**

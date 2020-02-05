@@ -583,9 +583,9 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         garment.setAvailable(true);
         garment.setPromoted(false);
         garment.setPromotionRequest(false);
-        garment.setBodyPart((BodyPart) comboBodyPart.getValue());
-        garment.setGarmentType((GarmentType) comboGarmentType.getValue());
-        garment.setMood((Mood) comboMood.getValue());
+        garment.setBodyPart(BodyPart.BOTTOM);
+        garment.setGarmentType(GarmentType.BEANIE);
+        garment.setMood(Mood.FORMAL);
         InputStream imageInputStream = new FileInputStream(garmentPictureFile);
         byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
         garment.setPicture(imageBytes);
