@@ -71,6 +71,9 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
      */
     @FXML
     private RadioButton rBtnFashionExpert;
+    
+    @FXML
+    private RadioButton rBtnAdmin;
     /**
      * Text field where username must be entered to log in
      */
@@ -509,6 +512,18 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
                 registerView.setPreviousStage(stage);
                 registerView.initStage(themeList, theme, registerStage, root, uri);
                 stage.hide();
+                
+                // ASIER DIN MODIFICATION
+                
+            }else if (rBtnAdmin.isSelected()) {
+                
+                
+                
+                
+                
+                
+                
+                
             } else {
                 createDialog("Please select what kind of registration you want");
             }

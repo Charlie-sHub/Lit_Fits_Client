@@ -66,6 +66,7 @@
                         <Separator layoutX="9.0" layoutY="10.0" prefHeight="8.0" prefWidth="586.0" />
                         <RadioButton fx:id="rBtnCompany" layoutX="331.0" layoutY="295.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="100.0" text="Company" />
                         <RadioButton fx:id="rBtnFashionExpert" layoutX="452.0" layoutY="295.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="181.0" text="Fashion Expert" />    
+                        <RadioButton fx:id="rBtnAdmin" layoutX="452.0" layoutY="295.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="181.0" text="Administrator" />    
                         <Button fx:id="btnRegister" layoutX="253.0" layoutY="357.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="94.0" text="Register">
                             <font>
                                 <Font name="Arial" size="15.0" />
