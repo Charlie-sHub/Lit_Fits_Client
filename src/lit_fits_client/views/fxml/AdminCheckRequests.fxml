@@ -52,8 +52,6 @@
                </children>
             </HBox>
             <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
-            </HBox>
-            <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="180.0">
                <children>
                   <Label fx:id="lblBack" minWidth="-Infinity" text="Alt + B = Back" />
                </children>

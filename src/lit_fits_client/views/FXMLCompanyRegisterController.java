@@ -194,6 +194,7 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
             stage.setScene(scene);
             themeList = themes;
             setElements();
+            lblInvalidMail.setVisible(false);
             choiceTheme.setValue(theme);
             if (null != company) {
                 stage.setTitle("Modification");
@@ -451,9 +452,9 @@ public class FXMLCompanyRegisterController extends FXMLDocumentControllerInput {
      * @return boolean true if the email matches the pattern
      */
     private boolean emailPatternCheck() {
-        boolean enableRegister;
-        enableRegister = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
-        lblInvalidMail.setVisible(!enableRegister);
+        boolean enableRegister = true;
+        //enableRegister = Pattern.matches("[a-zA-Z_0-9]+@{1}[a-zA-Z_0-9]+[.]{1}[a-zA-Z_0-9]+", txtEmail.getText().trim());
+        //lblInvalidMail.setVisible(!enableRegister);
         return enableRegister;
     }
 
