@@ -169,6 +169,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
      * The File of the picture chosen for the Garment
      */
     private File garmentPictureFile;
+    private boolean changedImage;
 
     /**
      * Getter for the stage of this view
@@ -328,6 +329,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
             stage.setMinWidth(850);
             stage.setMinHeight(650);
             stage.show();
+            changedImage = false;
         } catch (IOException e) {
             createExceptionDialog(e);
         }
@@ -506,6 +508,7 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         comboMood.onActionProperty().addListener(this::onItemChosen);
         checkComboColors.onMouseClickedProperty().addListener(this::onItemChosen);
         checkComboMaterials.onMouseClickedProperty().addListener(this::onItemChosen);
+        imageViewGarmentPicture.imageProperty().addListener(this::onImageChange);
     }
 
     /**
@@ -586,10 +589,12 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
         garment.setBodyPart(BodyPart.BOTTOM);
         garment.setGarmentType(GarmentType.BEANIE);
         garment.setMood(Mood.FORMAL);
-        InputStream imageInputStream = new FileInputStream(garmentPictureFile);
-        byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
-        garment.setPicture(imageBytes);
-        garment.setNamePicture(garmentPictureFile.getName());
+        if (changedImage) {
+            InputStream imageInputStream = new FileInputStream(garmentPictureFile);
+            byte[] imageBytes = IOUtils.toByteArray(imageInputStream);
+            garment.setPicture(imageBytes);
+            garment.setNamePicture(garmentPictureFile.getName());
+        }
         List<Color> selectedColorsList = new ArrayList<>(checkComboColors.getCheckModel().getCheckedItems());
         Set<Color> selectedColorsSet = selectedColorsList.stream().collect(Collectors.toSet());
         garment.setColors(selectedColorsSet);
@@ -690,6 +695,10 @@ public class FXMLCreateModifyGarmentController extends FXMLDocumentControllerInp
                 createExceptionDialog(e);
             }
         }
+    }
+
+    private void onImageChange(ObservableValue observable, Object oldValue, Object newValue) {
+        changedImage = true;
     }
 
     /**

@@ -325,7 +325,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
             setStylesheet(scene, theme.getThemeCssPath());
             themeList = themes;
             setElements();
-            choiceTheme.setValue(theme);            
+            choiceTheme.setValue(theme);
         } catch (Exception e) {
             createExceptionDialog(e);
             e.printStackTrace();
@@ -367,6 +367,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      * @throws ClientErrorException
      */
     private void fillTable() throws ClientErrorException {
+        tableGarments.getItems().clear();
         garmentList = FXCollections.observableArrayList(garmentClient.findGarmentsByCompany(new GenericType<List<Garment>>() {
         }, company.getNif()));
         tableGarments.setItems(garmentList);
@@ -406,15 +407,16 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
         tableColumnMaterials.setCellValueFactory(new PropertyValueFactory("materials"));
         tableColumnColors.setCellFactory((TableColumn<Garment, List<Color>> tableColumnParam) -> new ComboBoxTableCell());
         // tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, Set<Color>> cellDataParameter) -> (ObservableValue<Set<Color>>) cellDataParameter.getValue().getColors());
-        // tableColumnColors.setCellValueFactory(new PropertyValueFactory("colors"));
-        tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, List<Color>> cellDataParameter) -> {
-            Set<Color> colors = cellDataParameter.getValue().getColors();
-            List<Color> auxList = new ArrayList<>(colors);
-            ObservableList<Color> auxObservableList = FXCollections.observableArrayList(auxList);
-            ObservableValue<List<Color>> observable = new SimpleObjectProperty(auxList);
-            return observable;
-        });
-        
+        tableColumnColors.setCellValueFactory(new PropertyValueFactory("colors"));
+        /*
+            tableColumnColors.setCellValueFactory((CellDataFeatures<Garment, List<Color>> cellDataParameter) -> {
+                Set<Color> colors = cellDataParameter.getValue().getColors();
+                List<Color> auxList = new ArrayList<>(colors);
+                ObservableList<Color> auxObservableList = FXCollections.observableArrayList(auxList);
+                ObservableValue<List<Color>> observable = new SimpleObjectProperty(auxList);
+                return observable;
+            });
+         */
     }
 
     /**
@@ -558,7 +560,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void onBtnPromotePress(ActionEvent event) {
         Garment garment = ((Garment) tableGarments.getSelectionModel().getSelectedItem());
         try {
-            garment.setPromoted(true);
+            garment.setPromotionRequest(true);
             garmentClient.editGarment(garment);
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
@@ -587,12 +589,16 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
      */
     private void onBtnReportPress(ActionEvent event) {
         try {
-            JasperReport garmentReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("garmentsReport.jrxml"));
-            JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
-            Map<String, Object> parameters = new HashMap<>();
-            JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-            jasperViewer.setVisible(true);
+            if (!garmentList.isEmpty() | (garmentList != null)) {
+                JasperReport garmentReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("garmentsReport.jrxml"));
+                JRBeanCollectionDataSource garments = new JRBeanCollectionDataSource(garmentList);
+                Map<String, Object> parameters = new HashMap<>();
+                JasperPrint jasperPrint = JasperFillManager.fillReport(garmentReport, parameters, garments);
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+            } else {
+                createDialog("There are no garments to create a report of");
+            }
         } catch (Exception ex) {
             createExceptionDialog(ex);
         }
@@ -606,6 +612,7 @@ public class FXMLCompanyGarmentsController extends FXMLDocumentController {
     private void onBtnRefreshPress(ActionEvent event) {
         try {
             fillTable();
+            tableGarments.refresh();
         } catch (ClientErrorException e) {
             createExceptionDialog(e);
         }

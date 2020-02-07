@@ -111,6 +111,7 @@ public class FXMLDocumentController {
      * @param e exception to be handled
      */
     public void createExceptionDialog(Exception e) {
+        e.printStackTrace();
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error");
         alert.setContentText("There's been an error while running the program: " + e.getMessage());

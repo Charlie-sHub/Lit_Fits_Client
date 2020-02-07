@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -477,7 +476,7 @@ public class FXMLViewLoginController extends FXMLDocumentControllerInput {
         Company company = new Company();
         byte[] publicKeyBytes = IOUtils.toByteArray(publicKeyClient.getPublicKey(InputStream.class));
         company.setNif(txtUsername.getText());
-        company.setPassword(Encryptor.encryptText(fieldPassword.getText(), publicKeyBytes));
+        company.setPassword(Encryptor.encryptText(fieldPassword.getText().trim(), publicKeyBytes));
         company = companyClient.login(company, Company.class);
         companyClient.close();
         publicKeyClient.close();
