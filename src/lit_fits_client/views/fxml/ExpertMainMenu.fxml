@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -21,9 +23,12 @@
          <children>
             <AnchorPane fx:id="mainController" prefHeight="334.0" prefWidth="480.0">
                <children>
-                <Button fx:id="btnRecommendations" layoutX="125.0" layoutY="138.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="229.0" text="Check Recommendations" />
-                <Button fx:id="btnLogOut" layoutX="187.0" layoutY="274.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
-                  <Button fx:id="btnModify" layoutX="125.0" layoutY="44.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="230.0" text="Modify Account" />
+                <Button fx:id="btnRecommendations" layoutX="294.0" layoutY="44.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="229.0" text="Check Recommendations" />
+                <Button fx:id="btnLogOut" layoutX="208.0" layoutY="284.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Log Out" />
+                  <Button fx:id="btnModify" layoutX="14.0" layoutY="46.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="230.0" text="Modify Account" />
+                  <DatePicker fx:id="dpDate" layoutX="152.0" layoutY="162.0" prefHeight="54.0" prefWidth="220.0" />
+                  <Label fx:id="lblBirthday" layoutX="205.0" layoutY="227.0" prefHeight="26.0" prefWidth="177.0" text="HAPPY BIRTHDAY!!" />
+                  <Label layoutX="221.0" layoutY="137.0" prefHeight="18.0" prefWidth="145.0" text="Birthday Date" />
                </children>
             </AnchorPane>
          </children>

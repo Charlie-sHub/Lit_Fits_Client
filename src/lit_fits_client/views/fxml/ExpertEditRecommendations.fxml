@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPaneRecommendations" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewExpertEditRecommendationController">
+<BorderPane fx:id="borderPaneRecommendations" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="640.0" style="-fx-background-image: url(&quot;file:C:\Users\2dam.MACINF08\Desktop\2dam\200px-SonichuOriginal.jgp&quot;); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lit_fits_client.views.FXMLViewExpertEditRecommendationController">
   <left>
     <VBox alignment="CENTER" prefHeight="373.0" prefWidth="319.0" BorderPane.alignment="CENTER">
       <children>
@@ -70,11 +70,13 @@
     <HBox alignment="CENTER" prefHeight="50.0" prefWidth="640.0" BorderPane.alignment="CENTER">
       <children>
             <ChoiceBox fx:id="choiceTheme" prefHeight="26.0" prefWidth="165.0" />
-            <Label prefHeight="18.0" prefWidth="19.0" />
+            <Label prefHeight="18.0" prefWidth="33.0" />
         <Button fx:id="btnSave" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Save" />
-            <Label prefHeight="18.0" prefWidth="23.0" />
+            <Label prefHeight="18.0" prefWidth="31.0" />
         <Button fx:id="btnCancel" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="108.0" text="Cancel" />
-            <Label prefHeight="18.0" prefWidth="155.0" />
+            <Label prefHeight="18.0" prefWidth="35.0" />
+            <Button fx:id="btnReport" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Report" />
+            <Label prefHeight="18.0" prefWidth="48.0" />
       </children>
     </HBox>
   </bottom>

@@ -6,7 +6,9 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -37,6 +39,13 @@ import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
 import lit_fits_client.entities.Material;
 import lit_fits_client.views.themes.Theme;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -139,6 +148,11 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     @FXML
     private ContextMenu contextMenuTableMaterials;
         
+    @FXML
+    private Button btnReport;
+    
+    List<Color> colorsSelected;
+    
     private Stage stage;
     private Stage stageMainMenu;
     
@@ -447,7 +461,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      */
     private void setSelectedReccomendations() {
        
-       List<Color> colorsSelected = expert.getRecommendedColors();
+        colorsSelected = expert.getRecommendedColors();
         if(colorsSelected != null){
             if (colorsSelected.isEmpty()) {
                 tableColor.getSelectionModel().clearSelection();
@@ -513,6 +527,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
         menuItemSelectAll.setOnAction(this::selectAllTable);
         menuItemUnSelectAll.setOnAction(this::unSelectAllTable);
         menuItemHelp.setOnAction(this::onHelpPressed);
+        //btnReport.setOnAction(this::onBtnReportPress);
+        
     }
     
     /**
@@ -580,10 +596,22 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * This function put the menu items in the contextMenu
      */
     private void setContextMenus() {
-        contextMenuTableColors.getItems().addAll(menuItemSave, menuItemSelectAll, menuItemUnSelectAll);
-        contextMenuTableMaterials.getItems().addAll(menuItemSave, menuItemUnSelectAll, menuItemSelectAll);
+        contextMenuTableColors.getItems().addAll(menuItemSave);
+        contextMenuTableMaterials.getItems().addAll(menuItemSave);
     }
-
+    
+    public void onBtnReportPress(ActionEvent e){
+        try {
+            JasperReport expertReport = JasperCompileManager.compileReport(getClass().getResourceAsStream("expertReport.jrxml"));
+            JRBeanCollectionDataSource recommendations = new JRBeanCollectionDataSource(colorsSelected);
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(expertReport, parameters, recommendations);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            createExceptionDialog(ex);
+        }
+    }
 
 
     

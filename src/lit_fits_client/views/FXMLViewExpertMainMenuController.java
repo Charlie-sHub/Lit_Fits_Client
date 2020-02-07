@@ -6,6 +6,7 @@
 package lit_fits_client.views;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -14,6 +15,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import lit_fits_client.entities.FashionExpert;
@@ -39,6 +43,12 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
      */
     @FXML
     private Button btnRecommendations;
+    
+    @FXML
+    private DatePicker dpDate;
+    
+    @FXML
+    private Label lblBirthday;
     /**
      * The stage used by this view
      */
@@ -125,7 +135,6 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             choiceTheme.setValue(theme);
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
-            e.printStackTrace();
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
@@ -138,12 +147,14 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
         setOnAction();
         setTooltips();
         setFocusTraversable();
+        lblBirthday.setVisible(false);
         
     }
     /**
      * Implements the actions
      */
     private void setOnAction() {
+        dpDate.setOnAction(this::setBirthdayText);
         btnLogOut.setOnAction(this::onBtnLogoutPress);
         btnRecommendations.setOnAction(this::onBtnRecommendationPress);
         btnModify.setOnAction(this::onBtnModifyAccountPress);
@@ -213,6 +224,16 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
         }
+    }
+    
+    public void setBirthdayText(ActionEvent e){
+        LocalDate date = dpDate.getValue();
+        if (date.equals(LocalDate.now())) {
+            lblBirthday.setVisible(true);
+        }else{
+            lblBirthday.setVisible(false);
+        }
+    
     }
     
 }   
