@@ -414,7 +414,6 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
             setElements();
             stage.setOnCloseRequest(this::onClosing);
         }catch(Exception e){
-            e.printStackTrace();
             createExceptionDialog(e);
             LOG.severe(e.getMessage());
         }
@@ -449,31 +448,29 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
     private void setSelectedReccomendations() {
        
        List<Color> colorsSelected = expert.getRecommendedColors();
-       if(colorsSelected != null){
-        if (colorsSelected.isEmpty()) {
-            tableColor.getSelectionModel().clearSelection();
-        }else{
-            colorsSelected.forEach((colorExpert) -> {
-                colorList.stream().filter((colorDB) -> (colorExpert.getName().equals(colorDB.getName()))).forEachOrdered((colorDB) -> {
-                    tableColor.getSelectionModel().select(colorDB);
-                });
-             });
+        if(colorsSelected != null){
+            if (colorsSelected.isEmpty()) {
+                tableColor.getSelectionModel().clearSelection();
+            }else{
+                colorsSelected.forEach((colorExpert) -> {
+                    colorList.stream().filter((colorDB) -> (colorExpert.getName().equals(colorDB.getName()))).forEachOrdered((colorDB) -> {
+                        tableColor.getSelectionModel().select(colorDB);
+                    });
+                 });
+            }
         }
-       }
      
        List<Material> materialsSelected = expert.getRecommendedMaterials();
         if (materialsSelected != null) {
-            
-        
-       if (materialsSelected.isEmpty()) {
-            tableMaterial.getSelectionModel().clearSelection();
-        }else{
-            materialsSelected.forEach((materialExpert) -> {
-                materialList.stream().filter((materialDB) -> (materialExpert.getName().equals(materialDB.getName()))).forEachOrdered((materialDB) -> {
-                    tableMaterial.getSelectionModel().select(materialDB);
-                });
-            });
-        }
+            if (materialsSelected.isEmpty()) {
+                 tableMaterial.getSelectionModel().clearSelection();
+             }else{
+                 materialsSelected.forEach((materialExpert) -> {
+                     materialList.stream().filter((materialDB) -> (materialExpert.getName().equals(materialDB.getName()))).forEachOrdered((materialDB) -> {
+                         tableMaterial.getSelectionModel().select(materialDB);
+                     });
+                 });
+            }
         }
     }
     /**
@@ -524,20 +521,13 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      */
     private void onSavePress(ActionEvent event) {
         ExpertClient expertClient = ClientFactory.getExpertClient(uri);
-        try {
-            List<Color> colorsSelected = tableColor.getSelectionModel().getSelectedItems();
-            expert.setRecommendedColors(colorsSelected);
-            
-            List<Material> materialsSelected = tableMaterial.getSelectionModel().getSelectedItems();
-            expert.setRecommendedMaterials(materialsSelected);
-            
-            expertClient.edit(expert);
-            openMainWindow();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            expertClient.close();
-        }
+        List<Color> colorsSelected = tableColor.getSelectionModel().getSelectedItems();
+        expert.setRecommendedColors(colorsSelected);
+        List<Material> materialsSelected = tableMaterial.getSelectionModel().getSelectedItems();
+        expert.setRecommendedMaterials(materialsSelected);
+        expertClient.edit(expert);
+        stage.hide();
+        expertClient.close();
         
     }
     /**
@@ -545,11 +535,7 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * @param event 
      */
     private void onCancelPress(ActionEvent event) {
-        try {
-            openMainWindow();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLViewExpertEditRecommendationController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        stage.hide();
     }
     /**
      * This function select all values on the table
@@ -594,8 +580,8 @@ public class FXMLViewExpertEditRecommendationController extends FXMLDocumentCont
      * This function put the menu items in the contextMenu
      */
     private void setContextMenus() {
-        contextMenuTableColors.getItems().addAll(menuItemSave, menuItemHelp);
-        contextMenuTableMaterials.getItems().addAll(menuItemSave, menuItemHelp);
+        contextMenuTableColors.getItems().addAll(menuItemSave, menuItemSelectAll, menuItemUnSelectAll);
+        contextMenuTableMaterials.getItems().addAll(menuItemSave, menuItemUnSelectAll, menuItemSelectAll);
     }
 
 

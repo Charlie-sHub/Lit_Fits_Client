@@ -36,7 +36,9 @@ import lit_fits_client.miscellaneous.Encryptor;
 import lit_fits_client.RESTClients.ClientFactory;
 import lit_fits_client.RESTClients.ExpertClient;
 import lit_fits_client.RESTClients.PublicKeyClient;
+import lit_fits_client.entities.Color;
 import lit_fits_client.entities.FashionExpert;
+import lit_fits_client.entities.Material;
 import lit_fits_client.miscellaneous.TextChange;
 import lit_fits_client.views.themes.Theme;
 import org.apache.commons.io.IOUtils;
@@ -109,6 +111,10 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
     private Button btnHelp;
     @FXML
     private ListView listColors;
+    
+    @FXML
+    private ListView listMaterials;
+    
     /**
      * Stage to be used by the current controller
      */
@@ -621,7 +627,13 @@ public class FXMLViewExpertModifyAccountController extends FXMLDocumentControlle
         if(expert.getRecommendedColors() != null){
             listColors.setItems((ObservableList) expert.getRecommendedColors());
         }
+        
+        if(expert.getRecommendedMaterials() != null) {
+            listMaterials.setItems((ObservableList) expert.getRecommendedMaterials());
+        }
     }
+
+    
 
 
 

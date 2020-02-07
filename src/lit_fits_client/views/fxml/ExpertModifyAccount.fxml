@@ -29,59 +29,70 @@
             <children>
                 <AnchorPane prefHeight="572.0" prefWidth="1005.0">
                     <children>
-                        <Label fx:id="lblUsername" layoutX="178.0" layoutY="120.0" prefHeight="18.0" prefWidth="172.0" text="Username:">
+                        <Label fx:id="lblUsername" layoutX="52.0" layoutY="120.0" prefHeight="18.0" prefWidth="172.0" text="Username:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblFullName" layoutX="179.0" layoutY="159.0" prefHeight="18.0" prefWidth="172.0" text="Full name:">
+                        <Label fx:id="lblFullName" layoutX="53.0" layoutY="159.0" prefHeight="18.0" prefWidth="172.0" text="Full name:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblEmail" layoutX="178.0" layoutY="200.0" prefHeight="18.0" prefWidth="172.0" text="Email:">
+                        <Label fx:id="lblEmail" layoutX="52.0" layoutY="200.0" prefHeight="18.0" prefWidth="172.0" text="Email:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblPassword" layoutX="178.0" layoutY="316.0" prefHeight="18.0" prefWidth="172.0" text="Current Password:">
+                        <Label fx:id="lblPassword" layoutX="52.0" layoutY="316.0" prefHeight="18.0" prefWidth="172.0" text="Current Password:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <Label fx:id="lblNewPassword" layoutX="179.0" layoutY="353.0" prefHeight="18.0" prefWidth="171.0" text="New Password:">
+                        <Label fx:id="lblNewPassword" layoutX="53.0" layoutY="353.0" prefHeight="18.0" prefWidth="171.0" text="New Password:">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtUsername" layoutX="357.0" layoutY="116.0" prefHeight="25.0" prefWidth="228.0" />
-                        <TextField fx:id="txtFullName" layoutX="358.0" layoutY="155.0" prefHeight="25.0" prefWidth="228.0" />
-                        <TextField fx:id="txtEmail" layoutX="357.0" layoutY="196.0" prefHeight="25.0" prefWidth="228.0" />
-                        <PasswordField fx:id="txtPassword" layoutX="357.0" layoutY="312.0" prefHeight="25.0" prefWidth="228.0" />
-                        <PasswordField fx:id="txtNewPassword" layoutX="357.0" layoutY="349.0" prefHeight="25.0" prefWidth="228.0" />
-                        <Button id="btnRegister" fx:id="btnSubmit" layoutX="381.0" layoutY="422.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Submit">
+                        <TextField fx:id="txtUsername" layoutX="231.0" layoutY="116.0" prefHeight="25.0" prefWidth="228.0" />
+                        <TextField fx:id="txtFullName" layoutX="232.0" layoutY="155.0" prefHeight="25.0" prefWidth="228.0" />
+                        <TextField fx:id="txtEmail" layoutX="231.0" layoutY="196.0" prefHeight="25.0" prefWidth="228.0" />
+                        <PasswordField fx:id="txtPassword" layoutX="231.0" layoutY="312.0" prefHeight="25.0" prefWidth="228.0" />
+                        <PasswordField fx:id="txtNewPassword" layoutX="231.0" layoutY="349.0" prefHeight="25.0" prefWidth="228.0" />
+                        <Button id="btnRegister" fx:id="btnSubmit" layoutX="255.0" layoutY="422.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Submit">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Button fx:id="btnCancel" layoutX="495.0" layoutY="422.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Cancel">
+                        <Button fx:id="btnCancel" layoutX="369.0" layoutY="422.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="75.0" text="Cancel">
                             <font>
                                 <Font name="Arial" size="15.0" />
                             </font>
                         </Button>
-                        <Label fx:id="lblLength" layoutX="381.0" layoutY="388.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
+                        <Label fx:id="lblLength" layoutX="255.0" layoutY="388.0" prefHeight="18.0" prefWidth="222.0" text="A field has too much text" textAlignment="CENTER" textFill="#fc0400" />
                   <Button fx:id="btnUndo" layoutX="352.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="76.0" text="Undo" />
                   <Button fx:id="btnRedo" layoutX="433.0" layoutY="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="74.0" text="Redo" />
                   <Button fx:id="btnHelp" layoutX="521.0" layoutY="34.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="76.0" text="Help" />
-                  <Label fx:id="lblInvalidMail" layoutX="596.0" layoutY="200.0" prefHeight="18.0" prefWidth="226.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
-                  <Label fx:id="lblPhone" layoutX="178.0" layoutY="244.0" prefHeight="18.0" prefWidth="172.0" text="Phone Number:">
+                  <Label fx:id="lblInvalidMail" layoutX="470.0" layoutY="200.0" prefHeight="18.0" prefWidth="226.0" text="Not a valid email" textAlignment="JUSTIFY" textFill="RED" />
+                  <Label fx:id="lblPhone" layoutX="52.0" layoutY="244.0" prefHeight="18.0" prefWidth="172.0" text="Phone Number:">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPhone" layoutX="357.0" layoutY="240.0" prefHeight="25.0" prefWidth="228.0" />
-                  <Label fx:id="lblInvalidUsername" layoutX="596.0" layoutY="120.0" prefHeight="18.0" prefWidth="226.0" text="Username cannot start by 'admin'" textAlignment="JUSTIFY" textFill="RED" />
-                  <ListView fx:id="listColors" layoutX="651.0" layoutY="334.0" prefHeight="200.0" prefWidth="200.0" />
+                  <TextField fx:id="txtPhone" layoutX="231.0" layoutY="240.0" prefHeight="25.0" prefWidth="228.0" />
+                  <Label fx:id="lblInvalidUsername" layoutX="470.0" layoutY="120.0" prefHeight="18.0" prefWidth="226.0" text="Username cannot start by 'admin'" textAlignment="JUSTIFY" textFill="RED" />
+                  <ListView fx:id="listColors" layoutX="696.0" layoutY="340.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Label fx:id="lblColors" layoutX="731.0" layoutY="294.0" prefHeight="35.0" prefWidth="90.0" text="Colors">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="listMaterials" layoutX="696.0" layoutY="59.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Label layoutX="720.0" layoutY="14.0" prefHeight="42.0" prefWidth="130.0" text="Materials">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
                     </children>
                 </AnchorPane>
             </children>

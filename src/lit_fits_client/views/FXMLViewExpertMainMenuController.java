@@ -209,7 +209,6 @@ public class FXMLViewExpertMainMenuController extends FXMLDocumentController {
             editRecommendations.setExpert(expert);
             editRecommendations.setStageMainMenu(stage);
             editRecommendations.initStage(themeList, theme, stageMainProgram, root, uri);
-            stage.hide();
         } catch (IOException ex) {
             createExceptionDialog(ex);
             LOG.severe(ex.getMessage());
